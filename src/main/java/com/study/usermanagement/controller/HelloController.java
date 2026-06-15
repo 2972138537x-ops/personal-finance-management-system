@@ -2,6 +2,7 @@ package com.study.usermanagement.controller;
 
 import com.study.usermanagement.entity.User;
 import org.springframework.web.bind.annotation.*;
+import com.study.usermanagement.common.Result;
 
 @RestController
 public class HelloController {
@@ -21,8 +22,8 @@ public class HelloController {
     }
 
     @PostMapping("/users")
-    public String register(@RequestBody User user) {
-        return "注册用户： " + user.getUsername();
+    public Result register(@RequestBody User user) {
+        return new Result(true,"注册成功",user.getUsername());
     }
 }
 
