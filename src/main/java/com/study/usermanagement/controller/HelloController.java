@@ -6,7 +6,7 @@ import com.study.usermanagement.common.Result;
 
 @RestController
 public class HelloController {
-    @GetMapping("/hello")
+    /*@GetMapping("/hello")
     public String hello() {
         return "hello spring boot";
     }
@@ -63,7 +63,7 @@ public class HelloController {
         }
         return new Result(false,"用户名或密码错误",null);
     }
-
+*/
     @PostMapping("/login")
     public Result login(@RequestBody User user) {
         if (user.getUsername().equals("tom") && user.getPassword().equals("123456")) {
