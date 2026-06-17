@@ -35,4 +35,9 @@ public class UserController {
     public Result deleteUser(@PathVariable String username) {
         return userService.deleteByUsername(username);
     }
+
+    @GetMapping
+    public Result findAll() {
+        return userService.findAll();
+    }
 }

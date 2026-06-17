@@ -64,12 +64,12 @@ public class HelloController {
         return new Result(false,"用户名或密码错误",null);
     }
 */
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public Result login(@RequestBody User user) {
         if (user.getUsername().equals("tom") && user.getPassword().equals("123456")) {
             return new Result(true, "登录成功", user.getUsername());
         }
         return new Result(false, "用户名或密码错误", null);
-    }
+    }*/
 }
 
