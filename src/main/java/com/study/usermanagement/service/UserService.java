@@ -26,7 +26,7 @@ public class UserService {
         if (user == null) {
             return new Result(false, "没有该用户", null);
         }
-        return new Result(true, "查询成功", new UserVO(user.getUsername()));
+        return new Result(true, "查询成功", new UserVO(user.getUsername(), user.getRole()));
     }
 
     //如果 password 长度小于 6 或大于 12
@@ -106,9 +106,8 @@ public class UserService {
     public Result findAll() {
         List<User> users = userDao.findAll();
         List<UserVO> userVOList = new ArrayList<>();
-
         for (User user : users) {
-            userVOList.add(new UserVO(user.getUsername()));
+            userVOList.add(new UserVO(user.getUsername(),user.getRole()));
         }
         return new Result(true, "查询成功", userVOList);
     }

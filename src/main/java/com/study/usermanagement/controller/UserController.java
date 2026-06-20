@@ -14,10 +14,10 @@ public class UserController {
     @Autowired
     private UserService userService;
     //GET    /users/{username}
-    @GetMapping("/{username}")
+   /* @GetMapping("/{username}")
     public Result searchUsername(@PathVariable String username) {
         return userService.findByUsername(username);
-    }
+    }*/
 
     //POST   /users
     @PostMapping
@@ -25,7 +25,7 @@ public class UserController {
         return userService.register(user);
     }
 
-    //PUT    /users/{username}/password
+    /*//PUT    /users/{username}/password
     @PutMapping("/{username}/password")
     public Result changePassword(@PathVariable String username, @RequestBody @Valid User user) {
         return userService.changePassword(username,user);
@@ -40,5 +40,5 @@ public class UserController {
     @GetMapping
     public Result findAll() {
         return userService.findAll();
-    }
+    }*/
 }

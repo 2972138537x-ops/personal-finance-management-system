@@ -13,21 +13,23 @@ public class UserDao {
     private JdbcTemplate jdbcTemplate;
 
     public List<User> findAll() {
-        String sql = "SELECT username, password FROM `user` ";
+        String sql = "SELECT username, password, role FROM `user` ";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             User user = new User();
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
+            user.setRole(rs.getString("role"));
             return user;
         });
     }
 
     public User findByUsername(String username) {
-        String sql = "SELECT username, password FROM `user` WHERE username = ?";
+        String sql = "SELECT username, password,role FROM `user` WHERE username = ?";
         List<User> users = jdbcTemplate.query(sql, (rs, rowNum) -> {
             User user = new User();
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
+            user.setRole(rs.getString("role"));
             return user;
         }, username);
         if (users.isEmpty()) {
@@ -37,7 +39,7 @@ public class UserDao {
     }
 
     public int insert(User user) {
-        String sql = "INSERT INTO `user`(username, password, register_date) VALUES(?, ?, CURDATE())";
+        String sql = "INSERT INTO `user`(username, password, role, register_date) VALUES(?, ?, 'USER', CURDATE())";
         return jdbcTemplate.update(sql, user.getUsername(), user.getPassword());
     }
 

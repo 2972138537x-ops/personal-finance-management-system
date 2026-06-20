@@ -50,3 +50,33 @@ Content-Type: application/json
   "username": "",
   "password": "123"
 }
+
+### 查看自己 / Get me
+GET http://localhost:8080/me?username=tom
+
+### 修改自己的密码 / Change my password
+PUT http://localhost:8080/me/password?username=tom
+Content-Type: application/json
+
+{
+  "username": "tom",
+  "password": "abcdef"
+}
+
+### 管理员查询全部用户 / Admin get all users
+GET http://localhost:8080/admin/users
+
+### 管理员查询单个用户 / Admin get user
+GET http://localhost:8080/admin/users/tom
+
+### 管理员重置用户密码 / Admin reset password
+PUT http://localhost:8080/admin/users/tom/password
+Content-Type: application/json
+
+{
+  "username": "tom",
+  "password": "123456"
+}
+
+### 管理员删除用户 / Admin delete user
+DELETE http://localhost:8080/admin/users/spring01
