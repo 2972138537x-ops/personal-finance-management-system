@@ -1,8 +1,10 @@
-### 查询所有用户 / Get all users
-GET http://localhost:8080/users
+### 使用说明 / Notes
+### 1. 先运行登录接口，复制返回结果里的 token。
+### 2. 把 token 粘贴到下面的 adminToken 或 userToken。
+### 3. 再运行 /me 或 /admin/** 接口。
 
-### 查询单个用户 / Get user by username
-GET http://localhost:8080/users/tom
+@adminToken = paste_admin_token_here
+@userToken = paste_user_token_here
 
 ### 注册用户 / Register user
 POST http://localhost:8080/users
@@ -13,7 +15,7 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### 用户登录 / Login
+### 登录管理员 tom，获取 ADMIN token / Login as admin
 POST http://localhost:8080/login
 Content-Type: application/json
 
@@ -22,55 +24,51 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### 修改密码 / Change password
-PUT http://localhost:8080/users/spring01/password
-Content-Type: application/json
-
-{
-  "password": "abcdef"
-}
-
-### 使用新密码登录 / Login with new password
+### 登录普通用户 alice，获取 USER token / Login as normal user
 POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-  "username": "spring01",
-  "password": "abcdef"
+  "username": "alice",
+  "password": "abc123"
 }
 
-### 删除用户 / Delete user
-DELETE http://localhost:8080/users/spring01
+### 不带 token 访问 /me，应该失败 / Access /me without token
+GET http://localhost:8080/me
 
-### 测试参数校验 / Validation test
-POST http://localhost:8080/users
+### 假 token 访问 /me，应该失败 / Access /me with invalid token
+GET http://localhost:8080/me
+Authorization: invalid-token
+
+### 带 ADMIN token 查看自己 / Access /me with admin token
+GET http://localhost:8080/me
+Authorization: {{adminToken}}
+
+### 带 USER token 查看自己 / Access /me with user token
+GET http://localhost:8080/me
+Authorization: {{userToken}}
+
+### 普通用户修改自己的密码 / Change my password
+PUT http://localhost:8080/me/password
+Authorization: {{userToken}}
 Content-Type: application/json
 
 {
-  "username": "",
-  "password": "123"
-}
-
-### 查看自己 / Get me
-GET http://localhost:8080/me?username=tom
-
-### 修改自己的密码 / Change my password
-PUT http://localhost:8080/me/password?username=tom
-Content-Type: application/json
-
-{
-  "username": "tom",
+  "username": "alice",
   "password": "abcdef"
 }
 
 ### 管理员查询全部用户 / Admin get all users
 GET http://localhost:8080/admin/users
+Authorization: {{adminToken}}
 
 ### 管理员查询单个用户 / Admin get user
 GET http://localhost:8080/admin/users/tom
+Authorization: {{adminToken}}
 
 ### 管理员重置用户密码 / Admin reset password
 PUT http://localhost:8080/admin/users/tom/password
+Authorization: {{adminToken}}
 Content-Type: application/json
 
 {
@@ -80,36 +78,17 @@ Content-Type: application/json
 
 ### 管理员删除用户 / Admin delete user
 DELETE http://localhost:8080/admin/users/spring01
+Authorization: {{adminToken}}
 
-###
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "tom",
-  "password": "123456"
-}
-
-###
-GET http://localhost:8080/me
-Authorization: c
-
-### 不带 token 访问 /me / Access /me without token
-GET http://localhost:8080/me
-
-### 登录获取 token / Login and get token
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "tom",
-  "password": "123456"
-}
-
-### 带 token 访问 /me / Access /me with token
-GET http://localhost:8080/me
-Authorization: e68f5bbf-753f-48ed-8cc7-52b0fb901a84
-
-###
+### USER token 访问管理员接口，应该失败 / USER access admin API should fail
 GET http://localhost:8080/admin/users
-Authorization: 3c2f999a-86a3-433e-83f9-1902a55f71d6
+Authorization: {{userToken}}
+
+### 参数校验失败：用户名为空，密码太短 / Validation error
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "",
+  "password": "123"
+}
