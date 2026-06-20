@@ -4,8 +4,12 @@ package com.study.usermanagement.service;
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.dao.UserDao;
 import com.study.usermanagement.entity.User;
+import com.study.usermanagement.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -22,7 +26,7 @@ public class UserService {
         if (user == null) {
             return new Result(false, "没有该用户", null);
         }
-        return new Result(true, "查询成功", user.getUsername());
+        return new Result(true, "查询成功", new UserVO(user.getUsername()));
     }
 
     //如果 password 长度小于 6 或大于 12
@@ -100,7 +104,13 @@ public class UserService {
     }
 
     public Result findAll() {
-        return new Result(true, "查询成功", userDao.findAll());
+        List<User> users = userDao.findAll();
+        List<UserVO> userVOList = new ArrayList<>();
+
+        for (User user : users) {
+            userVOList.add(new UserVO(user.getUsername()));
+        }
+        return new Result(true, "查询成功", userVOList);
     }
 
     public Result login(User user) {
