@@ -1,7 +1,14 @@
 package com.study.usermanagement.entity;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class User {
+    @NotBlank(message = "用户名不能为空")
     private String username;
+
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 6,max = 12, message = "密码长度必须是6到12位")
     private String password;
 
     public User() {

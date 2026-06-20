@@ -42,3 +42,11 @@ Content-Type: application/json
 ### 删除用户 / Delete user
 DELETE http://localhost:8080/users/spring01
 
+### 测试参数校验 / Validation test
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "",
+  "password": "123"
+}
