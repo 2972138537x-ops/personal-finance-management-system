@@ -80,3 +80,36 @@ Content-Type: application/json
 
 ### 管理员删除用户 / Admin delete user
 DELETE http://localhost:8080/admin/users/spring01
+
+###
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "tom",
+  "password": "123456"
+}
+
+###
+GET http://localhost:8080/me
+Authorization: c
+
+### 不带 token 访问 /me / Access /me without token
+GET http://localhost:8080/me
+
+### 登录获取 token / Login and get token
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "tom",
+  "password": "123456"
+}
+
+### 带 token 访问 /me / Access /me with token
+GET http://localhost:8080/me
+Authorization: e68f5bbf-753f-48ed-8cc7-52b0fb901a84
+
+###
+GET http://localhost:8080/admin/users
+Authorization: 3c2f999a-86a3-433e-83f9-1902a55f71d6

@@ -11,6 +11,18 @@ public class User {
     @Size(min = 6,max = 12, message = "密码长度必须是6到12位")
     private String password;
 
+    private String role;
+
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public String getRole() {
         return role;
     }
@@ -18,8 +30,6 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-
-    private String role;
 
     public User() {
     }

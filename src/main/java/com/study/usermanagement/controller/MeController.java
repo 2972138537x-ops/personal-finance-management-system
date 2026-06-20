@@ -2,6 +2,8 @@ package com.study.usermanagement.controller;
 
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.entity.User;
+import com.study.usermanagement.vo.UserVO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +15,14 @@ public class MeController {
     private  UserService userService;
 
     @GetMapping
-    public Result getMe(@RequestParam String username){
-        return userService.findByUsername(username);
+    public Result getMe(@RequestHeader("Authorization") String token){
+        return userService.findByToken(token);
     }
 
     @PutMapping("/password")
-    public Result changeMyPassword(@RequestParam String username,@RequestBody @Valid User user){
-        return userService.changePassword(username,user);
+    public Result changeMyPassword(HttpServletRequest request,@RequestBody @Valid User user){
+        User currentUser = (User) request.getAttribute("currentUser");
+        return userService.changePassword(currentUser.getUsername(), user);
     }
 
 

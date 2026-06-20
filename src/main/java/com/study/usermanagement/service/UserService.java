@@ -4,12 +4,14 @@ package com.study.usermanagement.service;
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.dao.UserDao;
 import com.study.usermanagement.entity.User;
+import com.study.usermanagement.vo.LoginVO;
 import com.study.usermanagement.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -126,8 +128,23 @@ public class UserService {
             if (!password.equals(user1.getPassword())) {
                 return new Result(false, "密码错误", null);
             }
-            return new Result(true, "登录成功", username);
+            String token = UUID.randomUUID().toString();
+            userDao.updateToken(username, token);
+            LoginVO loginVO = new LoginVO(user1.getUsername(), user1.getRole(), token);
+            return new Result(true, "登录成功", loginVO);
         }
         return new Result(false, "用户不存在", null);
+    }
+
+    public Result findByToken(String token) {
+        if (token == null || token.isEmpty()) {
+            return new Result(false, "请先登录", null);
+        }
+        User user = userDao.findByToken(token);
+        if (user == null) {
+            return new Result(false, "登录状态无效，请重新登录", null);
+        }
+
+        return new Result(true, "查询成功", new UserVO(user.getUsername(), user.getRole()));
     }
 }

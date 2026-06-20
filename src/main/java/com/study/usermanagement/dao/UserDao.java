@@ -13,23 +13,25 @@ public class UserDao {
     private JdbcTemplate jdbcTemplate;
 
     public List<User> findAll() {
-        String sql = "SELECT username, password, role FROM `user` ";
+        String sql = "SELECT username, password, role, token FROM `user` ";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             User user = new User();
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
             user.setRole(rs.getString("role"));
+            user.setToken(rs.getString("token"));
             return user;
         });
     }
 
     public User findByUsername(String username) {
-        String sql = "SELECT username, password,role FROM `user` WHERE username = ?";
+        String sql = "SELECT username, password, role, token FROM `user` WHERE username = ?";
         List<User> users = jdbcTemplate.query(sql, (rs, rowNum) -> {
             User user = new User();
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
             user.setRole(rs.getString("role"));
+            user.setToken(rs.getString("token"));
             return user;
         }, username);
         if (users.isEmpty()) {
@@ -39,7 +41,7 @@ public class UserDao {
     }
 
     public int insert(User user) {
-        String sql = "INSERT INTO `user`(username, password, role, register_date) VALUES(?, ?, 'USER', CURDATE())";
+        String sql = "INSERT INTO `user`(username, password, role,  register_date) VALUES(?, ?, 'USER', CURDATE())";
         return jdbcTemplate.update(sql, user.getUsername(), user.getPassword());
     }
 
@@ -51,5 +53,26 @@ public class UserDao {
     public int deleteByUsername(String username) {
         String sql = "DELETE FROM `user` WHERE username = ?";
         return jdbcTemplate.update(sql, username);
+    }
+
+    public int updateToken(String username, String token) {
+        String sql = "UPDATE `user` SET token = ? WHERE username = ?";
+        return jdbcTemplate.update(sql, token, username);
+    }
+
+    public User findByToken(String token) {
+        String sql = "SELECT username, password, role, token FROM `user` WHERE token = ?";
+        List<User> users = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            User user = new User();
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            user.setRole(rs.getString("role"));
+            user.setToken(rs.getString("token"));
+            return user;
+        }, token);
+        if (users.isEmpty()) {
+            return null;
+        }
+        return users.get(0);
     }
 }
