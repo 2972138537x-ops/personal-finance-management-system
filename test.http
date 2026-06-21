@@ -1,13 +1,16 @@
 ### 使用说明 / Notes
-### 1. 先运行登录接口，复制返回结果里的 token。
-### 2. 把 token 粘贴到下面的 adminToken 或 userToken。
-### 3. 再运行 /me 或 /admin/** 接口。
+### 1. 先运行“登录管理员”和“登录普通用户”接口。
+### 2. 从返回结果 data.token 里复制 token。
+### 3. 把 token 粘贴到下面的 adminToken / userToken。
+### 4. 再测试 /me 和 /admin/** 接口。
 
+@baseUrl = http://localhost:8080
 @adminToken = paste_admin_token_here
 @userToken = paste_user_token_here
 
-### 注册用户 / Register user
-POST http://localhost:8080/users
+
+### 01 注册用户 / Register user
+POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
@@ -15,17 +18,9 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### 登录管理员 tom，获取 ADMIN token / Login as admin
-POST http://localhost:8080/login
-Content-Type: application/json
 
-{
-  "username": "tom",
-  "password": "123456"
-}
-
-### 登录普通用户 alice，获取 USER token / Login as normal user
-POST http://localhost:8080/login
+### 02 登录普通用户 alice，获取 USER token / Login as normal user
+POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
@@ -33,42 +28,9 @@ Content-Type: application/json
   "password": "abc123"
 }
 
-### 不带 token 访问 /me，应该失败 / Access /me without token
-GET http://localhost:8080/me
 
-### 假 token 访问 /me，应该失败 / Access /me with invalid token
-GET http://localhost:8080/me
-Authorization: invalid-token
-
-### 带 ADMIN token 查看自己 / Access /me with admin token
-GET http://localhost:8080/me
-Authorization: {{adminToken}}
-
-### 带 USER token 查看自己 / Access /me with user token
-GET http://localhost:8080/me
-Authorization: {{userToken}}
-
-### 普通用户修改自己的密码 / Change my password
-PUT http://localhost:8080/me/password
-Authorization: {{userToken}}
-Content-Type: application/json
-
-{
-  "username": "alice",
-  "password": "abcdef"
-}
-
-### 管理员查询全部用户 / Admin get all users
-GET http://localhost:8080/admin/users
-Authorization: {{adminToken}}
-
-### 管理员查询单个用户 / Admin get user
-GET http://localhost:8080/admin/users/tom
-Authorization: {{adminToken}}
-
-### 管理员重置用户密码 / Admin reset password
-PUT http://localhost:8080/admin/users/tom/password
-Authorization: {{adminToken}}
+### 03 登录管理员 tom，获取 ADMIN token / Login as admin
+POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
@@ -76,16 +38,84 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### 管理员删除用户 / Admin delete user
-DELETE http://localhost:8080/admin/users/spring01
-Authorization: {{adminToken}}
 
-### USER token 访问管理员接口，应该失败 / USER access admin API should fail
-GET http://localhost:8080/admin/users
+### 04 不带 token 访问 /me，应该失败 / Access /me without token
+GET {{baseUrl}}/me
+
+
+### 05 使用错误 token 访问 /me，应该失败 / Access /me with invalid token
+GET {{baseUrl}}/me
+Authorization: invalid-token
+
+
+### 06 普通用户查看自己的信息 / USER access /me
+GET {{baseUrl}}/me
 Authorization: {{userToken}}
 
-### 参数校验失败：用户名为空，密码太短 / Validation error
-POST http://localhost:8080/users
+
+### 07 普通用户修改自己的密码 / USER change own password
+PUT {{baseUrl}}/me/password
+Authorization: {{userToken}}
+Content-Type: application/json
+
+{
+  "password": "abcdef"
+}
+
+
+### 08 使用新密码登录普通用户 / Login with new password
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "abcdef"
+}
+
+
+### 09 把普通用户密码改回 abc123 / Change user password back
+### 如果刚刚运行了 08，请先把 08 返回的新 token 复制到 userToken。
+PUT {{baseUrl}}/me/password
+Authorization: {{userToken}}
+Content-Type: application/json
+
+{
+  "password": "abc123"
+}
+
+
+### 10 USER token 访问管理员接口，应该失败 / USER access admin API should fail
+GET {{baseUrl}}/admin/users
+Authorization: {{userToken}}
+
+
+### 11 管理员查询全部用户 / ADMIN get all users
+GET {{baseUrl}}/admin/users
+Authorization: {{adminToken}}
+
+
+### 12 管理员查询单个用户 / ADMIN get one user
+GET {{baseUrl}}/admin/users/alice
+Authorization: {{adminToken}}
+
+
+### 13 管理员重置用户密码 / ADMIN reset user password
+PUT {{baseUrl}}/admin/users/alice/password
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+  "password": "abcdef"
+}
+
+
+### 14 管理员删除用户 / ADMIN delete user
+DELETE {{baseUrl}}/admin/users/spring01
+Authorization: {{adminToken}}
+
+
+### 15 参数校验失败：用户名为空，密码太短 / Validation error
+POST {{baseUrl}}/users
 Content-Type: application/json
 
 {

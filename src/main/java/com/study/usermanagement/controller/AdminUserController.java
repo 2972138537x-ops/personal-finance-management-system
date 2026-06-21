@@ -1,7 +1,7 @@
 package com.study.usermanagement.controller;
 
 import com.study.usermanagement.common.Result;
-import com.study.usermanagement.entity.User;
+import com.study.usermanagement.dto.PasswordRequest;
 import com.study.usermanagement.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ public class AdminUserController {
     }
 
     @PutMapping("/{username}/password")
-    public Result resetPassword(@PathVariable String username,@RequestBody @Valid User user){
-        return userService.changePassword(username,user);
+    public Result resetPassword(@PathVariable String username, @RequestBody @Valid PasswordRequest passwordRequest){
+        return userService.changeMyPassword(username,passwordRequest.getPassword());
     }
 
     @DeleteMapping("/{username}")

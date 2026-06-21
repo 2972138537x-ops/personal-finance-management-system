@@ -1,6 +1,7 @@
 package com.study.usermanagement.controller;
 
 import com.study.usermanagement.common.Result;
+import com.study.usermanagement.dto.PasswordRequest;
 import com.study.usermanagement.entity.User;
 import com.study.usermanagement.vo.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,9 +21,9 @@ public class MeController {
     }
 
     @PutMapping("/password")
-    public Result changeMyPassword(HttpServletRequest request,@RequestBody @Valid User user){
+    public Result changeMyPassword(HttpServletRequest request,@RequestBody @Valid PasswordRequest passwordRequest){
         User currentUser = (User) request.getAttribute("currentUser");
-        return userService.changePassword(currentUser.getUsername(), user);
+        return userService.changeMyPassword(currentUser.getUsername(), passwordRequest.getPassword());
     }
 
 

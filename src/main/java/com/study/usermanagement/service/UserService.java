@@ -69,7 +69,6 @@ public class UserService {
         if (username == null || username.isEmpty()) {
             return new Result(false, "用户名不能为空", null);
         }
-
         if (password == null || password.isEmpty()) {
             return new Result(false, "新密码不能为空", null);
         }
@@ -80,8 +79,27 @@ public class UserService {
         if (oldUser == null) {
             return new Result(false, "该用户名不存在", null);
         }
-
         int rows = userDao.updatePassword(username, password);
+        if (rows > 0) {
+            return new Result(true, "修改密码成功", username);
+        }
+        return new Result(false, "修改失败", null);
+    }
+
+    public Result changeMyPassword(String username, String newPassword) {
+        if (newPassword == null || newPassword.isEmpty()) {
+            return new Result(false, "新密码不能为空", null);
+        }
+        if (newPassword.length() < 6 || newPassword.length() > 12) {
+            return new Result(false, "新密码长度必须是6到12位", null);
+        }
+
+        User oldUser = userDao.findByUsername(username);
+        if (oldUser == null) {
+            return new Result(false, "该用户名不存在", null);
+        }
+
+        int rows = userDao.updatePassword(username, newPassword);
         if (rows > 0) {
             return new Result(true, "修改密码成功", username);
         }
