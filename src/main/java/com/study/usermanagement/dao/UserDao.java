@@ -82,4 +82,10 @@ public class UserDao {
         }
         return users.get(0);
     }
+
+    // 根据 username 清空 token，表示用户退出登录
+    public int clearToken(String username) {
+        String sql = "UPDATE `user` SET token = NULL WHERE username = ?";
+        return jdbcTemplate.update(sql, username);
+    }
 }

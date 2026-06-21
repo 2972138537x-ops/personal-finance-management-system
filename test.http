@@ -49,8 +49,8 @@ Authorization: invalid-token
 
 
 ### 06 普通用户查看自己的信息 / USER access /me
-GET {{baseUrl}}/me
-Authorization: {{userToken}}
+GET http://localhost:8080/me
+Authorization: c9409153-bf8b-4f10-be3c-2c3a73b687c9
 
 
 ### 07 普通用户修改自己的密码 / USER change own password
@@ -122,3 +122,7 @@ Content-Type: application/json
   "username": "",
   "password": "123"
 }
+
+### 退出登录 / Logout
+POST http://localhost:8080/logout
+Authorization: c9409153-bf8b-4f10-be3c-2c3a73b687c9

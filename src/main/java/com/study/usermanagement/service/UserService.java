@@ -173,4 +173,15 @@ public class UserService {
 
         return new Result(true, "查询成功", new UserVO(user.getUsername(), user.getRole()));
     }
+
+    // 退出登录：清空当前用户的 token
+    public Result logout(String username) {
+        int rows = userDao.clearToken(username);
+
+        if (rows > 0) {
+            return new Result(true, "退出登录成功", null);
+        }
+
+        return new Result(false, "退出登录失败", null);
+    }
 }
