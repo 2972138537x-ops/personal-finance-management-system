@@ -126,3 +126,82 @@ Content-Type: application/json
 ### 退出登录 / Logout
 POST http://localhost:8080/logout
 Authorization: c9409153-bf8b-4f10-be3c-2c3a73b687c9
+
+
+### 01 登录普通用户 alice，获取 USER token
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "abc123"
+}
+
+### 02 普通用户查看自己信息，测试 findByToken
+GET http://localhost:8080/me
+Authorization: daf83338-e8c1-4d83-a1c5-f2846e20c575
+
+### 03 登录管理员 tom，获取 ADMIN token
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "tom",
+  "password": "123456"
+}
+
+### 04 管理员查询全部用户，测试 findAll
+GET http://localhost:8080/admin/users
+Authorization: 3788f66d-f3d7-4b43-a9b9-64c4153a8f21
+
+### 05 管理员查询 alice，测试 findByUsername
+GET http://localhost:8080/admin/users/alice
+Authorization: 64224aea-bfe2-42f8-8bb1-8e62bf57ca5d
+
+### 06 普通用户修改自己的密码，测试 updatePassword
+PUT http://localhost:8080/me/password
+Authorization: ea640867-c6e3-47a1-832f-4197839201c5
+Content-Type: application/json
+
+{
+  "password": "abcdef"
+}
+
+### 07 用新密码登录 alice，确认密码已修改
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "abcdef"
+}
+
+### 08 把 alice 密码改回 abc123
+PUT http://localhost:8080/me/password
+Authorization: 89a8c9cc-4b9d-4bc7-8de6-9dc308e5675d
+Content-Type: application/json
+
+{
+  "password": "abc123"
+}
+
+### 09 注册临时用户，测试 insert
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "mybatis_test",
+  "password": "123456"
+}
+
+### 10 管理员删除临时用户，测试 deleteByUsername
+DELETE http://localhost:8080/admin/users/mybatis_test
+Authorization: 525f19d7-4bb4-4ce2-ac61-b5d38e0f0bb5
+
+### 11 普通用户退出登录，测试 clearToken
+POST http://localhost:8080/logout
+Authorization: 583c0c16-2cfc-4ce0-a689-610027ed934a
+
+### 12 退出后用旧 token 访问 /me，应该失败
+GET http://localhost:8080/me
+Authorization: 583c0c16-2cfc-4ce0-a689-610027ed934a

@@ -2,8 +2,8 @@ package com.study.usermanagement.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.usermanagement.common.Result;
-import com.study.usermanagement.dao.UserDao;
 import com.study.usermanagement.entity.User;
+import com.study.usermanagement.mapper.UserMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
     @Autowired
-    private UserDao userDao;
+    private UserMapper userMapper;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -28,7 +28,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        User currentUser = userDao.findByToken(token);
+        User currentUser = userMapper.findByToken(token);
 
         if (currentUser == null) {
             writeResult(response, new Result(false, "登录状态无效，请重新登录", null));
