@@ -18,6 +18,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     private ObjectMapper objectMapper;
 
+    // 请求进入 Controller 前先执行：校验 token，并判断 /admin 接口是否需要管理员权限
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("Authorization");
@@ -42,6 +43,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    // 拦截器不能直接 return Result，所以手动把 Result 转成 JSON 写入响应
     private void writeResult(HttpServletResponse response, Result result) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(result));

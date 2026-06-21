@@ -14,6 +14,7 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    // 用户登录：账号密码正确时，Service 会生成 token 并返回给前端
     @PostMapping("/login")
     public Result login(@RequestBody @Valid User user){
         return userService.login(user);

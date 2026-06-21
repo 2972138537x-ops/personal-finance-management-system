@@ -20,6 +20,7 @@ public class UserController {
     }*/
 
     //POST   /users
+    // 注册用户：从 JSON 请求体接收 username/password，并触发参数校验
     @PostMapping
     public Result register(@RequestBody @Valid User user) {
         return userService.register(user);

@@ -11,6 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private AuthInterceptor authInterceptor;
 
+    // 注册拦截器：只有 /me、/me/**、/admin/** 这些接口需要先检查 token
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
