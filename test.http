@@ -246,3 +246,21 @@ Content-Type: application/json
   "name": "乱写",
   "type": "abc"
 }
+
+###
+GET http://localhost:8080/transaction-categories
+Authorization: 47843658-2053-49c5-9c8b-9a1b52a09b12
+
+### 修改自己的分类
+PUT http://localhost:8080/transaction-categories/2
+Authorization: cee2e088-d39f-4e5e-a439-a928ed6ba1cc
+Content-Type: application/json
+
+{
+  "name": "外食",
+  "type": "expense"
+}
+
+### 删除自己的分类
+DELETE http://localhost:8080/transaction-categories/1
+Authorization: 3f2b1fe0-962e-4fd3-a7c0-0e6bdc57cf03

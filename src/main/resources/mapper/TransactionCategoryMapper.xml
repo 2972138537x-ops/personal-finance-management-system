@@ -4,13 +4,27 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.usermanagement.mapper.TransactionCategoryMapper">
 
-    <insert id ="insert">
+    <insert id="insert">
         INSERT INTO transaction_category(user_id, name, type)
         VALUES(#{userId}, #{name}, #{type})
     </insert>
 
+    <select id="findByUserId" resultType="com.study.usermanagement.entity.TransactionCategory">
+        SELECT id, user_id AS userID, name, type
+        FROM transaction_category
+        WHERE user_id = #{userId}
+    </select>
 
+    <update id = "updateByIdAndUserId">
+        UPDATE transaction_category
+        SET name = #{category.name},
+            type = #{category.type}
+        WHERE id = #{id} AND user_id = #{userId}
+    </update>
 
-
+    <delete id = "deleteByIdAndUserId">
+        DELETE FROM transaction_category
+        WHERE id = #{id} AND user_id = #{userId}
+    </delete>
 
 </mapper>

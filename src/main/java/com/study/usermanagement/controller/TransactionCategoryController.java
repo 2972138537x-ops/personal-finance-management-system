@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import com.study.usermanagement.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transaction-categories")
@@ -22,9 +19,32 @@ public class TransactionCategoryController {
     @PostMapping
     public Result addCategory(HttpServletRequest request, @RequestBody @Valid TransactionCategory category) {
         User currentUser = (User) request.getAttribute("currentUser");
-        category.setUserId(currentUser.getId());
-        return transactionCategoryService.addCategory(category);
+        Integer userId = currentUser.getId();
+        return transactionCategoryService.addCategory(userId, category);
     }
 
+    //查询当前登录用户自己的分类
+    @GetMapping
+    public Result findMyCategories(HttpServletRequest request) {
+        User currentUser = (User) request.getAttribute("currentUser");
+        Integer userId = currentUser.getId();
+        return transactionCategoryService.findByUserId(userId);
+    }
+
+    //修改分类
+    @PutMapping("/{id}")
+    public Result updateMyCategory(@PathVariable Integer id,HttpServletRequest request, @RequestBody @Valid TransactionCategory category) {
+        User currentUser = (User) request.getAttribute("currentUser");
+        Integer userId = currentUser.getId();
+        return transactionCategoryService.updateByIdAndUserId(id, userId, category);
+    }
+
+    //删除分类
+    @DeleteMapping("/{id}")
+    public Result deleteMyCategory(@PathVariable Integer id,HttpServletRequest request) {
+        User currentUser = (User) request.getAttribute("currentUser");
+        Integer userId = currentUser.getId();
+        return transactionCategoryService.deleteByIdAndUserId(id, userId);
+    }
 
 }
