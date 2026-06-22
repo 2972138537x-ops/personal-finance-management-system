@@ -6,19 +6,19 @@
 <mapper namespace="com.study.usermanagement.mapper.UserMapper">
 
     <select id="findByUsername" resultType="com.study.usermanagement.entity.User">
-        SELECT username, password, role, token
+        SELECT id, username, password, role, token
         FROM `user`
         WHERE username = #{username}
     </select>
 
     <select id="findByToken" resultType="com.study.usermanagement.entity.User">
-        SELECT username, password, role, token
+        SELECT id, username, password, role, token
         FROM `user`
         WHERE token = #{token}
     </select>
 
     <select id="findAll" resultType="com.study.usermanagement.entity.User">
-        SELECT username, password, role, token
+        SELECT id, username, password, role, token
         FROM `user`
     </select>
 
@@ -49,5 +49,6 @@
         SET token = NULL
         WHERE username = #{username}
     </update>
+
 
 </mapper>

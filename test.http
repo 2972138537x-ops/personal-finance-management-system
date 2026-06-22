@@ -205,3 +205,44 @@ Authorization: 583c0c16-2cfc-4ce0-a689-610027ed934a
 ### 12 退出后用旧 token 访问 /me，应该失败
 GET http://localhost:8080/me
 Authorization: 583c0c16-2cfc-4ce0-a689-610027ed934a
+
+
+### 新增支出分类 / Add expense category
+POST http://localhost:8080/transaction-categories
+Authorization: 744e4daa-ca3e-4acf-a5d0-abd4a2ce38a4
+Content-Type: application/json
+
+{
+  "name": "餐饮",
+  "type": "expense"
+}
+
+### 新增收入分类 / Add income category
+POST http://localhost:8080/transaction-categories
+Authorization: 744e4daa-ca3e-4acf-a5d0-abd4a2ce38a4
+Content-Type: application/json
+
+{
+  "name": "工资",
+  "type": "income"
+}
+
+### 分类名为空，应该失败
+POST http://localhost:8080/transaction-categories
+Authorization: 744e4daa-ca3e-4acf-a5d0-abd4a2ce38a4
+Content-Type: application/json
+
+{
+  "name": "",
+  "type": "expense"
+}
+
+### 分类类型错误，应该失败
+POST http://localhost:8080/transaction-categories
+Authorization: 744e4daa-ca3e-4acf-a5d0-abd4a2ce38a4
+Content-Type: application/json
+
+{
+  "name": "乱写",
+  "type": "abc"
+}

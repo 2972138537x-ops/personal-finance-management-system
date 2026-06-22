@@ -4,16 +4,26 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class User {
+    private Integer id;
+
     @NotBlank(message = "用户名不能为空")
     private String username;
 
     @NotBlank(message = "密码不能为空")
-    @Size(min = 6,max = 12, message = "密码长度必须是6到12位")
+    @Size(min = 6, max = 12, message = "密码长度必须是6到12位")
     private String password;
 
     private String role;
 
     private String token;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     // 获取 token，token 用来表示用户登录状态
     public String getToken() {
@@ -40,9 +50,16 @@ public class User {
     }
 
     // 有参构造方法：方便自己 new User(username, password)
-    public User(String username, String password) {
+   /* public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }*/
+    public User(Integer id, String username, String password, String role, String token) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.token = token;
     }
 
     // 获取用户名
@@ -69,8 +86,11 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
+                "id=" + id +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 }

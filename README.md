@@ -201,7 +201,7 @@ spring.application.name=user-management-api
 
 spring.datasource.url=jdbc:mysql://localhost:3306/java_study?useSSL=false&serverTimezone=Asia/Tokyo
 spring.datasource.username=root
-spring.datasource.password=
+spring.datasource.password=root
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 mybatis.mapper-locations=classpath:mapper/*.xml
@@ -380,4 +380,3 @@ Personal Finance API
 - 删除收支记录
 - 按月份统计收入、支出、结余
 - 按类型统计支出
-

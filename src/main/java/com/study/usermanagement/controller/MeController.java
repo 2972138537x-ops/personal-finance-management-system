@@ -3,7 +3,6 @@ package com.study.usermanagement.controller;
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.dto.PasswordRequest;
 import com.study.usermanagement.entity.User;
-import com.study.usermanagement.vo.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
