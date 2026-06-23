@@ -1,10 +1,8 @@
 package com.study.usermanagement.mapper;
 
 import com.study.usermanagement.entity.TransactionCategory;
-import jakarta.validation.Valid;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -21,10 +19,14 @@ public interface TransactionCategoryMapper {
     //修改分类
     int updateByIdAndUserId(@Param("id") Integer id,
                             @Param("userId") Integer userId,
-                            @RequestBody @Valid @Param("category")TransactionCategory category);
+                            @Param("category") TransactionCategory category);
 
 
     //删除分类
-    int deleteByIdAndUserId(@Param("id")  Integer id,
+    int deleteByIdAndUserId(@Param("id") Integer id,
                             @Param("userId") Integer userId);
+
+    //分类id是否属于该用户
+    TransactionCategory findByIdAndUserId(@Param("id") Integer id,
+                                          @Param("userId") Integer userId);
 }

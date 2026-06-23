@@ -20,6 +20,9 @@ public class TransactionCategoryService {
 
     //添加收支分类
     public Result addCategory(Integer userId, TransactionCategory category) {
+        if (category == null) {
+            return new Result(false, "请求体不能为空", null);
+        }
         String name = category.getName();
         String type = category.getType();
         if (userId == null) {
@@ -37,7 +40,7 @@ public class TransactionCategoryService {
         category.setUserId(userId);
         int rows = transactionCategoryMapper.insert(category);
         if (rows > 0) {
-            return new Result(true, "新增分类成功", name);
+            return new Result(true, "新增分类成功", new TransactionCategoryVO(category.getId(), category.getName(), category.getType()));
         }
         return new Result(false, "新增分类失败", null);
     }
@@ -57,10 +60,13 @@ public class TransactionCategoryService {
 
     //修改分类
     public Result updateByIdAndUserId(Integer id, Integer userId, TransactionCategory category) {
+        if (category == null) {
+            return new Result(false, "请求体不能为空", null);
+        }
         String name = category.getName();
         String type = category.getType();
-        if(id == null){
-            return new Result(false,"分类id不能为空",null);
+        if (id == null) {
+            return new Result(false, "分类id不能为空", null);
         }
         if (userId == null) {
             return new Result(false, "userId不能为空", null);
@@ -83,8 +89,8 @@ public class TransactionCategoryService {
 
     //删除分类
     public Result deleteByIdAndUserId(Integer id, Integer userId) {
-        if(id == null){
-            return new Result(false,"分类id不能为空",null);
+        if (id == null) {
+            return new Result(false, "分类id不能为空", null);
         }
         if (userId == null) {
             return new Result(false, "userId不能为空", null);

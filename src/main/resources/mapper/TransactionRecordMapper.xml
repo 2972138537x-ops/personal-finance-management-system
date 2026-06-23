@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.usermanagement.mapper.TransactionRecordMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO transaction_record(user_id, category_id, type, amount, remark, record_date)
+        VALUES(#{userId}, #{categoryId}, #{type}, #{amount}, #{remark}, #{recordDate})
+    </insert>
+
+    <select id="findByUserId" resultType="com.study.usermanagement.entity.TransactionRecord">
+        SELECT id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
+        FROM transaction_record
+        WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateByIdAndUserId">
+        UPDATE transaction_record
+        SET category_id =#{record.categoryId},
+        type = #{record.type},
+        amount = #{record.amount},
+        remark = #{record.remark},
+        record_date = #{record.recordDate}
+        WHERE id = #{id} AND user_id = #{userId}
+    </update>
+
+    <delete id="deleteByIdAndUserId">
+        DELETE FROM transaction_record
+        WHERE id = #{id} AND user_id = #{userId}
+    </delete>
+
+    <select id="findByUserIdAndType" resultType="com.study.usermanagement.entity.TransactionRecord">
+        SELECT id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
+        FROM transaction_record
+        WHERE user_id = #{userId} AND type = #{type}
+    </select>
+
+
+    <select id="findByUserIdAndDateRange" resultType="com.study.usermanagement.entity.TransactionRecord">
+        SELECT id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
+        FROM transaction_record
+        WHERE user_id = #{userId} AND record_date BETWEEN #{startRecordDate} AND #{endOfRecordDate}
+    </select>
+
+
+</mapper>

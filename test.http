@@ -20,7 +20,7 @@ Content-Type: application/json
 
 
 ### 02 登录普通用户 alice，获取 USER token / Login as normal user
-POST {{baseUrl}}/login
+POST  http://localhost:8080/login
 Content-Type: application/json
 
 {
@@ -30,7 +30,7 @@ Content-Type: application/json
 
 
 ### 03 登录管理员 tom，获取 ADMIN token / Login as admin
-POST {{baseUrl}}/login
+POST http://localhost:8080/login
 Content-Type: application/json
 
 {
@@ -264,3 +264,334 @@ Content-Type: application/json
 ### 删除自己的分类
 DELETE http://localhost:8080/transaction-categories/1
 Authorization: 3f2b1fe0-962e-4fd3-a7c0-0e6bdc57cf03
+
+
+### =========================
+### 收支记录模块 / Transaction records
+### 使用前：
+### 1. 先登录普通用户，复制 token 到文件顶部的 @userToken。
+### 2. 先创建分类，再查询分类，确认 categoryId。
+### 3. 下面的 categoryId 要换成当前用户自己的分类 id。
+### =========================
+
+
+### 01 新增支出记录 / Add expense record
+POST http://localhost:8080/transaction-records
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+Content-Type: application/json
+
+{
+  "categoryId": 2,
+  "type": "expense",
+  "amount": 1200.50,
+  "remark": "午饭",
+  "recordDate": "2026-06-23"
+}
+
+
+### 02 新增收入记录 / Add income record
+POST {{baseUrl}}/transaction-records
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+Content-Type: application/json
+
+{
+  "categoryId": 3,
+  "type": "income",
+  "amount": 200000,
+  "remark": "工资",
+  "recordDate": "2026-06-23"
+}
+
+
+### 03 查询自己的全部收支记录 / Get my records
+GET {{baseUrl}}/transaction-records
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+
+
+### 04 按类型查询支出记录 / Get my expense records
+GET {{baseUrl}}/transaction-records/type/expense
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+
+
+### 05 按类型查询收入记录 / Get my income records
+GET {{baseUrl}}/transaction-records/type/income
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+
+
+### 06 按日期范围查询记录 / Get my records by date range
+GET {{baseUrl}}/transaction-records/range?startRecordDate=2026-06-01&endOfRecordDate=2026-06-30
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+
+
+### 07 修改自己的收支记录 / Update my record
+### 把路径里的 1 换成自己的 record id。
+PUT {{baseUrl}}/transaction-records/1
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+Content-Type: application/json
+
+{
+  "categoryId": 2,
+  "type": "expense",
+  "amount": 1500,
+  "remark": "晚饭",
+  "recordDate": "2026-06-23"
+}
+
+
+### 08 删除自己的收支记录 / Delete my record
+### 把路径里的 1 换成自己的 record id。
+DELETE {{baseUrl}}/transaction-records/1
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+
+
+### 09 不带 token 新增记录，应该失败 / Add record without token should fail
+POST {{baseUrl}}/transaction-records
+Content-Type: application/json
+
+{
+  "categoryId": 2,
+  "type": "expense",
+  "amount": 1200,
+  "remark": "没有token",
+  "recordDate": "2026-06-23"
+}
+
+
+### 10 分类 id 不存在，应该失败 / Category id not found should fail
+POST {{baseUrl}}/transaction-records
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+Content-Type: application/json
+
+{
+  "categoryId": 9999,
+  "type": "expense",
+  "amount": 1200,
+  "remark": "不存在的分类",
+  "recordDate": "2026-06-23"
+}
+
+
+### 11 类型和分类类型不一致，应该失败 / Record type and category type mismatch should fail
+### 例如 categoryId 是支出分类，但 type 写 income。
+POST {{baseUrl}}/transaction-records
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+Content-Type: application/json
+
+{
+  "categoryId": 2,
+  "type": "income",
+  "amount": 1200,
+  "remark": "类型不一致",
+  "recordDate": "2026-06-23"
+}
+
+
+### 12 金额为 0，应该失败 / Amount zero should fail
+POST {{baseUrl}}/transaction-records
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+Content-Type: application/json
+
+{
+  "categoryId": 2,
+  "type": "expense",
+  "amount": 0,
+  "remark": "金额为0",
+  "recordDate": "2026-06-23"
+}
+
+
+### 13 日期范围错误，应该失败 / Invalid date range should fail
+GET {{baseUrl}}/transaction-records/range?startRecordDate=2026-06-30&endOfRecordDate=2026-06-01
+Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+
+
+### =========================
+### Alice 空数据完整流程测试 / Alice full flow
+### 使用方法：
+### 1. 先运行 A01，复制返回的 data.token。
+### 2. 粘贴到文件顶部 @userToken = 后面。
+### 3. 按 A02 -> A03 -> A04 的顺序创建并查询分类。
+### 4. 把 A06 / A07 / A12 / A15 里的 categoryId 换成 A04 返回的真实分类 id。
+### 5. A08 查询记录后，把 A12 / A13 路径里的记录 id 换成真实记录 id。
+### =========================
+
+
+### A01 登录 alice，获取 token / Login alice and get token
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "abc123"
+}
+
+
+### A02 新增 alice 的支出分类：餐饮 / Add alice expense category
+POST http://localhost:8080/transaction-categories
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+Content-Type: application/json
+
+{
+  "name": "餐饮",
+  "type": "expense"
+}
+
+
+### A03 新增 alice 的收入分类：工资 / Add alice income category
+POST http://localhost:8080/transaction-categories
+Authorization: {{userToken}}
+Content-Type: application/json
+
+{
+  "name": "工资",
+  "type": "income"
+}
+
+
+### A04 查询 alice 自己的分类，确认分类 id / Get alice categories and check ids
+GET http://localhost:8080/transaction-categories
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+
+
+### A05 分类类型错误，应该失败 / Add category with invalid type should fail
+POST http://localhost:8080/transaction-categories
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+Content-Type: application/json
+
+{
+  "name": "乱写分类",
+  "type": "abc"
+}
+
+
+### A06 新增 alice 的支出记录 / Add alice expense record
+### 把 categoryId 换成 A04 返回的“餐饮”分类 id。
+POST http://localhost:8080/transaction-records
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+Content-Type: application/json
+
+{
+  "categoryId": 3,
+  "type": "expense",
+  "amount": 1200.50,
+  "remark": "午饭",
+  "recordDate": "2026-06-23"
+}
+
+
+### A07 新增 alice 的收入记录 / Add alice income record
+### 把 categoryId 换成 A04 返回的“工资”分类 id。
+POST http://localhost:8080/transaction-records
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+Content-Type: application/json
+
+{
+  "categoryId": 3,
+  "type": "income",
+  "amount": 200000,
+  "remark": "工资",
+  "recordDate": "2026-06-23"
+}
+
+
+### A08 查询 alice 自己的全部收支记录 / Get alice records
+GET http://localhost:8080/transaction-records
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+
+
+### A09 按类型查询 alice 的支出记录 / Get alice expense records
+GET http://localhost:8080/transaction-records/type/expense
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+
+
+### A10 按类型查询 alice 的收入记录 / Get alice income records
+GET http://localhost:8080/transaction-records/type/income
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+
+
+### A11 按日期范围查询 alice 的记录 / Get alice records by date range
+GET http://localhost:8080/transaction-records/range?startRecordDate=2026-06-01&endOfRecordDate=2026-06-30
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+
+
+### A12 修改 alice 自己的收支记录 / Update alice record
+### 把路径里的 1 换成 A08 返回的真实记录 id。
+### categoryId 也要换成 A04 返回的、属于 alice 的分类 id。
+PUT http://localhost:8080/transaction-records/1
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+Content-Type: application/json
+
+{
+  "categoryId": 3,
+  "type": "expense",
+  "amount": 1500,
+  "remark": "晚饭",
+  "recordDate": "2026-06-23"
+}
+
+
+### A13 删除 alice 自己的收支记录 / Delete alice record
+### 把路径里的 1 换成 A08 返回的真实记录 id。
+DELETE http://localhost:8080/transaction-records/2
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+
+
+### A14 使用不存在的分类 id 新增记录，应该失败 / Add record with invalid category id should fail
+POST http://localhost:8080/transaction-records
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+Content-Type: application/json
+
+{
+  "categoryId": 9999,
+  "type": "expense",
+  "amount": 1000,
+  "remark": "不存在的分类",
+  "recordDate": "2026-06-23"
+}
+
+
+### A15 类型和分类类型不一致，应该失败 / Type mismatch should fail
+### 例如 categoryId 是“餐饮 expense”，但 type 写成 income。
+POST http://localhost:8080/transaction-records
+Authorization:650e7e62-fe54-4785-841a-0587a85263cf
+Content-Type: application/json
+
+{
+  "categoryId": 3,
+  "type": "income",
+  "amount": 1000,
+  "remark": "类型不一致",
+  "recordDate": "2026-06-23"
+}
+
+
+### A16 日期范围错误，应该失败 / Invalid date range should fail
+GET http://localhost:8080/transaction-records/range?startRecordDate=2026-06-30&endOfRecordDate=2026-06-01
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+
+###
+GET http://localhost:8080/transaction-records
+Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+
+###
+POST http://localhost:8080/transaction-categories
+Authorization: 8e7a36d3-9bf2-4f6b-8028-bd59fbca8c5f
+Content-Type: application/json
+
+{
+  "name": "交通",
+  "type": "expense"
+}
+
+###
+POST http://localhost:8080/transaction-records
+Authorization: 8e7a36d3-9bf2-4f6b-8028-bd59fbca8c5f
+Content-Type: application/json
+
+{
+  "categoryId": 4,
+  "type": "expense",
+  "amount": 300,
+  "remark": "电车",
+  "recordDate": "2026-06-23"
+}
