@@ -649,3 +649,21 @@ Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
 ### 3. 按分类 id 查询 alice 自己的记录
 GET http://localhost:8080/transaction-records/category/1
 Authorization: 2955b25f-64e2-4e7c-9bf9-a8183dee2e6f
+
+###
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "abc123"
+}
+
+
+### 查询某月支出总额
+GET http://localhost:8080/transaction-stats/type-total?type=expense&year=2026&month=6
+Authorization: 9f636f94-4fbf-4447-84a9-0d3507415e57
+
+### 查询某月收入总额
+GET http://localhost:8080/transaction-stats/type-total?type=income&year=2026&month=6
+Authorization: 9f636f94-4fbf-4447-84a9-0d3507415e57

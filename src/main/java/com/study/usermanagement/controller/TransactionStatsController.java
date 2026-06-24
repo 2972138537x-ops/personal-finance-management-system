@@ -35,4 +35,17 @@ public class TransactionStatsController {
         Integer userId = currentUser.getId();
         return transactionStatsService.getStatsByCategoryAndType(userId, type, year, month);
     }
+
+    // 分类统计：按 income / expense 查询每个分类的合计金额
+    // カテゴリ別集計：income / expense ごとに各カテゴリの合計金額を取得する
+    @GetMapping("/type-total")
+    public Result getTypeTotal(HttpServletRequest request,
+                               @RequestParam String type,
+                               @RequestParam Integer year,
+                               @RequestParam Integer month) {
+        User currentUser = (User) request.getAttribute("currentUser");
+        Integer userId = currentUser.getId();
+        return transactionStatsService.sumAmountByMonthAndType(userId, type, year, month);
+    }
+
 }
