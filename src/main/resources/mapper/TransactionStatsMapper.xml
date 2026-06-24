@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.usermanagement.mapper.TransactionStatsMapper">
+    <!-- 月度类型总金额统计 / 月次タイプ別合計金額集計 -->
     <select id="sumAmountByMonthAndType" resultType="java.math.BigDecimal">
         SELECT IFNULL(sum(amount), 0)
         FROM transaction_record
@@ -12,6 +13,7 @@
         AND MONTH(record_date) = #{month}
     </select>
 
+    <!-- 分类金额统计 / カテゴリ別金額集計 -->
     <select id="sumByCategoryAndType" resultType="com.study.usermanagement.vo.CategoryStatsVO">
         SELECT transaction_category.name AS categoryName, IFNULL(SUM(transaction_record.amount), 0) AS totalAmount
         FROM transaction_record
@@ -24,6 +26,4 @@
         AND MONTH(transaction_record.record_date) = #{month}
         GROUP BY transaction_category.id,  transaction_category.name
     </select>
-
-
 </mapper>

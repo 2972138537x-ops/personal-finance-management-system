@@ -22,7 +22,8 @@ public class TransactionRecordService {
     @Autowired
     private TransactionCategoryMapper transactionCategoryMapper;
 
-    //新增收支记录
+    // 新增收支记录：先确认分类属于当前用户，再保存记录
+    // 収支記録追加：カテゴリがログイン中ユーザーのものか確認してから保存する
     public Result addRecord(Integer userId, TransactionRecord record) {
         if (record == null) {
             return new Result(false, "请求体不能为空", null);
@@ -65,7 +66,8 @@ public class TransactionRecordService {
         return new Result(false, "新增收支记录失败", null);
     }
 
-    //查询当前登录用户自己的收支记录
+    // 查询当前登录用户自己的全部收支记录，并转换成 VO 返回
+    // ログイン中ユーザー本人の全収支記録を取得し、VO に変換して返す
     public Result findByUserId(Integer userId) {
         if (userId == null) {
             return new Result(false, "登录状态异常，请重新登录", null);
@@ -79,7 +81,8 @@ public class TransactionRecordService {
         return new Result(true, "查询成功", recordsVO);
     }
 
-    //修改自己的收支记录
+    // 修改当前登录用户自己的收支记录：只能修改属于自己的记录
+    // ログイン中ユーザー本人の収支記録を更新する：本人の記録だけ更新できる
     public Result updateByIdAndUserId(Integer id, Integer userId, TransactionRecord record) {
         if (record == null) {
             return new Result(false, "请求体不能为空", null);
@@ -123,7 +126,8 @@ public class TransactionRecordService {
         return new Result(false, "修改收支记录失败", null);
     }
 
-    //删除自己的收支记录
+    // 删除当前登录用户自己的收支记录：用记录 id 和 userId 双重限制
+    // ログイン中ユーザー本人の収支記録を削除する：記録IDとuserIdで本人の記録に限定する
     public Result deleteByIdAndUserId(Integer id, Integer userId) {
         if (id == null) {
             return new Result(false, "收支记录id不能为空", null);
@@ -138,7 +142,8 @@ public class TransactionRecordService {
         return new Result(false, "删除收支记录失败", null);
     }
 
-    //按类型查询自己的收支记录
+    // 按类型查询自己的收支记录：type 只能是 income 或 expense
+    // タイプ別に本人の収支記録を取得する：type は income または expense のみ
     public Result findByUserIdAndType(Integer userId, String type) {
         if (userId == null) {
             return new Result(false, "userId不能为空", null);
@@ -158,7 +163,8 @@ public class TransactionRecordService {
         return new Result(true, "根据收支类型，查询记录成功", recordsVO);
     }
 
-    //按日期范围查询自己的收支记录
+    // 按日期范围查询自己的收支记录：开始日期不能晚于结束日期
+    // 日付範囲で本人の収支記録を取得する：開始日は終了日より後にできない
     public Result findByUserIdAndDateRange(Integer userId, LocalDate startRecordDate, LocalDate endOfRecordDate) {
         if (userId == null) {
             return new Result(false, "userId不能为空", null);
@@ -178,12 +184,14 @@ public class TransactionRecordService {
         return new Result(true, "按日期范围查询成功", recordsVO);
     }
 
-    //分类id是否属于该用户
+    // 检查分类 id 是否属于当前用户
+    // カテゴリIDがログイン中ユーザーのものか確認する
     public TransactionCategory findByIdAndUserId(Integer categoryId, Integer userId) {
         return transactionCategoryMapper.findByIdAndUserId(categoryId, userId);
     }
 
-    //某个分类下面的具体收支记录
+    // 查询某个分类下面的具体收支记录
+    // 指定カテゴリに属する具体的な収支記録を取得する
     public Result findByUserIdAndCategoryId(Integer userId, Integer categoryId) {
         if (userId == null) {
             return new Result(false, "userId不能为空", null);

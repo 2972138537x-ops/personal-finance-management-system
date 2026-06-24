@@ -4,17 +4,20 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.usermanagement.mapper.TransactionRecordMapper">
 
+    <!-- 新增收支记录 / 収支記録を追加する -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO transaction_record(user_id, category_id, type, amount, remark, record_date)
         VALUES(#{userId}, #{categoryId}, #{type}, #{amount}, #{remark}, #{recordDate})
     </insert>
 
+    <!-- 查询当前登录用户自己的全部收支记录 / ログイン中ユーザー本人の全収支記録を取得する -->
     <select id="findByUserId" resultType="com.study.usermanagement.entity.TransactionRecord">
         SELECT id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
         FROM transaction_record
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 修改当前登录用户自己的收支记录 / ログイン中ユーザー本人の収支記録を更新する -->
     <update id="updateByIdAndUserId">
         UPDATE transaction_record
         SET category_id =#{record.categoryId},
@@ -25,24 +28,27 @@
         WHERE id = #{id} AND user_id = #{userId}
     </update>
 
+    <!-- 删除当前登录用户自己的收支记录 / ログイン中ユーザー本人の収支記録を削除する -->
     <delete id="deleteByIdAndUserId">
         DELETE FROM transaction_record
         WHERE id = #{id} AND user_id = #{userId}
     </delete>
 
+    <!-- 按类型查询自己的收支记录 / タイプ別に本人の収支記録を取得する -->
     <select id="findByUserIdAndType" resultType="com.study.usermanagement.entity.TransactionRecord">
         SELECT id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
         FROM transaction_record
         WHERE user_id = #{userId} AND type = #{type}
     </select>
 
-
+    <!-- 按日期范围查询自己的收支记录 / 日付範囲で本人の収支記録を取得する -->
     <select id="findByUserIdAndDateRange" resultType="com.study.usermanagement.entity.TransactionRecord">
         SELECT id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
         FROM transaction_record
         WHERE user_id = #{userId} AND record_date BETWEEN #{startRecordDate} AND #{endOfRecordDate}
     </select>
 
+    <!-- 按分类 id 查询该分类下的具体收支记录 / カテゴリIDで、そのカテゴリに属する本人の収支記録を取得する -->
     <select id="findByUserIdAndCategoryId" resultType="com.study.usermanagement.entity.TransactionRecord">
         SELECT transaction_record.id,
         transaction_record.user_id AS userId,

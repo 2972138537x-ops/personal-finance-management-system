@@ -12,31 +12,27 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionStatsController {
     @Autowired
     private TransactionStatsService transactionStatsService;
-    //月度总览，根据用户id查询某月 总收入、总支出，以及结余
+
+    // 月度总览：统计当前登录用户某月的总收入、总支出和结余
+    // 月次サマリー：ログイン中ユーザーの指定月の収入合計、支出合計、残高を集計する
     @GetMapping("/month")
     public Result getMonthlyStats(HttpServletRequest request,
                                   @RequestParam Integer year,
-                                  @RequestParam Integer month){
+                                  @RequestParam Integer month) {
         User currentUser = (User) request.getAttribute("currentUser");
         Integer userId = currentUser.getId();
-        return transactionStatsService.getMonthlyStats(userId,year,month);
+        return transactionStatsService.getMonthlyStats(userId, year, month);
     }
 
+    // 分类统计：按收入或支出类型，统计某月每个分类的总金额
+    // カテゴリ別集計：収入または支出タイプごとに、指定月の各カテゴリ合計金額を集計する
     @GetMapping("/category/{type}")
-    //按type统计,统计某个月，每个type 每个分类名花了多少钱
     public Result getStatsByCategoryAndType(HttpServletRequest request,
                                             @PathVariable String type,
                                             @RequestParam Integer year,
-                                            @RequestParam Integer month){
+                                            @RequestParam Integer month) {
         User currentUser = (User) request.getAttribute("currentUser");
         Integer userId = currentUser.getId();
         return transactionStatsService.getStatsByCategoryAndType(userId, type, year, month);
     }
-
-
-
-
-
-
-
 }
