@@ -1,5 +1,7 @@
 package com.study.usermanagement.vo;
 
+// 登录结果展示对象：登录成功后返回用户名、角色和 token
+// ログイン結果表示用オブジェクト：ログイン成功後にユーザー名、権限、token を返す
 public class LoginVO {
     private String username;
     private String role;

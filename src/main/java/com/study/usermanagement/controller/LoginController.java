@@ -16,12 +16,14 @@ public class LoginController {
     private UserService userService;
 
     // 用户登录：账号密码正确时，Service 会生成 token 并返回给前端
+    // ログイン：ユーザー名とパスワードが正しい場合、Service が token を生成して返す
     @PostMapping("/login")
-    public Result login(@RequestBody @Valid User user){
+    public Result login(@RequestBody @Valid User user) {
         return userService.login(user);
     }
 
     // 退出登录：从 request 中取出拦截器保存的 currentUser，然后清空 token
+    // ログアウト：Interceptor が request に保存した currentUser を取り出し、token をクリアする
     @PostMapping("/logout")
     public Result logout(HttpServletRequest request) {
         User currentUser = (User) request.getAttribute("currentUser");

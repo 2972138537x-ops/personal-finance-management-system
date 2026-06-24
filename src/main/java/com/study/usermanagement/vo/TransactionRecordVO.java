@@ -4,6 +4,8 @@ package com.study.usermanagement.vo;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+// 收支记录响应对象：给前端看的记录数据，包含分类名，不直接暴露 categoryId
+// 取引記録レスポンス：画面表示用データ。categoryId ではなくカテゴリ名を返す
 public class TransactionRecordVO {
     private Integer id;
     private String categoryName;

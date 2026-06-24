@@ -1,5 +1,7 @@
 package com.study.usermanagement.vo;
 
+// 用户展示对象：不返回 password，只返回前端需要看的用户信息
+// ユーザー表示用オブジェクト：password は返さず、フロントに必要なユーザー情報だけを返す
 public class UserVO {
     private String username;
     private String role;
@@ -9,7 +11,7 @@ public class UserVO {
     }
 
     // 有参构造方法：封装要返回给前端看的 username 和 role
-    public UserVO(String username,String role) {
+    public UserVO(String username, String role) {
         this.username = username;
         this.role = role;
     }

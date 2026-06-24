@@ -1,5 +1,7 @@
 package com.study.usermanagement.common;
 
+// 统一返回结果：所有接口都用 success、message、data 返回给前端
+// 共通レスポンス：すべてのAPIは success、message、data の形式でフロントへ返す
 public class Result {
     private boolean success;
     private String message;

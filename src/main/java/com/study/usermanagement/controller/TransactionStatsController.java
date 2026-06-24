@@ -36,8 +36,8 @@ public class TransactionStatsController {
         return transactionStatsService.getStatsByCategoryAndType(userId, type, year, month);
     }
 
-    // 分类统计：按 income / expense 查询每个分类的合计金额
-    // カテゴリ別集計：income / expense ごとに各カテゴリの合計金額を取得する
+    // 类型总额：统计某月 income 或 expense 的总金额
+    // タイプ別合計：指定月の income または expense の合計金額を集計する
     @GetMapping("/type-total")
     public Result getTypeTotal(HttpServletRequest request,
                                @RequestParam String type,

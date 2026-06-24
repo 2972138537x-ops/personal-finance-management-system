@@ -1,5 +1,7 @@
 package com.study.usermanagement.vo;
 
+// 收支分类展示对象：只返回前端需要看的分类信息
+// 収支カテゴリ表示用オブジェクト：フロントに見せるカテゴリ情報だけを返す
 public class TransactionCategoryVO {
     private Integer id;
     private String name;

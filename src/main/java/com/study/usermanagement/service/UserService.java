@@ -18,9 +18,8 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    //username 为空 -> 查询用户名不能为空
-    //否则 -> 查询成功
     // 根据用户名查询用户；返回 UserVO，避免把 password 返回给前端
+    // ユーザー名でユーザーを検索する。password を返さないように UserVO に変換する
     public Result findByUsername(String username) {
         if (username == null || username.isEmpty()) {
             return new Result(false, "查询用户名不能为空", null);
@@ -32,13 +31,8 @@ public class UserService {
         return new Result(true, "查询成功", new UserVO(user.getUsername(), user.getRole()));
     }
 
-    //如果 password 长度小于 6 或大于 12
-    //返回 Result(false, "密码长度必须是6到12位", null)
-    //否则
-    //返回 Result(true, "注册成功", user.getUsername())
-    //如果 password 是 null
-    //返回 Result(false, "密码不能为空", null)
     // 注册用户：校验用户名和密码，再判断用户名是否已存在，最后插入数据库
+    // ユーザー登録：ユーザー名とパスワードを検証し、重複を確認してから DB に登録する
     public Result register(User user) {
         String username = user.getUsername();
         String password = user.getPassword();
@@ -62,11 +56,8 @@ public class UserService {
         return new Result(false, "注册失败", null);
     }
 
-    //1. username 不能为空
-    //2. 新密码 password 不能为空
-    //3. 新密码长度必须是 6 到 12 位
-    //4. 如果都没问题，返回修改密码成功
     // 修改密码旧写法：从 User 对象里取 password，目前主要保留作学习对比
+    // パスワード変更の旧実装：User オブジェクトから password を取得する。学習比較用として残している
     public Result changePassword(String username, User user) {
         String password = user.getPassword();
         if (username == null || username.isEmpty()) {
@@ -90,6 +81,7 @@ public class UserService {
     }
 
     // 修改密码新写法：username 表示要修改谁，newPassword 表示新密码
+    // パスワード変更の新実装：username は対象ユーザー、newPassword は新しいパスワードを表す
     public Result changeMyPassword(String username, String newPassword) {
         if (newPassword == null || newPassword.isEmpty()) {
             return new Result(false, "新密码不能为空", null);
@@ -110,9 +102,8 @@ public class UserService {
         return new Result(false, "修改失败", null);
     }
 
-    //username 为空 -> 删除用户名不能为空
-    //否则 -> 删除成功
     // 删除用户：先确认用户存在，再执行 delete
+    // ユーザー削除：対象ユーザーが存在することを確認してから delete を実行する
     public Result deleteByUsername(String username) {
         if (username == null || username.isEmpty()) {
             return new Result(false, "删除用户名不能为空", null);
@@ -129,16 +120,18 @@ public class UserService {
     }
 
     // 查询全部用户：把 User 列表转换成 UserVO 列表，避免返回密码
+    // 全ユーザー取得：User のリストを UserVO に変換し、password を返さない
     public Result findAll() {
         List<User> users = userMapper.findAll();
         List<UserVO> userVOList = new ArrayList<>();
         for (User user : users) {
-            userVOList.add(new UserVO(user.getUsername(),user.getRole()));
+            userVOList.add(new UserVO(user.getUsername(), user.getRole()));
         }
         return new Result(true, "查询成功", userVOList);
     }
 
     // 登录：校验账号密码，成功后生成 token，保存到数据库并返回 LoginVO
+    // ログイン：ユーザー名とパスワードを検証し、成功したら token を生成して DB に保存し、LoginVO を返す
     public Result login(User user) {
         String username = user.getUsername();
         String password = user.getPassword();
@@ -162,6 +155,7 @@ public class UserService {
     }
 
     // 根据 token 查询当前登录用户，常用于 /me 接口
+    // token で現在ログイン中のユーザーを検索する。主に /me API で使用する
     public Result findByToken(String token) {
         if (token == null || token.isEmpty()) {
             return new Result(false, "请先登录", null);
@@ -175,6 +169,7 @@ public class UserService {
     }
 
     // 退出登录：清空当前用户的 token
+    // ログアウト：現在ユーザーの token をクリアする
     public Result logout(String username) {
         int rows = userMapper.clearToken(username);
 

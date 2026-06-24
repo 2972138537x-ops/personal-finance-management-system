@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+// 收支记录实体：对应 transaction_record 表
+// 収支記録エンティティ：transaction_record テーブルに対応する
 public class TransactionRecord {
     private Integer id;
     private Integer userId;

@@ -5,45 +5,53 @@
 
 <mapper namespace="com.study.usermanagement.mapper.UserMapper">
 
+    <!-- 根据用户名查询用户 / ユーザー名でユーザーを検索する -->
     <select id="findByUsername" resultType="com.study.usermanagement.entity.User">
         SELECT id, username, password, role, token
         FROM `user`
         WHERE username = #{username}
     </select>
 
+    <!-- 根据 token 查询用户 / token でユーザーを検索する -->
     <select id="findByToken" resultType="com.study.usermanagement.entity.User">
         SELECT id, username, password, role, token
         FROM `user`
         WHERE token = #{token}
     </select>
 
+    <!-- 查询所有用户 / 全ユーザーを取得する -->
     <select id="findAll" resultType="com.study.usermanagement.entity.User">
         SELECT id, username, password, role, token
         FROM `user`
     </select>
 
+    <!-- 新增普通用户，默认 role 是 USER / 一般ユーザーを登録し、role は USER にする -->
     <insert id="insert">
         INSERT INTO `user`(username, password, role, register_date)
         VALUES(#{username}, #{password}, 'USER', CURDATE())
     </insert>
 
+    <!-- 根据 username 修改密码 / username を条件にパスワードを更新する -->
     <update id="updatePassword">
         UPDATE `user`
         SET password = #{password}
         WHERE username = #{username}
     </update>
 
+    <!-- 根据 username 删除用户 / username を条件にユーザーを削除する -->
     <delete id="deleteByUsername">
         DELETE FROM `user`
         WHERE username = #{username}
     </delete>
 
+    <!-- 登录成功后保存 token / ログイン成功後に token を保存する -->
     <update id="updateToken">
         UPDATE `user`
         SET token = #{token}
         WHERE username = #{username}
     </update>
 
+    <!-- 退出登录时清空 token / ログアウト時に token を NULL にする -->
     <update id="clearToken">
         UPDATE `user`
         SET token = NULL

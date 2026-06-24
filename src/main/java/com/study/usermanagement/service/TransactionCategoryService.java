@@ -4,11 +4,8 @@ import com.study.usermanagement.common.Result;
 import com.study.usermanagement.entity.TransactionCategory;
 import com.study.usermanagement.mapper.TransactionCategoryMapper;
 import com.study.usermanagement.vo.TransactionCategoryVO;
-import jakarta.validation.Valid;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +15,8 @@ public class TransactionCategoryService {
     @Autowired
     private TransactionCategoryMapper transactionCategoryMapper;
 
-    //添加收支分类
+    // 添加收支分类：同一个用户不能重复创建同名同类型分类
+    // 収支カテゴリ追加：同じユーザーは同名・同タイプのカテゴリを重複作成できない
     public Result addCategory(Integer userId, TransactionCategory category) {
         if (category == null) {
             return new Result(false, "请求体不能为空", null);
@@ -50,7 +48,8 @@ public class TransactionCategoryService {
         return new Result(false, "新增分类失败", null);
     }
 
-    //查询当前登录用户自己的分类
+    // 查询当前登录用户自己的分类，并转换成 VO 返回
+    // ログイン中ユーザー本人のカテゴリを取得し、VO に変換して返す
     public Result findByUserId(Integer userId) {
         if (userId == null) {
             return new Result(false, "登录状态异常，请重新登录", null);
@@ -63,7 +62,8 @@ public class TransactionCategoryService {
         return new Result(true, "查询成功", categoryVOList);
     }
 
-    //修改分类
+    // 修改分类：只能修改属于当前登录用户自己的分类
+    // カテゴリ更新：ログイン中ユーザー本人のカテゴリだけ更新できる
     public Result updateByIdAndUserId(Integer id, Integer userId, TransactionCategory category) {
         if (category == null) {
             return new Result(false, "请求体不能为空", null);
@@ -97,7 +97,8 @@ public class TransactionCategoryService {
         return new Result(false, "修改失败", null);
     }
 
-    //删除分类
+    // 删除分类：只能删除当前登录用户自己的分类
+    // カテゴリ削除：ログイン中ユーザー本人のカテゴリだけ削除できる
     public Result deleteByIdAndUserId(Integer id, Integer userId) {
         if (id == null) {
             return new Result(false, "分类id不能为空", null);

@@ -2,6 +2,8 @@ package com.study.usermanagement.vo;
 
 import java.math.BigDecimal;
 
+// 月度统计响应对象：收入合计、支出合计、结余
+// 月別集計レスポンス：収入合計、支出合計、残高
 public class MonthlyStatsVO {
     private BigDecimal incomeTotal;
     private BigDecimal expenseTotal;

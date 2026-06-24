@@ -2,6 +2,8 @@ package com.study.usermanagement.entity;
 
 import jakarta.validation.constraints.NotBlank;
 
+// 收支分类实体：对应 transaction_category 表
+// 収支カテゴリエンティティ：transaction_category テーブルに対応する
 public class TransactionCategory {
     private Integer id;
     private Integer userId;

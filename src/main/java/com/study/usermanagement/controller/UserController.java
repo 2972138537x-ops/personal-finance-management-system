@@ -13,33 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService userService;
-    //GET    /users/{username}
-   /* @GetMapping("/{username}")
-    public Result searchUsername(@PathVariable String username) {
-        return userService.findByUsername(username);
-    }*/
 
-    //POST   /users
     // 注册用户：从 JSON 请求体接收 username/password，并触发参数校验
+    // ユーザー登録：JSONリクエストボディから username/password を受け取り、入力チェックを行う
     @PostMapping
     public Result register(@RequestBody @Valid User user) {
         return userService.register(user);
     }
-
-    /*//PUT    /users/{username}/password
-    @PutMapping("/{username}/password")
-    public Result changePassword(@PathVariable String username, @RequestBody @Valid User user) {
-        return userService.changePassword(username,user);
-    }
-
-    //DELETE /users/{username}
-    @DeleteMapping("/{username}")
-    public Result deleteUser(@PathVariable String username) {
-        return userService.deleteByUsername(username);
-    }
-
-    @GetMapping
-    public Result findAll() {
-        return userService.findAll();
-    }*/
 }

@@ -4,17 +4,20 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.usermanagement.mapper.TransactionCategoryMapper">
 
+    <!-- 新增收支分类 / 収支カテゴリを追加する -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO transaction_category(user_id, name, type)
         VALUES(#{userId}, #{name}, #{type})
     </insert>
 
+    <!-- 查询当前登录用户自己的分类 / ログイン中ユーザー本人のカテゴリを取得する -->
     <select id="findByUserId" resultType="com.study.usermanagement.entity.TransactionCategory">
         SELECT id, user_id AS userId, name, type
         FROM transaction_category
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 修改当前登录用户自己的分类 / ログイン中ユーザー本人のカテゴリを更新する -->
     <update id="updateByIdAndUserId">
         UPDATE transaction_category
         SET name = #{category.name},
@@ -22,17 +25,20 @@
         WHERE id = #{id} AND user_id = #{userId}
     </update>
 
+    <!-- 删除当前登录用户自己的分类 / ログイン中ユーザー本人のカテゴリを削除する -->
     <delete id="deleteByIdAndUserId">
         DELETE FROM transaction_category
         WHERE id = #{id} AND user_id = #{userId}
     </delete>
 
+    <!-- 判断分类是否属于当前登录用户 / カテゴリがログイン中ユーザーのものか確認する -->
     <select id="findByIdAndUserId" resultType="com.study.usermanagement.entity.TransactionCategory">
         SELECT id, user_id AS userId, name, type
         FROM transaction_category
         WHERE id = #{id} AND user_id = #{userId}
     </select>
 
+    <!-- 检查同一用户是否已有同名同类型分类 / 同じユーザーに同名・同タイプのカテゴリが存在するか確認する -->
     <select id="findByUserIdAndNameAndType" resultType="com.study.usermanagement.entity.TransactionCategory">
         SELECT id, user_id AS userId, name, type
         FROM transaction_category
