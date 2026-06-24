@@ -29,4 +29,11 @@ public interface TransactionCategoryMapper {
     //分类id是否属于该用户
     TransactionCategory findByIdAndUserId(@Param("id") Integer id,
                                           @Param("userId") Integer userId);
+
+    //新增分类时，检查当前用户是否已经有同名同类型分类。
+    TransactionCategory findByUserIdAndNameAndType(
+            @Param("userId") Integer userId,
+            @Param("name") String name,
+            @Param("type") String type
+    );
 }

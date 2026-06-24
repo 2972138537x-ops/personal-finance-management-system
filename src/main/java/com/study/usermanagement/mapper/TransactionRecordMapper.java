@@ -2,6 +2,7 @@ package com.study.usermanagement.mapper;
 
 import com.study.usermanagement.entity.TransactionCategory;
 import com.study.usermanagement.entity.TransactionRecord;
+import com.study.usermanagement.vo.TransactionRecordVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,6 +36,8 @@ public interface TransactionRecordMapper {
                                                      @Param("startRecordDate") LocalDate startRecordDate,
                                                      @Param("endOfRecordDate") LocalDate endOfRecordDate);
 
-
+    //按分类categoryId查询当前登录用户自己userId的收支记录
+    List<TransactionRecord> findByUserIdAndCategoryId(@Param("userId") Integer userId,
+                                                        @Param("categoryId") Integer categoryId);
 
 }

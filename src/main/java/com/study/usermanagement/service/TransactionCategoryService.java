@@ -37,6 +37,11 @@ public class TransactionCategoryService {
         if (!"income".equals(type) && !"expense".equals(type)) {
             return new Result(false, "类型必须是 income 或者 expense", null);
         }
+        TransactionCategory oldCategory =
+                transactionCategoryMapper.findByUserIdAndNameAndType(userId, name, type);
+        if (oldCategory != null) {
+            return new Result(false, "该分类已存在", null);
+        }
         category.setUserId(userId);
         int rows = transactionCategoryMapper.insert(category);
         if (rows > 0) {
@@ -79,6 +84,11 @@ public class TransactionCategoryService {
         }
         if (!"income".equals(type) && !"expense".equals(type)) {
             return new Result(false, "类型必须是 income 或者 expense", null);
+        }
+        TransactionCategory oldCategory =
+                transactionCategoryMapper.findByUserIdAndNameAndType(userId, name, type);
+        if (oldCategory != null && !oldCategory.getId().equals(id)) {
+            return new Result(false, "该分类已存在", null);
         }
         int rows = transactionCategoryMapper.updateByIdAndUserId(id, userId, category);
         if (rows > 0) {

@@ -43,5 +43,20 @@
         WHERE user_id = #{userId} AND record_date BETWEEN #{startRecordDate} AND #{endOfRecordDate}
     </select>
 
+    <select id="findByUserIdAndCategoryId" resultType="com.study.usermanagement.entity.TransactionRecord">
+        SELECT transaction_record.id,
+        transaction_record.user_id AS userId,
+        transaction_record.category_id AS categoryId,
+        transaction_record.type,
+        transaction_record.amount,
+        transaction_record.remark,
+        transaction_record.record_date AS recordDate
+        FROM transaction_record
+        INNER JOIN transaction_category
+        ON transaction_record.category_id = transaction_category.id
+        WHERE transaction_record.user_id = #{userId}
+        AND transaction_category.user_id = #{userId}
+        AND transaction_category.id = #{categoryId}
+    </select>
 
 </mapper>

@@ -69,4 +69,12 @@ public class TransactionRecordController {
         return transactionRecordService.findByUserIdAndDateRange(userId, startRecordDate, endOfRecordDate);
 
     }
+
+    //分类id 看看下面有哪些具体记录。按分类查询当前登录用户自己的收支记录
+    @GetMapping("/category/{categoryId}")
+    public Result findMyRecordsByCategoryId(HttpServletRequest request, @PathVariable Integer categoryId) {
+        User currentUser = (User) request.getAttribute("currentUser");
+        Integer userId = currentUser.getId();
+        return transactionRecordService.findByUserIdAndCategoryId(userId, categoryId);
+    }
 }

@@ -183,4 +183,23 @@ public class TransactionRecordService {
         return transactionCategoryMapper.findByIdAndUserId(categoryId, userId);
     }
 
+    //某个分类下面的具体收支记录
+    public Result findByUserIdAndCategoryId(Integer userId, Integer categoryId) {
+        if (userId == null) {
+            return new Result(false, "userId不能为空", null);
+        }
+        if (categoryId == null) {
+            return new Result(false, "分类id不能为空", null);
+        }
+        TransactionCategory category = findByIdAndUserId(categoryId, userId);
+        if (category == null) {
+            return new Result(false, "该分类id不存在 或 该分类id不属于该用户", null);
+        }
+        List<TransactionRecord> records = transactionRecordMapper.findByUserIdAndCategoryId(userId, categoryId);
+        List<TransactionRecordVO> recordsVO = new ArrayList<>();
+        for (TransactionRecord record : records) {
+            recordsVO.add(new TransactionRecordVO(record.getId(), category.getName(), record.getType(), record.getAmount(), record.getRemark(), record.getRecordDate()));
+        }
+        return new Result(true, "根据分类id，查询所有记录成功", recordsVO);
+    }
 }

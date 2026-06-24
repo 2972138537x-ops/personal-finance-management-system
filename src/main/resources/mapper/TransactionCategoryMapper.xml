@@ -33,5 +33,13 @@
         WHERE id = #{id} AND user_id = #{userId}
     </select>
 
+    <select id="findByUserIdAndNameAndType" resultType="com.study.usermanagement.entity.TransactionCategory">
+        SELECT id, user_id AS userId, name, type
+        FROM transaction_category
+        WHERE user_id = #{userId}
+        AND name = #{name}
+        AND type = #{type}
+    </select>
+
 
 </mapper>

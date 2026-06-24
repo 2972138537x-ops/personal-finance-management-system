@@ -450,7 +450,7 @@ Content-Type: application/json
 
 ### A04 查询 alice 自己的分类，确认分类 id / Get alice categories and check ids
 GET http://localhost:8080/transaction-categories
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+Authorization: 2955b25f-64e2-4e7c-9bf9-a8183dee2e6f
 
 
 ### A05 分类类型错误，应该失败 / Add category with invalid type should fail
@@ -595,3 +595,57 @@ Content-Type: application/json
   "remark": "电车",
   "recordDate": "2026-06-23"
 }
+###
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+"username": "alice",
+"password": "abc123"
+}
+
+### 按月份统计收入、支出、结余
+GET http://localhost:8080/transaction-stats/month?year=2026&month=6
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+
+### 按支出分类统计 / Expense stats by category
+GET http://localhost:8080/transaction-stats/category/expense?year=2026&month=6
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+### 按收入分类统计 / Income stats by category
+GET http://localhost:8080/transaction-stats/category/income?year=2026&month=6
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+### 查询 alice 自己的全部收支记录
+GET http://localhost:8080/transaction-records
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+### 查询 alice 的支出记录
+GET http://localhost:8080/transaction-records/type/expense
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+### 查询 alice 的收入记录
+GET http://localhost:8080/transaction-records/type/income
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+### 查询 alice 2026-06-01 到 2026-06-30 的记录
+GET http://localhost:8080/transaction-records/range?startRecordDate=2026-06-01&endOfRecordDate=2026-06-30
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+### 查询 alice 2026-06-23 到 2026-06-24 的记录
+GET http://localhost:8080/transaction-records/range?startRecordDate=2026-06-23&endOfRecordDate=2026-06-24
+Authorization:86411b27-f304-4d4c-9af2-275379b2e649
+
+### 按支出分类统计
+GET http://localhost:8080/transaction-stats/category/expense?year=2026&month=6
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+### 按收入分类统计
+GET http://localhost:8080/transaction-stats/category/income?year=2026&month=6
+Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
+
+2955b25f-64e2-4e7c-9bf9-a8183dee2e6f
+### 3. 按分类 id 查询 alice 自己的记录
+GET http://localhost:8080/transaction-records/category/1
+Authorization: 2955b25f-64e2-4e7c-9bf9-a8183dee2e6f
