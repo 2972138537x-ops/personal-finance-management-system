@@ -12,7 +12,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("个人收支管理系统接口文档")
+                        .title("个人财务管理系统接口文档")
                         .version("1.0")
                         .description("基于 Spring Boot + MyBatis + MySQL 的个人收支管理系统接口文档"));
     }

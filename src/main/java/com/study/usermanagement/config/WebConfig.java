@@ -25,6 +25,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/transaction-records",
                         "/transaction-records/**",
                         "/transaction-stats",
-                        "/transaction-stats/**");
+                        "/transaction-stats/**",
+                        "/ai",
+                        "/ai/**");
     }
 }

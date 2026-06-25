@@ -2,7 +2,9 @@ package com.study.usermanagement.service;
 
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.entity.TransactionCategory;
+import com.study.usermanagement.entity.TransactionRecord;
 import com.study.usermanagement.mapper.TransactionCategoryMapper;
+import com.study.usermanagement.mapper.TransactionRecordMapper;
 import com.study.usermanagement.vo.TransactionCategoryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import java.util.List;
 public class TransactionCategoryService {
     @Autowired
     private TransactionCategoryMapper transactionCategoryMapper;
+
+    @Autowired
+    private TransactionRecordMapper transactionRecordMapper;
 
     // 添加收支分类：同一个用户不能重复创建同名同类型分类
     // 収支カテゴリ追加：同じユーザーは同名・同タイプのカテゴリを重複作成できない
@@ -105,6 +110,20 @@ public class TransactionCategoryService {
         }
         if (userId == null) {
             return new Result(false, "userId不能为空", null);
+        }
+        // 删除分类前，先检查该分类是否属于当前用户
+        // カテゴリ削除前に、そのカテゴリがログイン中ユーザー本人のものか確認する
+        TransactionCategory category = transactionCategoryMapper.findByIdAndUserId(id, userId);
+
+        if (category == null) {
+            return new Result(false, "该分类不存在 或 该分类不属于当前用户", null);
+        }
+        // 删除分类前，检查该分类下是否已有收支记录
+        // カテゴリ削除前に、そのカテゴリに収支記録が存在するか確認する
+        List<TransactionRecord> records =
+                transactionRecordMapper.findByUserIdAndCategoryId( userId, id);
+        if (records != null && !records.isEmpty()) {
+            return new Result(false, "该分类下已有收支记录，不能删除", null);
         }
         int rows = transactionCategoryMapper.deleteByIdAndUserId(id, userId);
         if (rows > 0) {

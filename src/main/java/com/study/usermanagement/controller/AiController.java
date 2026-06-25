@@ -3,6 +3,8 @@ package com.study.usermanagement.controller;
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.dto.AiRequest;
 import com.study.usermanagement.service.AiService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +21,8 @@ public class AiController {
      * AI 聊天接口
      * AI チャット用のインターフェース
      */
+    @Tag(name = "AI助手", description = "用户通过自然语言获取记账、消费分析和省钱建议")
+    @Operation(summary = "AI聊天", description = "接收用户问题，调用外部大语言模型 API 返回财务建议")
     @PostMapping("/chat")
     public Result chat(@RequestBody AiRequest aiRequest) {
         // Controller 只负责接收请求，真正调用 AI 的逻辑交给 Service
