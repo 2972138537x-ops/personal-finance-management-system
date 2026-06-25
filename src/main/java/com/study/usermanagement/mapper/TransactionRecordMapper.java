@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
+// 收支记录 Mapper：定义 transaction_record 表的数据库操作
+// 収支記録 Mapper：transaction_record テーブルのDB操作を定義する
 public interface TransactionRecordMapper {
 
     // 新增收支记录
@@ -44,14 +46,17 @@ public interface TransactionRecordMapper {
     // カテゴリIDで、そのカテゴリに属する本人の収支記録を取得する
     List<TransactionRecord> findByUserIdAndCategoryId(@Param("userId") Integer userId,
                                                       @Param("categoryId") Integer categoryId);
-    //根据页数查询用户指定数量的收支记录
+    // 根据页码和每页条数查询当前用户的收支记录
+    // ページ番号と件数に基づき、現在ユーザーの収支記録を取得する
     List<TransactionRecord> findByUserIdPage(@Param("userId") Integer userId,
                                              @Param("offset") Integer offset,
                                              @Param("size") Integer size);
-    //通过用户id 查询有多少条记录
+    // 查询当前用户一共有多少条收支记录
+    // 現在ユーザーの収支記録総件数を取得する
     Integer countByUserId(@Param("userId") Integer userId);
 
-    //根据多种条件筛选分页
+    // 根据多种条件筛选并分页查询
+    // 複数条件で絞り込み、ページング検索する
     List<TransactionRecord> searchByUserIdPage(@Param("userId") Integer userId,
                                                @Param("type") String type,
                                                @Param("categoryId") Integer categoryId,
@@ -60,7 +65,8 @@ public interface TransactionRecordMapper {
                                                @Param("offset") Integer offset,
                                                @Param("size") Integer size);
 
-    //根据条件筛选有多少条记录
+    // 查询组合条件筛选后的总条数
+    // 複合条件で絞り込んだ後の総件数を取得する
     Integer countSearchByUserId(@Param("userId") Integer userId,
                                 @Param("type") String type,
                                 @Param("categoryId") Integer categoryId,

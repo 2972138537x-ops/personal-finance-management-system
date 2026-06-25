@@ -6,17 +6,27 @@ import jakarta.validation.constraints.Size;
 // 用户实体类，对应数据库 user 表
 // ユーザーエンティティ。DB の user テーブルに対応する
 public class User {
+    // 用户主键 id，由数据库自增生成
+    // ユーザー主キー id。DB の自動採番で生成される
     private Integer id;
 
+    // 用户名，注册和登录时使用
+    // ユーザー名。登録とログインで使う
     @NotBlank(message = "用户名不能为空")
     private String username;
 
+    // 密码，当前学习项目中直接保存，实际项目应使用加密
+    // パスワード。現在の学習プロジェクトでは直接保存するが、実務では暗号化が必要
     @NotBlank(message = "密码不能为空")
     @Size(min = 6, max = 12, message = "密码长度必须是6到12位")
     private String password;
 
+    // 用户角色：ADMIN 表示管理员，USER 表示普通用户
+    // ユーザーロール：ADMIN は管理者、USER は一般ユーザー
     private String role;
 
+    // 登录 token：登录成功后生成，用于后续接口认证
+    // ログイン token：ログイン成功後に生成され、後続APIの認証に使う
     private String token;
 
     public Integer getId() {

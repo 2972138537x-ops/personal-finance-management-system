@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 
 
 @Service
+// 收支统计业务层：按月份、类型和分类统计当前用户的金额
+// 収支集計業務層：ログイン中ユーザーの金額を月・タイプ・カテゴリ別に集計する
 public class TransactionStatsService {
     @Autowired
     private TransactionStatsMapper transactionStatsMapper;

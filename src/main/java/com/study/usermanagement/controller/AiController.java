@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ai")
+// AI 控制器：接收前端问题，把调用外部 AI 的工作交给 AiService
+// AI コントローラー：フロントの質問を受け取り、外部 AI 呼び出しは AiService に任せる
 public class AiController {
 
     private final AiService aiService;

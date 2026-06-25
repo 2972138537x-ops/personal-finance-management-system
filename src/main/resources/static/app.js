@@ -1,4 +1,6 @@
 (function () {
+    // 页面全局状态：保存登录信息、当前语言、分类、记录、分页和筛选条件
+    // 画面全体の状態：ログイン情報、現在言語、カテゴリ、記録、ページング、絞り込み条件を保持する
     const state = {
         token: localStorage.getItem("pf.token") || "",
         user: readJson(localStorage.getItem("pf.user")) || null,
@@ -381,6 +383,8 @@
         return result.message || result.error || result.msg || "";
     }
 
+    // 统一 API 请求函数：自动携带 token，并把后端 Result 错误转换成异常
+    // 共通 API リクエスト関数：token を自動付与し、バックエンドの Result エラーを例外に変換する
     async function api(path, options) {
         const opts = options || {};
         const headers = {
@@ -388,6 +392,8 @@
         };
 
         if (state.token && opts.auth !== false) {
+            // 登录后的接口需要 Authorization 请求头
+            // ログイン後のAPIには Authorization ヘッダーが必要
             headers.Authorization = state.token;
         }
 
@@ -955,6 +961,8 @@
         $("categoryType").value = "expense";
     }
 
+    // 加载收支记录：把分页和筛选条件组装成查询参数，调用后端组合搜索接口
+    // 収支記録読み込み：ページングと絞り込み条件をクエリパラメータにし、バックエンドの複合検索APIを呼ぶ
     async function loadRecords(renderTable) {
         const params = new URLSearchParams();
 
@@ -1007,6 +1015,8 @@
         renderRows("recordsBody", rows, 7);
     }
 
+    // 渲染分页按钮：根据总条数和每页条数计算总页数
+    // ページングボタン描画：総件数と1ページ件数から総ページ数を計算する
     function renderRecordPagination() {
         const box = $("recordPagination");
         if (!box) return;
@@ -1115,6 +1125,8 @@
         await loadRecords();
     }
 
+    // 按日期范围和分类筛选记录：前端先做简单日期校验，再请求后端
+    // 日付範囲とカテゴリで記録を絞り込む：フロントで簡単な日付チェックをしてからバックエンドへ送る
     async function filterRecordsByRange(event) {
         event.preventDefault();
 
@@ -1297,6 +1309,8 @@
         answerBox.innerHTML = escapeHtml(answer || "").replaceAll("\n", "<br>");
     }
 
+    // AI 提问：把用户输入发送到 /ai/chat，后端再调用外部 AI 服务
+    // AI 質問：ユーザー入力を /ai/chat に送り、バックエンド側で外部 AI サービスを呼び出す
     async function askAi(event) {
         event.preventDefault();
 
@@ -1314,6 +1328,8 @@
 
         try {
             if (sendBtn) {
+                // 调用 AI 时临时禁用按钮，避免重复提交
+                // AI 呼び出し中はボタンを一時的に無効化し、重複送信を防ぐ
                 sendBtn.disabled = true;
                 sendBtn.textContent = "发送中...";
             }

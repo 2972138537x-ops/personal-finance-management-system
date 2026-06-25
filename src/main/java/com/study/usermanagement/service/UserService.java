@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+// 用户业务层：处理注册、登录、退出、密码修改和管理员用户管理
+// ユーザー業務層：登録、ログイン、ログアウト、パスワード変更、管理者のユーザー管理を処理する
 public class UserService {
     @Autowired
     private UserMapper userMapper;
@@ -110,7 +112,8 @@ public class UserService {
         return new Result(false, "修改失败", null);
     }
 
-    //管理员重置密码
+    // 管理员重置密码：不需要旧密码，但要确认目标用户存在并校验新密码
+    // 管理者のパスワードリセット：旧パスワードは不要だが、対象ユーザーの存在と新パスワードを確認する
     public Result resetPassword(String username, String newPassword) {
         if (newPassword == null || newPassword.isEmpty()) {
             return new Result(false, "新密码不能为空", null);

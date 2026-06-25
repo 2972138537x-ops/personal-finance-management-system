@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+// 收支分类业务层：处理当前用户自己的收入和支出分类
+// 収支カテゴリ業務層：ログイン中ユーザー本人の収入・支出カテゴリを処理する
 public class TransactionCategoryService {
     @Autowired
     private TransactionCategoryMapper transactionCategoryMapper;
@@ -40,6 +42,8 @@ public class TransactionCategoryService {
         if (!"income".equals(type) && !"expense".equals(type)) {
             return new Result(false, "类型必须是 income 或者 expense", null);
         }
+        // 同一个用户下，同类型同名称的分类不能重复
+        // 同じユーザーでは、同じタイプ・同じ名前のカテゴリを重複できない
         TransactionCategory oldCategory =
                 transactionCategoryMapper.findByUserIdAndNameAndType(userId, name, type);
         if (oldCategory != null) {
@@ -90,6 +94,8 @@ public class TransactionCategoryService {
         if (!"income".equals(type) && !"expense".equals(type)) {
             return new Result(false, "类型必须是 income 或者 expense", null);
         }
+        // 修改时允许保留原分类名，但不能改成和其它分类重复
+        // 更新時は元のカテゴリ名は許可するが、他カテゴリとの重複は許可しない
         TransactionCategory oldCategory =
                 transactionCategoryMapper.findByUserIdAndNameAndType(userId, name, type);
         if (oldCategory != null && !oldCategory.getId().equals(id)) {

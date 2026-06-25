@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.usermanagement.mapper.TransactionStatsMapper">
-    <!-- 月度类型总金额统计 / 月次タイプ別合計金額集計 -->
+    <!-- 月度类型总金额统计，IFNULL 避免没有记录时返回 null / 月次タイプ別合計金額集計。記録がない場合に null にならないよう IFNULL を使う -->
     <select id="sumAmountByMonthAndType" resultType="java.math.BigDecimal">
         SELECT IFNULL(sum(amount), 0)
         FROM transaction_record
@@ -13,7 +13,7 @@
         AND MONTH(record_date) = #{month}
     </select>
 
-    <!-- 分类金额统计 / カテゴリ別金額集計 -->
+    <!-- 分类金额统计：JOIN 分类表拿到分类名，并按分类分组 / カテゴリ別金額集計：カテゴリ表を JOIN してカテゴリ名を取得し、カテゴリ別に GROUP BY する -->
     <select id="sumByCategoryAndType" resultType="com.study.usermanagement.vo.CategoryStatsVO">
         SELECT transaction_category.name AS categoryName, IFNULL(SUM(transaction_record.amount), 0) AS totalAmount
         FROM transaction_record

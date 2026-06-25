@@ -3,17 +3,23 @@ package com.study.usermanagement.vo;
 
 import java.util.List;
 
+// 分页响应对象：返回当前页数据、总条数、当前页码和每页条数
+// ページングレスポンス：現在ページのデータ、総件数、ページ番号、1ページ件数を返す
 public class PageVO {
     // 当前页的数据
+    // 現在ページのデータ
     private List<TransactionRecordVO> list;
 
     // 总条数
+    // 条件に一致する総件数
     private Integer total;
 
     // 当前第几页
+    // 現在のページ番号
     private Integer page;
 
     // 每页多少条
+    // 1ページあたりの件数
     private Integer size;
 
     public PageVO() {

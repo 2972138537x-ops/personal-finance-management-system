@@ -7,6 +7,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+// Spring MVC 配置类：把自定义拦截器注册到需要登录的接口上
+// Spring MVC 設定クラス：ログインが必要なAPIに自作インターセプターを登録する
 public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private AuthInterceptor authInterceptor;

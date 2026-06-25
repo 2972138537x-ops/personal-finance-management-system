@@ -65,6 +65,7 @@
         AND transaction_category.id = #{categoryId}
     </select>
 
+    <!-- 分页查询当前用户收支记录，按日期和 id 倒序展示 / 現在ユーザーの収支記録をページング検索し、日付と id の降順で表示する -->
     <select id="findByUserIdPage" resultType="com.study.usermanagement.entity.TransactionRecord">
         SELECT  id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
         FROM transaction_record
@@ -73,12 +74,14 @@
         LIMIT #{size} OFFSET #{offset}
     </select>
 
+    <!-- 统计当前用户的收支记录总数，用于分页 / ページング用に現在ユーザーの収支記録総件数を数える -->
     <select id = "countByUserId" resultType= "java.lang.Integer">
         SELECT COUNT(*) AS total
         FROM transaction_record
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 组合条件分页搜索；未传的条件不会拼接到 SQL / 複合条件ページング検索。未指定の条件は SQL に追加しない -->
     <select id = "searchByUserIdPage" resultType="com.study.usermanagement.entity.TransactionRecord">
         SELECT  id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
         FROM transaction_record
@@ -98,6 +101,7 @@
         LIMIT #{size} OFFSET #{offset}
     </select>
 
+    <!-- 统计组合条件筛选后的总条数，用于分页 / 複合条件で絞り込んだ後の総件数を数え、ページングに使う -->
     <select id = "countSearchByUserId" resultType= "java.lang.Integer">
         SELECT COUNT(*) AS total
         FROM transaction_record

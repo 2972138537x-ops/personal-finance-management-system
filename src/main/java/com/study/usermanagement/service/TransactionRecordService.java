@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+// 收支记录业务层：处理记录的增删改查、分页搜索和金额校验
+// 収支記録業務層：記録の追加・削除・更新・検索、ページング検索、金額チェックを処理する
 public class TransactionRecordService {
     @Autowired
     private TransactionRecordMapper transactionRecordMapper;
@@ -53,6 +55,8 @@ public class TransactionRecordService {
         if (!type.equals(category.getType())) {
             return new Result(false, "记录类型必须和分类类型一致", null);
         }
+        // 金额必须是正数，避免保存 0 或负数的收支记录
+        // 金額は正数のみ許可し、0 やマイナスの収支記録を保存しない
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             return new Result(false, "金额不能为空 且 必须大于0", null);
         }
@@ -117,6 +121,8 @@ public class TransactionRecordService {
         if (!type.equals(category.getType())) {
             return new Result(false, "记录类型必须和分类类型一致", null);
         }
+        // 修改记录时同样要校验金额，防止把已有记录改成非法金额
+        // 記録更新時も金額をチェックし、既存記録が不正な金額にならないようにする
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             return new Result(false, "金额不能为空 且 必须大于0", null);
         }
@@ -221,7 +227,8 @@ public class TransactionRecordService {
         return new Result(true, "根据分类id，查询所有记录成功", recordsVO);
     }
 
-    //分页，查询指定数量的记录
+    // 分页查询当前用户的收支记录
+    // ログイン中ユーザーの収支記録をページング検索する
     public Result findByUserIdPage(Integer userId,
                                    Integer page,
                                    Integer size) {
@@ -240,6 +247,8 @@ public class TransactionRecordService {
         if (size <= 0) {
             return new Result(false, "查看的每页的记录数量必须大于0", null);
         }
+        // MySQL 分页偏移量：第 1 页从 0 开始，第 2 页从 size 开始
+        // MySQL のページング開始位置：1ページ目は0、2ページ目は size から始まる
         Integer offset = (page - 1) * size;
         List<TransactionRecord> records = transactionRecordMapper.findByUserIdPage(userId, offset, size);
         List<TransactionRecordVO> recordsVO = new ArrayList<>();
@@ -253,7 +262,8 @@ public class TransactionRecordService {
 
     }
 
-    // 组合条件分页查询
+    // 组合条件分页查询：type、categoryId、日期范围都可以作为可选筛选条件
+    // 複合条件ページング検索：type、categoryId、日付範囲を任意条件として使える
     public Result searchByUserIdPage(Integer userId,
                                      String type,
                                      Integer categoryId,
@@ -291,6 +301,8 @@ public class TransactionRecordService {
             }
         }
         if (categoryId != null) {
+            // 分类筛选必须确认分类属于当前用户，不能查询别人的分类数据
+            // カテゴリ条件は現在ユーザー本人のカテゴリか確認し、他人のデータを検索させない
             TransactionCategory category = findByIdAndUserId(categoryId, userId);
             if (category == null) {
                 return new Result(false, "该分类id不存在 或 该分类id不属于该用户", null);
@@ -300,6 +312,8 @@ public class TransactionRecordService {
                 return new Result(false, "筛选类型必须和分类类型一致", null);
             }
         }
+        // 搜索接口也使用相同分页公式
+        // 検索APIでも同じページング計算式を使う
         Integer offset = (page - 1) * size;
         List<TransactionRecord> records = transactionRecordMapper.searchByUserIdPage(userId, type, categoryId, startRecordDate, endOfRecordDate, offset, size);
         List<TransactionRecordVO> recordsVO = new ArrayList<>();
@@ -314,7 +328,7 @@ public class TransactionRecordService {
     }
 
     // 校验金额：必须大于0，不能超过数据库 DECIMAL(10,2) 的范围，小数最多2位
-// 金額チェック：0より大きく、DB の DECIMAL(10,2) の範囲を超えず、小数は2桁まで
+    // 金額チェック：0より大きく、DB の DECIMAL(10,2) の範囲を超えず、小数は2桁まで
     private Result validateAmount(BigDecimal amount) {
         if (amount == null) {
             return new Result(false, "金额不能为空", null);
