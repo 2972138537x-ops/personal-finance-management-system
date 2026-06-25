@@ -17,7 +17,7 @@ Spring Boot + MyBatis + MySQL 的后端 REST API 项目
 - Java 17
 - Spring Boot 3.5.15
 - Maven
-- MySQL 5.7
+- MySQL 8.0.34
 - MyBatis
 - MySQL Connector/J
 - Spring Validation
@@ -201,6 +201,12 @@ ADMIN  管理员
 如果普通用户访问管理员接口，会返回失败结果。
 
 ## 数据库 / Database
+
+当前开发环境使用：
+
+```text
+MySQL 8.0.34
+```
 
 数据库名：
 

@@ -22,11 +22,11 @@
 
     const i18n = {
         zh: {
-            appTitle: "个人收支管理系统",
+            appTitle: "个人财务管理系统",
             appSubTitle: "Spring Boot + MyBatis + MySQL",
             login: "登录",
             register: "注册",
-            loginHint: "登录后进入收支管理系统。",
+            loginHint: "登录后进入财务管理系统。",
             registerHint: "创建普通用户账号。",
             username: "用户名",
             password: "密码",
@@ -49,6 +49,13 @@
             recordsHint: "新增、修改和删除收支记录。",
             stats: "统计",
             statsHint: "按月份查看收入、支出、结余和分类统计。",
+            aiAssistant: "AI助手",
+            aiAssistantHint: "向 AI 提问，获取记账、消费分析和省钱建议。",
+            aiQuestion: "你的问题",
+            aiQuestionPlaceholder: "例如：请给我一些控制生活支出的建议",
+            aiSend: "发送问题",
+            aiAnswer: "AI回复",
+            aiDefaultAnswer: "请在上方输入问题，然后点击发送。",
             admin: "管理员",
             adminHint: "查询用户、查看详情、重置密码、删除用户。",
             incomeTotal: "收入合计",
@@ -105,11 +112,11 @@
             selectUserHint: "点击“详情”后显示用户信息。"
         },
         ja: {
-            appTitle: "個人収支管理システム",
+            appTitle: "個人財務管理システム",
             appSubTitle: "Spring Boot + MyBatis + MySQL",
             login: "ログイン",
             register: "登録",
-            loginHint: "ログイン後、収支管理システムに入ります。",
+            loginHint: "ログイン後、財務管理システムに入ります。",
             registerHint: "一般ユーザーアカウントを作成します。",
             username: "ユーザー名",
             password: "パスワード",
@@ -132,6 +139,13 @@
             recordsHint: "収支記録を追加・編集・削除します。",
             stats: "統計",
             statsHint: "月別に収入、支出、残高、カテゴリ統計を確認します。",
+            aiAssistant: "AIアシスタント",
+            aiAssistantHint: "AIに質問して、記帳・支出分析・節約アドバイスを受け取ります。",
+            aiQuestion: "質問内容",
+            aiQuestionPlaceholder: "例：生活費を抑えるためのアドバイスをください",
+            aiSend: "質問を送信",
+            aiAnswer: "AIの回答",
+            aiDefaultAnswer: "上に質問を入力して、送信ボタンを押してください。",
             admin: "管理者",
             adminHint: "ユーザー検索、詳細確認、パスワード変更、削除を行います。",
             incomeTotal: "収入合計",
@@ -188,7 +202,7 @@
             selectUserHint: "「詳細」をクリックするとユーザー情報が表示されます。"
         },
         en: {
-            appTitle: "Personal Finance System",
+            appTitle: "Personal Finance Management System",
             appSubTitle: "Spring Boot + MyBatis + MySQL",
             login: "Login",
             register: "Register",
@@ -215,6 +229,13 @@
             recordsHint: "Add, edit, and delete transaction records.",
             stats: "Stats",
             statsHint: "View monthly income, expense, balance, and category stats.",
+            aiAssistant: "AI Assistant",
+            aiAssistantHint: "Ask AI for bookkeeping, spending analysis, and saving advice.",
+            aiQuestion: "Your Question",
+            aiQuestionPlaceholder: "Example: Please give me advice on controlling living expenses",
+            aiSend: "Send Question",
+            aiAnswer: "AI Answer",
+            aiDefaultAnswer: "Enter a question above, then click send.",
             admin: "Admin",
             adminHint: "Search users, view details, reset passwords, and delete users.",
             incomeTotal: "Income Total",
@@ -389,6 +410,11 @@
         document.querySelectorAll("[data-i18n]").forEach(function (el) {
             const key = el.dataset.i18n;
             el.textContent = text(key);
+        });
+
+        document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+            const key = el.dataset.i18nPlaceholder;
+            el.setAttribute("placeholder", text(key));
         });
 
         document.querySelectorAll(".lang-btn").forEach(function (btn) {
@@ -665,6 +691,8 @@
                 await loadRecords();
             } else if (tab === "stats") {
                 await loadStats();
+            } else if (tab === "ai") {
+                renderAiDefaultAnswer();
             } else if (tab === "admin") {
                 await loadAdminUsers();
             }
@@ -1223,6 +1251,67 @@
         }
     }
 
+    function renderAiDefaultAnswer() {
+        const answerBox = $("aiAnswerBox");
+        if (!answerBox) return;
+
+        if (!answerBox.dataset.hasAnswer) {
+            answerBox.textContent = text("aiDefaultAnswer");
+        }
+    }
+
+    function renderAiAnswer(answer) {
+        const answerBox = $("aiAnswerBox");
+        if (!answerBox) return;
+
+        answerBox.dataset.hasAnswer = "true";
+        answerBox.innerHTML = escapeHtml(answer || "").replaceAll("\n", "<br>");
+    }
+
+    async function askAi(event) {
+        event.preventDefault();
+
+        const input = $("aiQuestionInput");
+        const sendBtn = $("aiSendBtn");
+
+        if (!input) return;
+
+        const message = input.value.trim();
+
+        if (!message) {
+            toast("请输入问题");
+            return;
+        }
+
+        try {
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.textContent = "发送中...";
+            }
+
+            renderAiAnswer("AI 正在思考中，请稍等...");
+
+            const result = await api("/ai/chat", {
+                method: "POST",
+                body: {
+                    message: message
+                }
+            });
+
+            const answer = getResultData(result);
+            renderAiAnswer(answer || result.message || "AI没有返回内容。");
+            toast(result.message || "AI回复成功");
+        } catch (error) {
+            renderAiAnswer(error.message);
+            toast(error.message);
+        } finally {
+            if (sendBtn) {
+                sendBtn.disabled = false;
+                sendBtn.textContent = text("aiSend");
+            }
+        }
+    }
+
     async function loadAdminUsers() {
         const result = await api("/admin/users");
         const data = getResultData(result);
@@ -1495,6 +1584,8 @@
 
         $("monthlyStatsForm").addEventListener("submit", loadStats);
         $("typeTotalForm").addEventListener("submit", loadTypeTotal);
+
+        $("aiForm").addEventListener("submit", askAi);
 
         $("adminSearchForm").addEventListener("submit", searchAdminUser);
         $("adminLoadAllBtn").addEventListener("click", loadAdminUsers);

@@ -595,3 +595,39 @@ th {
         width: 100%;
     }
 }
+
+
+.ai-form {
+    display: grid;
+    gap: 14px;
+}
+
+.ai-form textarea {
+    width: 100%;
+    min-height: 130px;
+    resize: vertical;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    line-height: 1.6;
+}
+
+.ai-answer {
+    min-height: 180px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #f8fbfb;
+    color: var(--text);
+    line-height: 1.8;
+    white-space: normal;
+    overflow: auto;
+}
+
+.ai-answer:empty::before {
+    content: "请在上方输入问题，然后点击发送。";
+    color: var(--muted);
+}

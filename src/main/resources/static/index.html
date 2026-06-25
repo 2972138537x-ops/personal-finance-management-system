@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人收支管理系统</title>
+    <title>个人财务管理系统</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
     <div class="brand">
         <div class="logo">PF</div>
         <div>
-            <h1 data-i18n="appTitle">个人收支管理系统</h1>
+            <h1 data-i18n="appTitle">个人财务管理系统</h1>
             <p data-i18n="appSubTitle">Spring Boot + MyBatis + MySQL</p>
         </div>
     </div>
@@ -33,7 +33,7 @@
 
             <form id="loginForm" class="auth-form">
                 <h2 data-i18n="login">登录</h2>
-                <p class="muted" data-i18n="loginHint">登录后进入收支管理系统。</p>
+                <p class="muted" data-i18n="loginHint">登录后进入财务管理系统。</p>
 
                 <label>
                     <span data-i18n="username">用户名</span>
@@ -97,6 +97,7 @@
                 <button type="button" class="nav-btn" data-tab="categories" data-i18n="categories">分类管理</button>
                 <button type="button" class="nav-btn" data-tab="records" data-i18n="records">收支记录</button>
                 <button type="button" class="nav-btn" data-tab="stats" data-i18n="stats">统计</button>
+                <button type="button" class="nav-btn" data-tab="ai" data-i18n="aiAssistant">AI助手</button>
                 <button type="button" id="navAdmin" class="nav-btn hidden" data-tab="admin" data-i18n="admin">管理员</button>
             </nav>
         </aside>
@@ -441,6 +442,32 @@
                     <p class="big-number">
                         <span data-i18n="amount">金额</span>：<strong id="typeTotalAmount">0.00</strong>
                     </p>
+                </section>
+            </section>
+
+            <section id="aiPanel" class="view-panel">
+                <div class="content-header">
+                    <div>
+                        <h2 data-i18n="aiAssistant">AI助手</h2>
+                        <p data-i18n="aiAssistantHint">向 AI 提问，获取记账、消费分析和省钱建议。</p>
+                    </div>
+                </div>
+
+                <section class="panel">
+                    <h3 data-i18n="aiQuestion">你的问题</h3>
+                    <form id="aiForm" class="ai-form">
+                        <textarea id="aiQuestionInput" rows="5" data-i18n-placeholder="aiQuestionPlaceholder" placeholder="例如：请给我一些控制生活支出的建议"></textarea>
+
+                        <div class="form-actions">
+                            <button type="submit" id="aiSendBtn" class="primary" data-i18n="aiSend">发送问题</button>
+                            <button type="reset" data-i18n="clear">清空</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="panel">
+                    <h3 data-i18n="aiAnswer">AI回复</h3>
+                    <div id="aiAnswerBox" class="ai-answer" data-i18n="aiDefaultAnswer">请在上方输入问题，然后点击发送。</div>
                 </section>
             </section>
 
