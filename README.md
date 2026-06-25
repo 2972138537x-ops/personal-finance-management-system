@@ -21,6 +21,7 @@ Spring Boot + MyBatis + MySQL 的后端 REST API 项目
 - MyBatis
 - MySQL Connector/J
 - Spring Validation
+- Springdoc OpenAPI / Swagger UI
 - Git
 - IntelliJ IDEA HTTP Client (`test.http`)
 
@@ -49,6 +50,13 @@ Spring Boot + MyBatis + MySQL 的后端 REST API 项目
 - 删除用户 `DELETE /admin/users/{username}`
 - 只有 `ADMIN` 角色可以访问 `/admin/**`
 
+### 个人收支功能 / Personal Finance APIs
+
+- 维护当前用户自己的收支分类
+- 新增、修改、删除和查询当前用户自己的收支记录
+- 按类型、分类、日期范围和分页条件查询收支记录
+- 按月份统计收入、支出、结余和分类金额
+
 ## 项目结构 / プロジェクト構成
 
 ```text
@@ -67,6 +75,28 @@ src/main/java/com/study/usermanagement
 src/main/resources
   mapper       MyBatis XML SQL 映射文件
   application.properties
+```
+
+## Swagger / OpenAPI 文档
+
+项目已接入 `springdoc-openapi-starter-webmvc-ui`，并在 Controller 中使用 `@Tag`、`@Operation`、`@Parameter` 补充接口说明。
+
+启动项目后可以访问：
+
+```text
+Swagger UI:
+http://localhost:8080/swagger-ui/index.html
+
+OpenAPI JSON:
+http://localhost:8080/v3/api-docs
+```
+
+常用注解复习：
+
+```text
+@Tag        写在 Controller 类上，说明这一组接口属于哪个模块
+@Operation  写在 Controller 方法上，说明这个接口做什么
+@Parameter  写在路径参数或请求参数上，说明参数含义
 ```
 
 ## 分层说明 / Layer Design
@@ -98,6 +128,22 @@ XML
 | GET | `/admin/users/{username}` | 管理员查询单个用户 / Admin get one user | 是，ADMIN |
 | PUT | `/admin/users/{username}/password` | 管理员重置密码 / Admin reset password | 是，ADMIN |
 | DELETE | `/admin/users/{username}` | 管理员删除用户 / Admin delete user | 是，ADMIN |
+| POST | `/transaction-categories` | 新增当前用户的收支分类 | 是 |
+| GET | `/transaction-categories` | 查询当前用户的全部分类 | 是 |
+| PUT | `/transaction-categories/{id}` | 修改当前用户自己的分类 | 是 |
+| DELETE | `/transaction-categories/{id}` | 删除当前用户自己的分类 | 是 |
+| POST | `/transaction-records` | 新增当前用户的收支记录 | 是 |
+| GET | `/transaction-records` | 查询当前用户的全部收支记录 | 是 |
+| PUT | `/transaction-records/{id}` | 修改当前用户自己的收支记录 | 是 |
+| DELETE | `/transaction-records/{id}` | 删除当前用户自己的收支记录 | 是 |
+| GET | `/transaction-records/type/{type}` | 按 income/expense 查询收支记录 | 是 |
+| GET | `/transaction-records/range` | 按日期范围查询收支记录 | 是 |
+| GET | `/transaction-records/category/{categoryId}` | 按分类查询收支记录 | 是 |
+| GET | `/transaction-records/page` | 分页查询收支记录 | 是 |
+| GET | `/transaction-records/search` | 组合条件分页搜索收支记录 | 是 |
+| GET | `/transaction-stats/month` | 查询月度收入、支出和结余 | 是 |
+| GET | `/transaction-stats/category/{type}` | 按分类统计月度金额 | 是 |
+| GET | `/transaction-stats/type-total` | 统计某类型月度总金额 | 是 |
 
 ## 登录和 token / Login and Token
 
@@ -239,7 +285,7 @@ resultType              每一行结果要封装成的 Java 类型
 3. 确认 `user` 表存在，并包含 `role` 和 `token` 字段。
 4. 确认 `application.properties` 数据库配置正确。
 5. 启动 `UserManagementApiApplication`。
-6. 使用 `test.http` 测试接口。
+6. 使用 `test.http` 测试接口，或打开 Swagger UI 查看接口文档。
 
 Maven 编译：
 
@@ -356,6 +402,7 @@ data     返回数据
 - MyBatis Mapper 接口和 XML
 - MySQL 数据库操作
 - 参数校验 `@Valid` / `@NotBlank` / `@Size`
+- Swagger / OpenAPI 接口文档注解 `@Tag` / `@Operation` / `@Parameter`
 - 统一异常处理 `@RestControllerAdvice`
 - 统一返回对象 `Result`
 - token 登录状态
@@ -365,18 +412,8 @@ data     返回数据
 
 ## 后续计划 / Next Steps
 
-后续计划在用户系统基础上增加个人收支管理模块：
+后续计划：
 
-```text
-Personal Finance API
-```
-
-计划功能：
-
-- 新增收入记录
-- 新增支出记录
-- 查询当前用户自己的收支记录
-- 修改收支记录
-- 删除收支记录
-- 按月份统计收入、支出、结余
-- 按类型统计支出
+- 补充更多接口测试场景
+- 优化 README 中的数据库建表说明
+- 为简历整理项目亮点和接口截图

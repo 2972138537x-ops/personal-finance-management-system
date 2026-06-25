@@ -658,7 +658,7 @@ Content-Type: application/json
   "username": "alice",
   "password": "abc123"
 }
-
+f021c740-0521-4fd0-9ab4-ac7270f1057f
 
 ### 查询某月支出总额
 GET http://localhost:8080/transaction-stats/type-total?type=expense&year=2026&month=6
@@ -667,3 +667,7 @@ Authorization: 9f636f94-4fbf-4447-84a9-0d3507415e57
 ### 查询某月收入总额
 GET http://localhost:8080/transaction-stats/type-total?type=income&year=2026&month=6
 Authorization: 9f636f94-4fbf-4447-84a9-0d3507415e57
+
+###
+GET http://localhost:8080/transaction-records/page?page=1&size=10
+Authorization: f021c740-0521-4fd0-9ab4-ac7270f1057f

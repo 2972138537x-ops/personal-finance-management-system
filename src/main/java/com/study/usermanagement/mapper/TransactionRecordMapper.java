@@ -44,4 +44,26 @@ public interface TransactionRecordMapper {
     // カテゴリIDで、そのカテゴリに属する本人の収支記録を取得する
     List<TransactionRecord> findByUserIdAndCategoryId(@Param("userId") Integer userId,
                                                       @Param("categoryId") Integer categoryId);
+    //根据页数查询用户指定数量的收支记录
+    List<TransactionRecord> findByUserIdPage(@Param("userId") Integer userId,
+                                             @Param("offset") Integer offset,
+                                             @Param("size") Integer size);
+    //通过用户id 查询有多少条记录
+    Integer countByUserId(@Param("userId") Integer userId);
+
+    //根据多种条件筛选分页
+    List<TransactionRecord> searchByUserIdPage(@Param("userId") Integer userId,
+                                               @Param("type") String type,
+                                               @Param("categoryId") Integer categoryId,
+                                               @Param("startRecordDate") LocalDate startRecordDate,
+                                               @Param("endOfRecordDate") LocalDate endOfRecordDate,
+                                               @Param("offset") Integer offset,
+                                               @Param("size") Integer size);
+
+    //根据条件筛选有多少条记录
+    Integer countSearchByUserId(@Param("userId") Integer userId,
+                                @Param("type") String type,
+                                @Param("categoryId") Integer categoryId,
+                                @Param("startRecordDate") LocalDate startRecordDate,
+                                @Param("endOfRecordDate") LocalDate endOfRecordDate);
 }

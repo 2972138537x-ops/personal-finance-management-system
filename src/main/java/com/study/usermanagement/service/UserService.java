@@ -82,7 +82,10 @@ public class UserService {
 
     // 修改密码新写法：username 表示要修改谁，newPassword 表示新密码
     // パスワード変更の新実装：username は対象ユーザー、newPassword は新しいパスワードを表す
-    public Result changeMyPassword(String username, String newPassword) {
+    public Result changeMyPassword(String username, String oldPassword, String newPassword) {
+        if (oldPassword == null || oldPassword.isEmpty()) {
+            return new Result(false, "当前密码不能为空", null);
+        }
         if (newPassword == null || newPassword.isEmpty()) {
             return new Result(false, "新密码不能为空", null);
         }
@@ -94,12 +97,44 @@ public class UserService {
         if (oldUser == null) {
             return new Result(false, "该用户名不存在", null);
         }
-
+        if (!oldUser.getPassword().equals(oldPassword)) {
+            return new Result(false, "当前密码不正确", null);
+        }
+        if (oldUser.getPassword().equals(newPassword)) {
+            return new Result(false, "新密码不能和当前密码相同", null);
+        }
         int rows = userMapper.updatePassword(username, newPassword);
         if (rows > 0) {
             return new Result(true, "修改密码成功", username);
         }
         return new Result(false, "修改失败", null);
+    }
+
+    //管理员重置密码
+    public Result resetPassword(String username, String newPassword) {
+        if (newPassword == null || newPassword.isEmpty()) {
+            return new Result(false, "新密码不能为空", null);
+        }
+
+        if (newPassword.length() < 6 || newPassword.length() > 12) {
+            return new Result(false, "新密码长度必须是6到12位", null);
+        }
+
+        User oldUser = userMapper.findByUsername(username);
+        if (oldUser == null) {
+            return new Result(false, "该用户名不存在", null);
+        }
+
+        if (oldUser.getPassword().equals(newPassword)) {
+            return new Result(false, "新密码不能和原密码相同", null);
+        }
+
+        int rows = userMapper.updatePassword(username, newPassword);
+        if (rows > 0) {
+            return new Result(true, "重置密码成功", username);
+        }
+
+        return new Result(false, "重置密码失败", null);
     }
 
     // 删除用户：先确认用户存在，再执行 delete

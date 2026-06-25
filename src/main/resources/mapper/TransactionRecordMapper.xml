@@ -65,4 +65,54 @@
         AND transaction_category.id = #{categoryId}
     </select>
 
+    <select id="findByUserIdPage" resultType="com.study.usermanagement.entity.TransactionRecord">
+        SELECT  id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
+        FROM transaction_record
+        WHERE user_id = #{userId}
+        ORDER BY record_date DESC, id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id = "countByUserId" resultType= "java.lang.Integer">
+        SELECT COUNT(*) AS total
+        FROM transaction_record
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id = "searchByUserIdPage" resultType="com.study.usermanagement.entity.TransactionRecord">
+        SELECT  id, user_id AS userId, category_id AS categoryId, type, amount, remark, record_date AS recordDate
+        FROM transaction_record
+        WHERE user_id = #{userId}
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+
+        <if test="categoryId != null">
+            AND category_id = #{categoryId}
+        </if>
+
+        <if test="startRecordDate != null and endOfRecordDate != null">
+            AND record_date BETWEEN #{startRecordDate} AND #{endOfRecordDate}
+        </if>
+        ORDER BY record_date DESC, id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id = "countSearchByUserId" resultType= "java.lang.Integer">
+        SELECT COUNT(*) AS total
+        FROM transaction_record
+        WHERE user_id = #{userId}
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+
+        <if test="categoryId != null">
+            AND category_id = #{categoryId}
+        </if>
+
+        <if test="startRecordDate != null and endOfRecordDate != null">
+            AND record_date BETWEEN #{startRecordDate} AND #{endOfRecordDate}
+        </if>
+    </select>
+
 </mapper>
