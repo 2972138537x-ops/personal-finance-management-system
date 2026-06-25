@@ -1,434 +1,244 @@
-# 个人财务管理系统
+# 个人财务管理系统 / 個人財務管理システム
 
-## 项目介绍 / プロジェクト概要
+## 项目简介 / プロジェクト概要
 
-这是一个基于 **Spring Boot + MyBatis + MySQL** 的个人财务管理系统，用于练习 Java 后端开发、RESTful API、三层架构、MyBatis XML、MySQL 数据库操作、Token 登录校验、角色权限控制、统一返回结果、参数校验、统一异常处理、Swagger 接口文档以及简单前端页面开发。
+中文说明：
 
-系统实现了用户注册登录、个人信息管理、收支分类管理、收支记录管理、分页查询、月度统计、分类统计、管理员用户管理以及 AI 助手功能。
+这是一个基于 **Java 17 + Spring Boot + MyBatis + MySQL** 的个人财务管理系统。项目实现了用户认证、收支分类、收支记录、分页筛选、统计分析、管理员管理、Swagger / OpenAPI 文档、AI 财务助手和简单前端页面，适合作为初级 Java 后端求职展示项目。
 
-このプロジェクトは、**Spring Boot + MyBatis + MySQL** を使用した個人財務管理システムです。Java バックエンド開発、RESTful API、三層構成、MyBatis XML、MySQL、Token 認証、権限管理、共通レスポンス、入力チェック、例外処理、Swagger API ドキュメント、簡単なフロントエンド実装を学習するために作成しました。
+日本語説明：
 
----
-
-## 项目定位 / Project Position
-
-```text
-Spring Boot + MyBatis + MySQL + HTML/CSS/JavaScript 的个人财务管理系统
-```
-
-项目特点：
-
-```text
-1. 前后端分离思想的练习项目
-2. 后端使用 Spring Boot 提供 REST API
-3. 前端使用 HTML、CSS、JavaScript 调用后端接口
-4. 使用 MyBatis XML 编写 SQL
-5. 使用 Token 实现登录状态校验
-6. 使用 role 字段实现简单管理员权限控制
-7. 接入 OpenRouter API，实现 AI 助手功能
-```
+このプロジェクトは **Java 17 + Spring Boot + MyBatis + MySQL** を使用した個人財務管理システムです。ユーザー認証、収支カテゴリ、収支記録、ページング検索、統計、管理者機能、Swagger / OpenAPI、AI 財務アシスタント、簡単なフロント画面を実装しており、初級 Java バックエンドエンジニア向けのポートフォリオとして整理しています。
 
 ---
 
-## 技术栈 / 使用技術
+## 技术栈 / 技術スタック
 
-* Java 17
-* Spring Boot 3.5.15
-* Maven
-* MySQL 8.0.34
-* MyBatis
-* MyBatis XML
-* MySQL Connector/J
-* Spring Validation
-* Springdoc OpenAPI / Swagger UI
-* Spring MVC Interceptor
-* RestTemplate
-* OpenRouter API
-* HTML
-* CSS
-* JavaScript
-* Git
-* IntelliJ IDEA
+| 中文 | 日本語 |
+|---|---|
+| 后端：Java 17, Spring Boot 3.5.15, Spring MVC | バックエンド：Java 17, Spring Boot 3.5.15, Spring MVC |
+| 数据库：MySQL 8.0.34 | データベース：MySQL 8.0.34 |
+| ORM / SQL：MyBatis, MyBatis XML | ORM / SQL：MyBatis, MyBatis XML |
+| 构建工具：Maven | ビルドツール：Maven |
+| 参数校验：Service 层业务校验 / Spring Validation | 入力チェック：Service 層の業務チェック / Spring Validation |
+| 登录认证：Token, Spring MVC Interceptor | ログイン認証：Token, Spring MVC Interceptor |
+| 接口文档：Swagger / OpenAPI | API ドキュメント：Swagger / OpenAPI |
+| AI API：OpenRouter AI API, RestTemplate | AI API：OpenRouter AI API, RestTemplate |
+| 前端：HTML / CSS / JavaScript | フロントエンド：HTML / CSS / JavaScript |
+| 开发工具：IntelliJ IDEA, Git | 開発ツール：IntelliJ IDEA, Git |
 
 ---
 
-## 功能列表 / 機能一覧
+## 主要功能 / 主な機能
 
-### 1. 用户认证功能 / User Authentication
-
-* 用户注册
-* 用户登录
-* 登录成功后生成 Token
-* Token 保存到数据库
-* 退出登录时清空 Token
-* 通过 `Authorization` 请求头携带 Token
-* 拦截器统一校验登录状态
-
-### 2. 当前用户功能 / Current User
-
-* 查看当前登录用户信息
-* 修改自己的登录密码
-* 修改密码时校验当前密码
-* 新密码不能和当前密码相同
-* 返回用户信息时不返回密码
-
-### 3. 收支分类管理 / Transaction Category Management
-
-* 新增当前用户自己的收入或支出分类
-* 查询当前用户自己的全部分类
-* 修改当前用户自己的分类
-* 删除当前用户自己的分类
-* 同一个用户不能重复创建同名同类型分类
-* 普通用户只能操作自己的分类数据
-
-### 4. 收支记录管理 / Transaction Record Management
-
-* 新增收入或支出记录
-* 查询当前用户自己的全部收支记录
-* 修改当前用户自己的收支记录
-* 删除当前用户自己的收支记录
-* 按收入或支出类型查询
-* 按日期范围查询
-* 按分类查询
-* 分页查询
-* 组合条件分页搜索
-* 新增和修改记录时，会校验分类是否属于当前用户
-* 记录类型必须和分类类型一致
-
-### 5. 统计分析功能 / Statistics
-
-* 查询指定月份的收入合计
-* 查询指定月份的支出合计
-* 查询指定月份的结余
-* 按分类统计某月收入金额
-* 按分类统计某月支出金额
-* 按类型统计某月总金额
-* 前端使用图表形式展示分类统计
-
-### 6. 管理员功能 / Admin Management
-
-* 管理员查询所有用户
-* 管理员根据用户名查询用户
-* 管理员重置指定用户密码
-* 管理员删除用户
-* 只有 `ADMIN` 角色可以访问 `/admin/**`
-* 普通用户访问管理员接口会被拦截
-
-### 7. AI 助手功能 / AI Assistant
-
-* 前端提供 AI 助手页面
-* 用户可以输入自然语言问题
-* 前端调用后端 `/ai/chat` 接口
-* 后端 `AiController` 接收请求
-* 后端 `AiService` 使用 `RestTemplate` 调用 OpenRouter API
-* API Key 通过环境变量 `OPENROUTER_API_KEY` 配置
-* 前端不会直接接触 API Key
-* AI 可回答记账、消费分析、省钱建议等问题
+| 中文 | 日本語 |
+|---|---|
+| 用户注册、登录、退出 | ユーザー登録・ログイン・ログアウト |
+| Token 登录认证 | Token によるログイン認証 |
+| 个人信息查看 | ログイン中ユーザー情報の確認 |
+| 修改密码 | パスワード変更 |
+| 管理员用户管理 | 管理者によるユーザー管理 |
+| 收支分类管理 | 収支カテゴリ管理 |
+| 收支记录管理 | 収支記録管理 |
+| 分页查询和条件筛选 | ページング検索と条件検索 |
+| 月度统计 | 月次統計 |
+| 收入 / 支出分类统计 | 収入 / 支出のカテゴリ別集計 |
+| AI 财务助手 | AI 財務アシスタント |
+| 中日英多语言切换 | 中国語・日本語・英語の切り替え |
+| 密码显示 / 隐藏 | パスワード表示 / 非表示 |
+| 金额输入校验 | 金額入力チェック |
 
 ---
 
 ## 项目结构 / プロジェクト構成
 
+中文说明：
+
 ```text
 src/main/java/com/study/usermanagement
-  common
-    Result.java                     统一返回结果
-
-  config
-    WebConfig.java                  注册拦截器
-    OpenApiConfig.java              Swagger / OpenAPI 配置
-
-  controller
-    UserController.java             用户注册
-    LoginController.java            登录和退出
-    MeController.java               当前用户信息和修改密码
-    AdminUserController.java        管理员用户管理
-    TransactionCategoryController.java  收支分类接口
-    TransactionRecordController.java    收支记录接口
-    TransactionStatsController.java     统计接口
-    AiController.java               AI 助手接口
-
-  dto
-    AiRequest.java                  AI 请求体
-    PasswordRequest.java            修改密码请求体
-
-  entity
-    User.java                       用户实体
-    TransactionCategory.java        收支分类实体
-    TransactionRecord.java          收支记录实体
-
-  exception
-    GlobalExceptionHandler.java     统一异常处理
-
-  interceptor
-    AuthInterceptor.java            Token 登录校验和管理员权限校验
-
-  mapper
-    UserMapper.java                 用户 Mapper 接口
-    TransactionCategoryMapper.java  分类 Mapper 接口
-    TransactionRecordMapper.java    记录 Mapper 接口
-    TransactionStatsMapper.java     统计 Mapper 接口
-
-  service
-    UserService.java                用户业务逻辑
-    TransactionCategoryService.java 分类业务逻辑
-    TransactionRecordService.java   记录业务逻辑
-    TransactionStatsService.java    统计业务逻辑
-    AiService.java                  AI 调用业务逻辑
-
-  vo
-    LoginVO.java                    登录结果展示对象
-    UserVO.java                     用户展示对象
-    TransactionCategoryVO.java      分类展示对象
-    TransactionRecordVO.java        记录展示对象
-    MonthlyStatsVO.java             月度统计展示对象
-    CategoryStatsVO.java            分类统计展示对象
-    PageVO.java                     分页展示对象
+  common       统一返回结果 Result
+  config       WebConfig, OpenApiConfig
+  controller   接收 HTTP 请求
+  dto          接收请求体数据
+  entity       数据库实体对象
+  exception    统一异常处理
+  interceptor  Token 登录校验和管理员权限校验
+  mapper       MyBatis Mapper 接口
+  service      业务逻辑
+  vo           返回给前端的展示对象
 
 src/main/resources
-  mapper
-    UserMapper.xml
-    TransactionCategoryMapper.xml
-    TransactionRecordMapper.xml
-    TransactionStatsMapper.xml
-
-  static
-    index.html
-    styles.css
-    app.js
-
+  mapper       MyBatis XML SQL 文件
+  static       HTML / CSS / JavaScript 前端页面
   application.properties
 ```
 
----
-
-## 分层设计 / Layer Design
+日本語説明：
 
 ```text
-Controller
-接收 HTTP 请求，获取路径参数、请求体和当前登录用户。
-
-Service
-处理业务逻辑，例如参数校验、用户名是否存在、分类是否属于当前用户、记录类型是否正确等。
-
-Mapper
-定义数据库操作方法。
-
-XML
-编写具体 SQL 语句。
-
-VO
-控制返回给前端的数据结构，避免直接暴露数据库实体中的敏感字段。
-
-DTO
-接收前端请求体数据。
+controller  HTTP リクエストを受け取る層
+service     業務ロジックを処理する層
+mapper      MyBatis の Mapper インターフェース
+mapper XML  SQL を記述するファイル
+dto         リクエストボディ用オブジェクト
+vo          フロントへ返す表示用オブジェクト
 ```
 
 ---
 
-## 主要接口 / Main APIs
+## 后端功能说明 / バックエンド機能説明
 
-| 方法 / Method | 路径 / Path                                    | 说明 / Description                     | 是否需要 Token |
-| ----------- | -------------------------------------------- | ------------------------------------ | ---------- |
-| POST        | `/users`                                     | 注册用户 / Register user                 | 否          |
-| POST        | `/login`                                     | 登录并返回 Token / Login and return Token | 否          |
-| POST        | `/logout`                                    | 退出登录 / Logout                        | 是          |
-| GET         | `/me`                                        | 查看当前用户信息 / Get current user info     | 是          |
-| PUT         | `/me/password`                               | 修改自己的密码 / Change own password        | 是          |
-| GET         | `/admin/users`                               | 管理员查询所有用户 / Admin get all users      | 是，ADMIN    |
-| GET         | `/admin/users/{username}`                    | 管理员查询单个用户 / Admin get one user       | 是，ADMIN    |
-| PUT         | `/admin/users/{username}/password`           | 管理员重置密码 / Admin reset password       | 是，ADMIN    |
-| DELETE      | `/admin/users/{username}`                    | 管理员删除用户 / Admin delete user          | 是，ADMIN    |
-| POST        | `/transaction-categories`                    | 新增当前用户的收支分类                          | 是          |
-| GET         | `/transaction-categories`                    | 查询当前用户的全部分类                          | 是          |
-| PUT         | `/transaction-categories/{id}`               | 修改当前用户自己的分类                          | 是          |
-| DELETE      | `/transaction-categories/{id}`               | 删除当前用户自己的分类                          | 是          |
-| POST        | `/transaction-records`                       | 新增当前用户的收支记录                          | 是          |
-| GET         | `/transaction-records`                       | 查询当前用户的全部收支记录                        | 是          |
-| PUT         | `/transaction-records/{id}`                  | 修改当前用户自己的收支记录                        | 是          |
-| DELETE      | `/transaction-records/{id}`                  | 删除当前用户自己的收支记录                        | 是          |
-| GET         | `/transaction-records/type/{type}`           | 按 income / expense 查询收支记录            | 是          |
-| GET         | `/transaction-records/range`                 | 按日期范围查询收支记录                          | 是          |
-| GET         | `/transaction-records/category/{categoryId}` | 按分类查询收支记录                            | 是          |
-| GET         | `/transaction-records/page`                  | 分页查询收支记录                             | 是          |
-| GET         | `/transaction-records/search`                | 组合条件分页搜索收支记录                         | 是          |
-| GET         | `/transaction-stats/month`                   | 查询月度收入、支出和结余                         | 是          |
-| GET         | `/transaction-stats/category/{type}`         | 按分类统计月度金额                            | 是          |
-| GET         | `/transaction-stats/type-total`              | 统计某类型月度总金额                           | 是          |
-| POST        | `/ai/chat`                                   | AI 助手聊天接口                            | 是          |
+### 用户认证 / ユーザー認証
 
----
+| 中文 | 日本語 |
+|---|---|
+| `POST /users` 注册普通用户 | `POST /users` で一般ユーザーを登録 |
+| `POST /login` 登录成功后生成 Token | `POST /login` 成功時に Token を生成 |
+| Token 保存到数据库 `user.token` 字段 | Token は DB の `user.token` に保存 |
+| `POST /logout` 清空当前用户 Token | `POST /logout` で現在ユーザーの Token をクリア |
+| 后续请求通过 `Authorization` 请求头携带 Token | 以降のリクエストは `Authorization` ヘッダーで Token を送信 |
 
-## 登录和 Token / Login and Token
+### 当前用户 / ログイン中ユーザー
 
-登录成功后，后端会生成 Token，并保存到数据库 `user.token` 字段。
+| 中文 | 日本語 |
+|---|---|
+| `GET /me` 查看当前登录用户信息 | `GET /me` でログイン中ユーザー情報を取得 |
+| `PUT /me/password` 修改自己的密码 | `PUT /me/password` で自分のパスワードを変更 |
+| 修改密码需要旧密码和新密码 | パスワード変更には現在のパスワードと新しいパスワードが必要 |
+| 返回用户信息时使用 `UserVO`，不返回密码 | ユーザー情報は `UserVO` で返し、パスワードは返さない |
 
-```text
-POST /login
-```
+### 管理员用户管理 / 管理者ユーザー管理
 
-请求示例：
+| 中文 | 日本語 |
+|---|---|
+| 管理员可以查询全部用户 | 管理者は全ユーザーを取得できる |
+| 管理员可以按用户名查询用户 | 管理者はユーザー名でユーザーを検索できる |
+| 管理员可以重置用户密码 | 管理者はユーザーのパスワードをリセットできる |
+| 管理员可以删除用户 | 管理者はユーザーを削除できる |
+| `/admin/**` 只有 `ADMIN` 角色可以访问 | `/admin/**` は `ADMIN` ロールのみアクセス可能 |
 
-```json
-{
-  "username": "tom",
-  "password": "123456"
-}
-```
+### 收支分类管理 / 収支カテゴリ管理
 
-返回示例：
+| 中文 | 日本語 |
+|---|---|
+| 当前用户可以新增收入 / 支出分类 | ログイン中ユーザーは収入 / 支出カテゴリを追加できる |
+| 当前用户可以查询、修改、删除自己的分类 | 自分のカテゴリを取得・更新・削除できる |
+| 分类类型使用 `income` 和 `expense` | カテゴリタイプは `income` と `expense` |
+| 同一用户下同类型同名称分类不能重复 | 同じユーザー内で同じタイプ・同じ名前のカテゴリは重複不可 |
+| 分类下已有收支记录时，不允许删除分类 | 収支記録が紐づいているカテゴリは削除不可 |
 
-```json
-{
-  "success": true,
-  "message": "登录成功",
-  "data": {
-    "username": "tom",
-    "role": "ADMIN",
-    "token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  }
-}
-```
+### 收支记录管理 / 収支記録管理
 
-访问需要登录的接口时，需要把 Token 放到请求头：
+| 中文 | 日本語 |
+|---|---|
+| 当前用户可以新增、查询、修改、删除自己的收支记录 | ログイン中ユーザーは自分の収支記録を追加・取得・更新・削除できる |
+| 新增和修改记录时，会校验分类是否属于当前用户 | 追加・更新時にカテゴリが本人のものか確認する |
+| 记录类型必须和分类类型一致 | 記録タイプとカテゴリタイプは一致する必要がある |
+| 支持按类型、日期范围、分类查询 | タイプ、日付範囲、カテゴリで検索できる |
+| 支持分页查询和组合条件筛选 | ページング検索と複合条件検索に対応 |
 
-```http
-Authorization: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-```
+### 统计功能 / 統計機能
 
-拦截器处理流程：
+| 中文 | 日本語 |
+|---|---|
+| 查询指定年月的收入合计 | 指定年月の収入合計を取得 |
+| 查询指定年月的支出合计 | 指定年月の支出合計を取得 |
+| 查询指定年月的结余 | 指定年月の残高を取得 |
+| 按收入分类统计金额 | 収入カテゴリ別に金額を集計 |
+| 按支出分类统计金额 | 支出カテゴリ別に金額を集計 |
+| 前端用图表展示分类统计 | フロントでカテゴリ別集計をグラフ表示 |
 
-```text
-1. 从请求头 Authorization 中获取 Token
-2. 根据 Token 查询用户
-3. 如果用户存在，把 currentUser 放入 request
-4. 如果用户不存在，返回“登录状态无效”
-5. 如果访问 /admin/**，继续判断 role 是否为 ADMIN
-```
+### AI 财务助手 / AI 財務アシスタント
 
----
+| 中文 | 日本語 |
+|---|---|
+| 前端提供 AI 助手页面 | フロントに AI アシスタント画面を用意 |
+| 用户可以提问记账、消费分析、省钱建议 | 記帳、支出分析、節約アドバイスについて質問可能 |
+| 后端 `AiService` 调用 OpenRouter AI API | バックエンドの `AiService` が OpenRouter AI API を呼び出す |
+| 使用 `RestTemplate` 发送 HTTP 请求 | `RestTemplate` で HTTP リクエストを送信 |
+| API Key 通过 `OPENROUTER_API_KEY` 环境变量读取 | API Key は `OPENROUTER_API_KEY` 環境変数から読み込む |
+| 对提示词泄露类问题做了简单防护 | プロンプト漏えい系の質問に対する簡単な防御を実装 |
 
-## 权限控制 / Permission Control
+### 前端功能 / フロントエンド機能
 
-项目中使用 `role` 字段区分用户身份：
-
-```text
-USER   普通用户
-ADMIN  管理员
-```
-
-权限规则：
-
-```text
-/me/**                    需要登录
-/admin/**                 需要登录，并且 role 必须是 ADMIN
-/transaction-categories/** 需要登录
-/transaction-records/**    需要登录
-/transaction-stats/**      需要登录
-/ai/**                     需要登录
-```
-
-普通用户访问管理员接口时，会返回失败结果。
+| 中文 | 日本語 |
+|---|---|
+| 使用 HTML / CSS / JavaScript 实现页面 | HTML / CSS / JavaScript で画面を実装 |
+| 支持中文、日语、英语切换 | 中国語・日本語・英語の切り替えに対応 |
+| 登录、注册、首页、分类、记录、统计、管理员、AI 页面 | ログイン、登録、ホーム、カテゴリ、記録、統計、管理者、AI 画面 |
+| 密码输入框支持显示 / 隐藏 | パスワード入力欄は表示 / 非表示を切り替え可能 |
+| 金额输入框设置最小值、最大值和小数位 | 金額入力欄に最小値、最大値、小数桁を設定 |
 
 ---
 
-## AI 助手说明 / AI Assistant
+## 安全和业务校验 / セキュリティと業務チェック
 
-AI 助手模块用于让用户通过自然语言获取记账、消费分析和省钱建议。
-
-调用流程：
-
-```text
-前端 AI助手页面
-→ POST /ai/chat
-→ AiController
-→ AiService
-→ RestTemplate
-→ OpenRouter API
-→ 返回 AI 回复
-```
-
-请求示例：
-
-```http
-POST http://localhost:8080/ai/chat
-Content-Type: application/json
-Authorization: your_token_here
-
-{
-  "message": "请给我一些控制生活支出的建议"
-}
-```
-
-返回示例：
-
-```json
-{
-  "success": true,
-  "message": "AI回复成功",
-  "data": "控制生活支出可以从记录每月固定支出、减少冲动消费、设置预算等方面开始。"
-}
-```
-
-AI API Key 不写在前端，也不直接写死在代码里，而是通过环境变量配置：
-
-```text
-OPENROUTER_API_KEY
-```
-
-这样可以避免 API Key 暴露在浏览器中。
+| 中文 | 日本語 |
+|---|---|
+| 普通用户只能操作自己的数据 | 一般ユーザーは自分のデータだけ操作できる |
+| 后端通过 Token 查询当前用户，不依赖前端传入 `userId` | バックエンドは Token から現在ユーザーを取得し、フロントの `userId` に依存しない |
+| 管理员可以查看用户、重置密码、删除用户 | 管理者はユーザー確認、パスワードリセット、削除ができる |
+| `/admin/**` 接口需要 `ADMIN` 角色 | `/admin/**` API は `ADMIN` ロールが必要 |
+| 金额字段按 `DECIMAL(10,2)` 设计 | 金額項目は `DECIMAL(10,2)` を想定 |
+| 前端金额输入限制为 `0.01` 到 `99999999.99`，小数步长 `0.01` | フロントでは `0.01` から `99999999.99`、小数ステップ `0.01` に制限 |
+| 后端校验金额必须大于 0，并保留范围和小数位校验逻辑 | バックエンドでは金額が 0 より大きいことを確認し、範囲・小数桁チェックのロジックも保持 |
+| 分类下已有收支记录时，不允许删除分类 | 収支記録があるカテゴリは削除不可 |
+| 收支记录的分类必须属于当前登录用户 | 収支記録のカテゴリはログイン中ユーザー本人のものに限る |
+| 收支记录类型必须和分类类型一致 | 収支記録タイプとカテゴリタイプは一致が必要 |
+| OpenRouter API Key 使用环境变量 `OPENROUTER_API_KEY` | OpenRouter API Key は環境変数 `OPENROUTER_API_KEY` を使用 |
+| API Key 不写死在代码中，也不暴露给前端 | API Key はコードに直書きせず、フロントにも公開しない |
+| AI 助手加入简单的提示词泄露防护 | AI アシスタントには簡単なプロンプト漏えい防止処理を追加 |
 
 ---
 
-## Swagger / OpenAPI 文档
+## 主要接口 / 主な API
 
-项目已接入 `springdoc-openapi-starter-webmvc-ui`，并在 Controller 中使用 `@Tag`、`@Operation`、`@Parameter` 补充接口说明。
-
-启动项目后可以访问：
-
-```text
-Swagger UI:
-http://localhost:8080/swagger-ui/index.html
-
-OpenAPI JSON:
-http://localhost:8080/v3/api-docs
-```
-
-常用注解：
-
-```text
-@Tag        写在 Controller 类上，说明这一组接口属于哪个模块
-@Operation  写在 Controller 方法上，说明这个接口做什么
-@Parameter  写在路径参数或请求参数上，说明参数含义
-```
+| Method | Path | 中文 | 日本語 |
+|---|---|---|---|
+| POST | `/users` | 用户注册 | ユーザー登録 |
+| POST | `/login` | 用户登录 | ログイン |
+| POST | `/logout` | 退出登录 | ログアウト |
+| GET | `/me` | 查看当前用户信息 | ログイン中ユーザー情報取得 |
+| PUT | `/me/password` | 修改当前用户密码 | パスワード変更 |
+| GET | `/admin/users` | 管理员查询全部用户 | 管理者：全ユーザー取得 |
+| GET | `/admin/users/{username}` | 管理员查询指定用户 | 管理者：指定ユーザー取得 |
+| PUT | `/admin/users/{username}/password` | 管理员重置密码 | 管理者：パスワードリセット |
+| DELETE | `/admin/users/{username}` | 管理员删除用户 | 管理者：ユーザー削除 |
+| POST | `/transaction-categories` | 新增收支分类 | 収支カテゴリ追加 |
+| GET | `/transaction-categories` | 查询自己的分类 | 自分のカテゴリ取得 |
+| PUT | `/transaction-categories/{id}` | 修改自己的分类 | 自分のカテゴリ更新 |
+| DELETE | `/transaction-categories/{id}` | 删除自己的分类 | 自分のカテゴリ削除 |
+| POST | `/transaction-records` | 新增收支记录 | 収支記録追加 |
+| GET | `/transaction-records` | 查询自己的全部记录 | 自分の全記録取得 |
+| PUT | `/transaction-records/{id}` | 修改自己的记录 | 自分の記録更新 |
+| DELETE | `/transaction-records/{id}` | 删除自己的记录 | 自分の記録削除 |
+| GET | `/transaction-records/page` | 分页查询 | ページング検索 |
+| GET | `/transaction-records/search` | 条件筛选分页查询 | 条件付きページング検索 |
+| GET | `/transaction-stats/month` | 月度统计 | 月次統計 |
+| GET | `/transaction-stats/category/{type}` | 收入 / 支出分类统计 | 収入 / 支出カテゴリ別集計 |
+| POST | `/ai/chat` | AI 财务助手 | AI 財務アシスタント |
 
 ---
 
-## 数据库 / Database
+## 数据库 / データベース
 
-当前开发环境使用：
+中文说明：
 
-```text
-MySQL 8.0.34
-```
+当前开发环境使用 **MySQL 8.0.34**，数据库名为 `java_study`。项目主要使用三张表：`user`、`transaction_category`、`transaction_record`。
 
-数据库名：
+日本語説明：
+
+現在の開発環境では **MySQL 8.0.34** を使用しています。データベース名は `java_study` です。主に `user`、`transaction_category`、`transaction_record` の3つのテーブルを使用します。
+
+参考 SQL：
 
 ```sql
-java_study
-```
+CREATE DATABASE IF NOT EXISTS java_study
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_unicode_ci;
 
-主要数据表：
+USE java_study;
 
-```text
-user
-transaction_category
-transaction_record
-```
-
-### user 表
-
-```sql
 CREATE TABLE `user` (
   id INT PRIMARY KEY AUTO_INCREMENT,
   username VARCHAR(20) NOT NULL UNIQUE,
@@ -437,22 +247,14 @@ CREATE TABLE `user` (
   role VARCHAR(20) NOT NULL DEFAULT 'USER',
   token VARCHAR(100)
 );
-```
 
-### transaction_category 表
-
-```sql
 CREATE TABLE transaction_category (
   id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT NOT NULL,
   name VARCHAR(50) NOT NULL,
   type VARCHAR(20) NOT NULL
 );
-```
 
-### transaction_record 表
-
-```sql
 CREATE TABLE transaction_record (
   id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT NOT NULL,
@@ -466,9 +268,96 @@ CREATE TABLE transaction_record (
 
 ---
 
-## 配置 / Configuration
+## 运行方法 / 実行方法
 
-`src/main/resources/application.properties`
+### 1. 创建 MySQL 数据库 / MySQL データベース作成
+
+中文说明：
+
+先创建数据库 `java_study`，再创建 `user`、`transaction_category`、`transaction_record` 三张表。
+
+日本語説明：
+
+まず `java_study` データベースを作成し、その後 `user`、`transaction_category`、`transaction_record` の3テーブルを作成します。
+
+```sql
+CREATE DATABASE IF NOT EXISTS java_study
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_unicode_ci;
+```
+
+### 2. 修改数据库配置 / DB 設定の変更
+
+中文说明：
+
+修改 `src/main/resources/application.properties` 中的数据库连接信息。
+
+日本語説明：
+
+`src/main/resources/application.properties` のデータベース接続情報を自分の環境に合わせて変更します。
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/java_study?useSSL=false&serverTimezone=Asia/Tokyo
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
+
+### 3. 设置 OPENROUTER_API_KEY 环境变量 / OPENROUTER_API_KEY 環境変数の設定
+
+中文说明：
+
+OpenRouter API Key 不写死在代码里，需要通过环境变量设置。
+
+日本語説明：
+
+OpenRouter API Key はコードに直接書かず、環境変数として設定します。
+
+PowerShell 示例：
+
+```powershell
+$env:OPENROUTER_API_KEY="your_api_key_here"
+```
+
+IntelliJ IDEA 中也可以在 Run Configuration 的 Environment variables 中设置：
+
+```text
+OPENROUTER_API_KEY=your_api_key_here
+```
+
+### 4. 启动 Spring Boot / Spring Boot 起動
+
+中文说明：
+
+可以在 IntelliJ IDEA 中运行 `UserManagementApiApplication`，也可以使用 Maven 启动。
+
+日本語説明：
+
+IntelliJ IDEA で `UserManagementApiApplication` を実行するか、Maven で起動します。
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+### 5. 浏览器访问 / ブラウザでアクセス
+
+| 中文 | 日本語 | URL |
+|---|---|---|
+| 前端页面 | フロント画面 | http://localhost:8080/ |
+| Swagger UI | Swagger UI | http://localhost:8080/swagger-ui/index.html |
+| OpenAPI JSON | OpenAPI JSON | http://localhost:8080/v3/api-docs |
+
+---
+
+## 配置文件 / 設定ファイル
+
+中文说明：
+
+项目主要配置在 `src/main/resources/application.properties`。
+
+日本語説明：
+
+主な設定は `src/main/resources/application.properties` にあります。
 
 ```properties
 spring.application.name=user-management-api
@@ -485,173 +374,23 @@ openrouter.api-url=https://openrouter.ai/api/v1/chat/completions
 openrouter.model=openai/gpt-oss-20b:free
 ```
 
-注意：
-
-```text
-真实的 OpenRouter API Key 不要写进 application.properties。
-需要在运行配置或系统环境变量中设置 OPENROUTER_API_KEY。
-```
-
 ---
 
-## MyBatis 说明 / MyBatis
+## 请求示例 / リクエスト例
 
-Mapper 接口示例：
-
-```text
-src/main/java/com/study/usermanagement/mapper/UserMapper.java
-```
-
-Mapper XML 示例：
-
-```text
-src/main/resources/mapper/UserMapper.xml
-```
-
-MyBatis 关键点：
-
-```text
-@Mapper                 声明 Mapper 接口
-@Param                  给 SQL 参数命名
-namespace               对应 Mapper 接口完整类名
-id                      对应 Mapper 接口方法名
-resultType              每一行结果要封装成的 Java 类型
-#{参数名}               安全占位符，类似 JDBC 的 ?
-```
-
-项目中使用 XML 编写 SQL，方便练习复杂查询、分页查询、条件查询和统计查询。
-
----
-
-## 前端页面 / Frontend
-
-前端文件放在：
-
-```text
-src/main/resources/static
-```
-
-主要文件：
-
-```text
-index.html    页面结构
-styles.css    页面样式
-app.js        前端交互和接口请求
-```
-
-前端功能：
-
-```text
-1. 登录 / 注册页面
-2. 首页月度总览
-3. 个人信息和修改密码
-4. 分类管理
-5. 收支记录管理
-6. 分页查询
-7. 统计图表
-8. 管理员页面
-9. AI 助手页面
-10. 中文 / 日语 / 英语切换
-```
-
----
-
-## 启动方式 / How to Run
-
-1. 启动 MySQL。
-2. 确认数据库 `java_study` 存在。
-3. 确认 `user`、`transaction_category`、`transaction_record` 表存在。
-4. 确认 `application.properties` 数据库配置正确。
-5. 设置环境变量 `OPENROUTER_API_KEY`。
-6. 启动 `UserManagementApiApplication`。
-7. 打开前端页面：
-
-```text
-http://localhost:8080/
-```
-
-8. 或打开 Swagger UI：
-
-```text
-http://localhost:8080/swagger-ui/index.html
-```
-
----
-
-## Maven 编译 / Build
-
-Maven 编译：
-
-```powershell
-.\mvnw.cmd -DskipTests compile
-```
-
-如果看到：
-
-```text
-BUILD SUCCESS
-```
-
-说明项目编译成功。
-
----
-
-## 测试顺序 / Test Flow
-
-推荐测试顺序：
-
-```text
-1. 注册普通用户
-2. 登录普通用户，复制 USER Token
-3. 登录管理员，复制 ADMIN Token
-4. 测试 /me
-5. 测试 /me/password
-6. 测试分类新增、查询、修改、删除
-7. 测试收支记录新增、查询、修改、删除
-8. 测试分页和组合条件查询
-9. 测试月度统计和分类统计
-10. 测试 USER 访问 /admin/** 应该失败
-11. 测试 ADMIN 访问 /admin/** 应该成功
-12. 测试 /ai/chat AI 助手接口
-13. 测试 logout 后旧 Token 失效
-```
-
----
-
-## 请求示例 / Request Examples
-
-### 注册用户
-
-```http
-POST http://localhost:8080/users
-Content-Type: application/json
-
-{
-  "username": "spring01",
-  "password": "123456"
-}
-```
-
-### 登录
+### 登录 / ログイン
 
 ```http
 POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-  "username": "spring01",
+  "username": "tom",
   "password": "123456"
 }
 ```
 
-### 查看自己的信息
-
-```http
-GET http://localhost:8080/me
-Authorization: your_token_here
-```
-
-### 新增分类
+### 新增收支分类 / 収支カテゴリ追加
 
 ```http
 POST http://localhost:8080/transaction-categories
@@ -664,7 +403,7 @@ Authorization: your_token_here
 }
 ```
 
-### 新增收支记录
+### 新增收支记录 / 収支記録追加
 
 ```http
 POST http://localhost:8080/transaction-records
@@ -680,14 +419,14 @@ Authorization: your_token_here
 }
 ```
 
-### 查询月度统计
+### 条件筛选分页查询 / 条件付きページング検索
 
 ```http
-GET http://localhost:8080/transaction-stats/month?year=2026&month=6
+GET http://localhost:8080/transaction-records/search?type=expense&categoryId=1&startRecordDate=2026-06-01&endOfRecordDate=2026-06-30&page=1&size=5
 Authorization: your_token_here
 ```
 
-### AI 助手
+### AI 财务助手 / AI 財務アシスタント
 
 ```http
 POST http://localhost:8080/ai/chat
@@ -695,106 +434,104 @@ Content-Type: application/json
 Authorization: your_token_here
 
 {
-  "message": "请分析一下怎么减少生活支出"
+  "message": "请给我一些控制生活支出的建议"
 }
 ```
 
 ---
 
-## 返回格式 / Response Format
+## 统一返回格式 / 共通レスポンス形式
 
-项目使用统一返回对象 `Result`：
+中文说明：
+
+后端接口统一返回 `Result` 对象。
+
+日本語説明：
+
+バックエンド API は共通の `Result` オブジェクトを返します。
 
 ```json
 {
   "success": true,
   "message": "查询成功",
-  "data": {
-    "username": "tom",
-    "role": "ADMIN"
-  }
+  "data": {}
 }
 ```
 
-字段说明：
+| 字段 | 中文 | 日本語 |
+|---|---|---|
+| success | 是否成功 | 成功したかどうか |
+| message | 返回提示信息 | レスポンスメッセージ |
+| data | 返回数据，可以是对象、数组或 null | 返却データ。オブジェクト、配列、null の場合があります |
+
+---
+
+## Swagger / OpenAPI
+
+中文说明：
+
+项目已接入 Swagger / OpenAPI，可以在浏览器中查看接口分组、路径、参数和说明。
+
+日本語説明：
+
+Swagger / OpenAPI を導入しており、ブラウザで API のグループ、パス、パラメータ、説明を確認できます。
 
 ```text
-success  是否成功
-message  返回信息
-data     返回数据
+http://localhost:8080/swagger-ui/index.html
 ```
 
 ---
 
-## 安全处理 / Security Notes
+## GitHub 展示用项目亮点 / GitHub 表示用ポイント
 
-* 查询用户信息时不返回密码。
-* 使用 `UserVO` 控制返回给前端的用户数据。
-* 登录接口使用 `LoginVO` 返回用户名、角色和 Token。
-* 通过 `AuthInterceptor` 统一检查 Token。
-* 通过 `role` 区分普通用户和管理员。
-* 普通用户只能操作自己的分类、记录和统计数据。
-* SQL 中使用 `user_id` 限制数据范围。
-* AI API Key 不放在前端，不写死在代码里。
-* OpenRouter API Key 通过环境变量配置。
+| 中文 | 日本語 |
+|---|---|
+| 使用 Spring Boot + MyBatis + MySQL 实现个人财务管理系统 | Spring Boot + MyBatis + MySQL で個人財務管理システムを実装 |
+| 使用 Controller / Service / Mapper / XML 分层结构 | Controller / Service / Mapper / XML の層構成を採用 |
+| 使用 Token 和 Interceptor 实现登录认证 | Token と Interceptor でログイン認証を実装 |
+| 使用 role 字段实现 ADMIN / USER 权限控制 | role 項目で ADMIN / USER の権限制御を実装 |
+| 普通用户只能操作自己的收支数据 | 一般ユーザーは自分の収支データのみ操作可能 |
+| 使用 VO 控制返回数据，避免返回密码 | VO でレスポンスを制御し、パスワードを返さない |
+| 使用统一异常处理返回错误信息 | 共通例外処理でエラーレスポンスを返す |
+| 收支记录支持分页查询和条件筛选 | 収支記録はページング検索と条件検索に対応 |
+| 统计模块支持月度统计和分类统计 | 統計機能は月次統計とカテゴリ別集計に対応 |
+| 前端支持中日英切换和密码显示 / 隐藏 | フロントは中日英切り替えとパスワード表示 / 非表示に対応 |
+| 接入 Swagger / OpenAPI，方便查看接口 | Swagger / OpenAPI で API を確認しやすい |
+| 接入 OpenRouter AI API，实现简单 AI 财务助手 | OpenRouter AI API と連携し、簡単な AI 財務アシスタントを実装 |
+| API Key 使用环境变量管理 | API Key は環境変数で管理 |
 
 ---
 
-## 项目亮点 / Project Highlights
+## 本地验证 / ローカル確認
+
+中文说明：
+
+可以使用 Maven 编译项目，确认代码可以正常通过编译。
+
+日本語説明：
+
+Maven でプロジェクトをコンパイルし、コードが正常にビルドできることを確認できます。
+
+```powershell
+.\mvnw.cmd -DskipTests compile
+```
+
+成功时会看到：
 
 ```text
-1. 使用 Spring Boot + MyBatis + MySQL 实现完整的个人财务管理系统。
-2. 实现用户注册、登录、Token 校验和管理员权限控制。
-3. 使用 Controller / Service / Mapper / XML 分层结构，职责清晰。
-4. 使用 VO 控制返回数据，避免直接返回密码等敏感信息。
-5. 使用 Interceptor 统一处理登录校验和管理员权限判断。
-6. 使用 GlobalExceptionHandler 统一处理参数校验和异常返回。
-7. 收支记录支持分页查询和组合条件搜索。
-8. 统计模块支持月度收入、支出、结余和分类金额统计。
-9. 前端使用 HTML、CSS、JavaScript 实现完整页面交互。
-10. 接入 OpenRouter API，实现 AI 助手功能。
-11. API Key 通过环境变量配置，避免前端泄露。
-12. 接入 Swagger UI，方便查看和测试接口文档。
+BUILD SUCCESS
 ```
 
 ---
 
-## 学习重点 / Learning Points
+## 后续改进方向 / 今後の改善
 
-* Spring Boot 项目创建和启动
-* RESTful API 设计
-* Controller / Service / Mapper 分层
-* MyBatis Mapper 接口和 XML
-* MySQL 数据库操作
-* 参数校验 `@Valid` / `@NotBlank` / `@Size`
-* 统一异常处理 `@RestControllerAdvice`
-* 统一返回对象 `Result`
-* Token 登录状态管理
-* Interceptor 拦截器
-* 简单角色权限控制
-* VO / DTO 的使用
-* 分页查询
-* 条件查询
-* 月度统计 SQL
-* Swagger / OpenAPI 接口文档
-* 前端 HTML / CSS / JavaScript
-* 调用外部 AI API
-* 环境变量保存 API Key
-* Git 本地版本管理
-
----
-
-## 后续优化方向 / Next Steps
-
-后续可以继续优化：
-
-```text
-1. 删除分类前检查该分类下是否已有收支记录。
-2. 密码加密保存，例如使用 BCrypt。
-3. Token 改为 JWT。
-4. AI 助手结合当前用户真实收支数据进行分析。
-5. 增加更多接口测试用例。
-6. 增加数据库建表 SQL 文件。
-7. 优化前端页面样式和移动端适配。
-8. 为项目整理简历用介绍和面试回答。
-```
+| 中文 | 日本語 |
+|---|---|
+| 密码改为加密保存，例如 BCrypt | パスワードを BCrypt などでハッシュ化して保存 |
+| Token 改为 JWT 或更完整的认证方案 | Token を JWT などより整った認証方式に変更 |
+| 增加数据库外键和索引 | DB に外部キーやインデックスを追加 |
+| 给 Service 层补充单元测试 | Service 層の単体テストを追加 |
+| 增加 SQL 初始化脚本 | SQL 初期化スクリプトを追加 |
+| AI 助手结合当前用户真实收支数据分析 | AI アシスタントが実際の収支データを使って分析できるようにする |
+| 继续优化前端页面和移动端适配 | フロント画面とモバイル対応を改善 |
