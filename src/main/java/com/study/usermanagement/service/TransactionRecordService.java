@@ -312,4 +312,26 @@ public class TransactionRecordService {
         PageVO pageVO = new PageVO(recordsVO, total, page, size);
         return new Result(true, "查询成功", pageVO);
     }
+
+    // 校验金额：必须大于0，不能超过数据库 DECIMAL(10,2) 的范围，小数最多2位
+// 金額チェック：0より大きく、DB の DECIMAL(10,2) の範囲を超えず、小数は2桁まで
+    private Result validateAmount(BigDecimal amount) {
+        if (amount == null) {
+            return new Result(false, "金额不能为空", null);
+        }
+
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            return new Result(false, "金额必须大于0", null);
+        }
+
+        if (amount.compareTo(new BigDecimal("99999999.99")) > 0) {
+            return new Result(false, "金额不能超过99999999.99", null);
+        }
+
+        if (amount.scale() > 2) {
+            return new Result(false, "金额最多只能保留2位小数", null);
+        }
+
+        return null;
+    }
 }

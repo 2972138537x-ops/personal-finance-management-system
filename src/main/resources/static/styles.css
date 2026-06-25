@@ -631,3 +631,54 @@ th {
     content: "请在上方输入问题，然后点击发送。";
     color: var(--muted);
 }
+
+
+/* 密码输入框：显示/隐藏按钮 */
+/* パスワード入力欄：表示/非表示ボタン */
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-field input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.password-field .password-toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    min-height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    font-size: 16px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+}
+
+.password-field .password-toggle:hover {
+    background: var(--soft);
+}
+
+/* 尽量隐藏浏览器自带的密码显示按钮，避免出现两个小眼睛 */
+/* ブラウザ標準のパスワード表示ボタンをできるだけ隠し、二重表示を防ぐ */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-caps-lock-indicator {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+}

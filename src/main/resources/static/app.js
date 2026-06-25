@@ -6,6 +6,7 @@
         activeTab: "home",
         categories: [],
         records: [],
+        homeRecentRecords: [],
         recordPage: 1,
         recordSize: 10,
         recordTotal: 0,
@@ -30,6 +31,8 @@
             registerHint: "创建普通用户账号。",
             username: "用户名",
             password: "密码",
+            showPassword: "显示密码",
+            hidePassword: "隐藏密码",
             noAccount: "还没有账号？",
             goRegister: "去注册",
             hasAccount: "已有账号？",
@@ -40,6 +43,7 @@
             logout: "退出",
             home: "首页",
             homeHint: "查看指定月份的收入、支出、结余和最近记录。",
+            monthFilter: "月份筛选",
             profile: "个人信息",
             profileHint: "查看当前登录用户信息并修改登录密码。",
             accountInfo: "账号信息",
@@ -70,13 +74,13 @@
             myRecords: "记录列表",
             filter: "筛选",
             allRecords: "全部记录",
+            allCategories: "全部分类",
             incomeOnly: "只看收入",
             expenseOnly: "只看支出",
             startDate: "开始日期",
             endDate: "结束日期",
             queryByDate: "按日期查询",
             monthlyStats: "月度统计",
-            typeTotal: "类型总额",
             userManagement: "用户管理",
             userDetail: "用户详情",
             resetPassword: "重置密码",
@@ -120,6 +124,8 @@
             registerHint: "一般ユーザーアカウントを作成します。",
             username: "ユーザー名",
             password: "パスワード",
+            showPassword: "パスワードを表示",
+            hidePassword: "パスワードを非表示",
             noAccount: "アカウントがありませんか？",
             goRegister: "登録へ",
             hasAccount: "すでにアカウントがありますか？",
@@ -130,6 +136,7 @@
             logout: "ログアウト",
             home: "ホーム",
             homeHint: "指定した月の収入、支出、残高、最近の記録を表示します。",
+            monthFilter: "年月の選択",
             profile: "個人情報",
             profileHint: "ログイン中のユーザー情報を確認し、パスワードを変更します。",
             accountInfo: "アカウント情報",
@@ -160,13 +167,13 @@
             myRecords: "記録一覧",
             filter: "絞り込み",
             allRecords: "すべての記録",
+            allCategories: "すべてのカテゴリ",
             incomeOnly: "収入のみ",
             expenseOnly: "支出のみ",
             startDate: "開始日",
             endDate: "終了日",
             queryByDate: "日付で検索",
             monthlyStats: "月次統計",
-            typeTotal: "タイプ別合計",
             userManagement: "ユーザー管理",
             userDetail: "ユーザー詳細",
             resetPassword: "パスワード変更",
@@ -210,6 +217,8 @@
             registerHint: "Create a normal user account.",
             username: "Username",
             password: "Password",
+            showPassword: "Show Password",
+            hidePassword: "Hide Password",
             noAccount: "No account?",
             goRegister: "Register",
             hasAccount: "Already have an account?",
@@ -220,6 +229,7 @@
             logout: "Logout",
             home: "Home",
             homeHint: "View income, expense, balance, and recent records for the selected month.",
+            monthFilter: "Month Selection",
             profile: "Profile",
             profileHint: "View your account information and change your password.",
             accountInfo: "Account Info",
@@ -250,13 +260,13 @@
             myRecords: "Record List",
             filter: "Filter",
             allRecords: "All Records",
+            allCategories: "All Categories",
             incomeOnly: "Income Only",
             expenseOnly: "Expense Only",
             startDate: "Start Date",
             endDate: "End Date",
             queryByDate: "Query by Date",
             monthlyStats: "Monthly Stats",
-            typeTotal: "Type Total",
             userManagement: "User Management",
             userDetail: "User Detail",
             resetPassword: "Reset Password",
@@ -424,12 +434,18 @@
         document.documentElement.lang = state.lang === "zh" ? "zh-CN" : state.lang;
 
         setupTypeSelects();
+        setupPasswordToggleButtons();
         fillRecordCategoryOptions();
+        fillFilterCategoryOptions();
         renderCurrentUser();
 
         if (state.categories.length > 0) renderCategoryTable();
 
-        if (state.records.length > 0) {
+        if (state.homeRecentRecords.length > 0) {
+            renderHomeRecentRecords(state.homeRecentRecords);
+        }
+
+        if (state.activeTab === "records" && $("recordsBody")) {
             renderRecordTable(state.records);
             renderRecordPagination();
         }
@@ -448,7 +464,7 @@
     }
 
     function setupTypeSelects() {
-        const selects = ["categoryType", "recordType", "typeTotalType"];
+        const selects = ["categoryType", "recordType"];
 
         selects.forEach(function (id) {
             const select = $(id);
@@ -460,6 +476,31 @@
                 '<option value="expense">' + text("expense") + "</option>";
             select.value = oldValue;
         });
+    }
+
+
+    // 初始化密码显示/隐藏按钮
+    // パスワード表示/非表示ボタンを初期化する
+    function setupPasswordToggleButtons() {
+        document.querySelectorAll(".password-toggle").forEach(function (button) {
+            const input = $(button.dataset.target);
+            if (!input) return;
+
+            const isVisible = input.type === "text";
+            button.textContent = isVisible ? "🙈" : "👁";
+            button.setAttribute("title", isVisible ? text("hidePassword") : text("showPassword"));
+            button.setAttribute("aria-label", isVisible ? text("hidePassword") : text("showPassword"));
+        });
+    }
+
+    // 切换密码显示/隐藏
+    // パスワードの表示/非表示を切り替える
+    function togglePasswordVisibility(button) {
+        const input = $(button.dataset.target);
+        if (!input) return;
+
+        input.type = input.type === "password" ? "text" : "password";
+        setupPasswordToggleButtons();
     }
 
     function showLoginForm() {
@@ -730,6 +771,20 @@
         return category ? (category.name || category.categoryName || "-") : "-";
     }
 
+    function renderHomeRecentRecords(records) {
+        const recentRows = (records || []).map(function (record) {
+            return "<tr>" +
+                "<td>" + escapeHtml(record.id) + "</td>" +
+                "<td>" + escapeHtml(getCategoryName(record)) + "</td>" +
+                "<td>" + renderType(record.type) + "</td>" +
+                "<td>" + money(record.amount) + "</td>" +
+                "<td>" + escapeHtml(record.recordDate || "") + "</td>" +
+                "</tr>";
+        });
+
+        renderRows("recentRecordsBody", recentRows, 5);
+    }
+
     async function loadHome() {
         const year = Number(state.homeYear || currentYear());
         const month = Number(state.homeMonth || currentMonth());
@@ -756,17 +811,8 @@
         const recentData = getResultData(recentResult) || {};
         const recentList = Array.isArray(recentData.list) ? recentData.list : [];
 
-        const recentRows = recentList.map(function (record) {
-            return "<tr>" +
-                "<td>" + escapeHtml(record.id) + "</td>" +
-                "<td>" + escapeHtml(getCategoryName(record)) + "</td>" +
-                "<td>" + renderType(record.type) + "</td>" +
-                "<td>" + money(record.amount) + "</td>" +
-                "<td>" + escapeHtml(record.recordDate || "") + "</td>" +
-                "</tr>";
-        });
-
-        renderRows("recentRecordsBody", recentRows, 5);
+        state.homeRecentRecords = recentList;
+        renderHomeRecentRecords(state.homeRecentRecords);
 
         await renderCategoryStats("income", year, month, "homeIncomeStats");
         await renderCategoryStats("expense", year, month, "homeExpenseStats");
@@ -850,7 +896,7 @@
 
         const oldValue = select.value;
 
-        const options = ['<option value="">全部分类</option>'];
+        const options = ['<option value="">' + text("allCategories") + "</option>"];
 
         state.categories.forEach(function (item) {
             const name = item.name || item.categoryName || "";
@@ -1234,23 +1280,6 @@
         }
     }
 
-    async function loadTypeTotal(event) {
-        event.preventDefault();
-
-        const type = $("typeTotalType").value;
-        const year = Number($("typeTotalYear").value || currentYear());
-        const month = Number($("typeTotalMonth").value || currentMonth());
-
-        try {
-            const result = await api("/transaction-stats/type-total?type=" + encodeURIComponent(type) + "&year=" + year + "&month=" + month);
-            const data = getResultData(result);
-
-            $("typeTotalAmount").textContent = money(data);
-        } catch (error) {
-            toast(error.message);
-        }
-    }
-
     function renderAiDefaultAnswer() {
         const answerBox = $("aiAnswerBox");
         if (!answerBox) return;
@@ -1531,6 +1560,12 @@
         $("loginForm").addEventListener("submit", handleLogin);
         $("registerForm").addEventListener("submit", handleRegister);
 
+        document.querySelectorAll(".password-toggle").forEach(function (button) {
+            button.addEventListener("click", function () {
+                togglePasswordVisibility(button);
+            });
+        });
+
         $("logoutBtn").addEventListener("click", logout);
         $("changePasswordForm").addEventListener("submit", changeMyPassword);
 
@@ -1583,7 +1618,6 @@
         $("homeMonthForm").addEventListener("submit", handleHomeMonthQuery);
 
         $("monthlyStatsForm").addEventListener("submit", loadStats);
-        $("typeTotalForm").addEventListener("submit", loadTypeTotal);
 
         $("aiForm").addEventListener("submit", askAi);
 
@@ -1598,6 +1632,7 @@
         bindEvents();
 
         setupTypeSelects();
+        setupPasswordToggleButtons();
         translatePage();
 
         $("recordDate").value = today();
@@ -1609,8 +1644,6 @@
 
         $("statsYear").value = currentYear();
         $("statsMonth").value = currentMonth();
-        $("typeTotalYear").value = currentYear();
-        $("typeTotalMonth").value = currentMonth();
 
         if (!state.token) {
             showAuthView();

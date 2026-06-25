@@ -42,7 +42,10 @@
 
                 <label>
                     <span data-i18n="password">密码</span>
-                    <input id="loginPassword" type="password" autocomplete="current-password">
+                    <div class="password-field">
+                        <input id="loginPassword" type="password" autocomplete="current-password">
+                        <button type="button" class="password-toggle" data-target="loginPassword">👁</button>
+                    </div>
                 </label>
 
                 <button type="submit" class="primary" data-i18n="login">登录</button>
@@ -64,7 +67,10 @@
 
                 <label>
                     <span data-i18n="password">密码</span>
-                    <input id="registerPassword" type="password" autocomplete="new-password">
+                    <div class="password-field">
+                        <input id="registerPassword" type="password" autocomplete="new-password">
+                        <button type="button" class="password-toggle" data-target="registerPassword">👁</button>
+                    </div>
                 </label>
 
                 <button type="submit" class="primary" data-i18n="register">注册</button>
@@ -112,7 +118,7 @@
                 </div>
 
                 <section class="panel">
-                    <h3>月份筛选</h3>
+                    <h3 data-i18n="monthFilter">月份筛选</h3>
                     <form id="homeMonthForm" class="inline-form">
                         <label>
                             <span data-i18n="year">年份</span>
@@ -201,17 +207,26 @@
                     <form id="changePasswordForm" class="form-grid">
                         <label>
                             <span data-i18n="oldPassword">当前密码</span>
-                            <input id="meOldPassword" type="password" autocomplete="current-password">
+                            <div class="password-field">
+                                <input id="meOldPassword" type="password" autocomplete="current-password">
+                                <button type="button" class="password-toggle" data-target="meOldPassword">👁</button>
+                            </div>
                         </label>
 
                         <label>
                             <span data-i18n="newPassword">新密码</span>
-                            <input id="meNewPassword" type="password" autocomplete="new-password">
+                            <div class="password-field">
+                                <input id="meNewPassword" type="password" autocomplete="new-password">
+                                <button type="button" class="password-toggle" data-target="meNewPassword">👁</button>
+                            </div>
                         </label>
 
                         <label>
                             <span data-i18n="confirmPassword">确认新密码</span>
-                            <input id="meConfirmPassword" type="password" autocomplete="new-password">
+                            <div class="password-field">
+                                <input id="meConfirmPassword" type="password" autocomplete="new-password">
+                                <button type="button" class="password-toggle" data-target="meConfirmPassword">👁</button>
+                            </div>
                         </label>
 
                         <div class="form-actions">
@@ -295,7 +310,7 @@
 
                         <label>
                             <span data-i18n="amount">金额</span>
-                            <input id="recordAmount" type="number" min="0" step="0.01">
+                            <input id="recordAmount" type="number" min="0.01" max="99999999.99" step="0.01">
                         </label>
 
                         <label>
@@ -418,31 +433,6 @@
                     </section>
                 </div>
 
-                <section class="panel">
-                    <h3 data-i18n="typeTotal">类型总额</h3>
-                    <form id="typeTotalForm" class="inline-form">
-                        <label>
-                            <span data-i18n="type">类型</span>
-                            <select id="typeTotalType"></select>
-                        </label>
-
-                        <label>
-                            <span data-i18n="year">年份</span>
-                            <input id="typeTotalYear" type="number">
-                        </label>
-
-                        <label>
-                            <span data-i18n="month">月份</span>
-                            <input id="typeTotalMonth" type="number" min="1" max="12">
-                        </label>
-
-                        <button type="submit" class="primary" data-i18n="query">查询</button>
-                    </form>
-
-                    <p class="big-number">
-                        <span data-i18n="amount">金额</span>：<strong id="typeTotalAmount">0.00</strong>
-                    </p>
-                </section>
             </section>
 
             <section id="aiPanel" class="view-panel">
@@ -522,7 +512,10 @@
 
                         <label>
                             <span data-i18n="newPassword">新密码</span>
-                            <input id="adminResetPassword" type="password">
+                            <div class="password-field">
+                                <input id="adminResetPassword" type="password">
+                                <button type="button" class="password-toggle" data-target="adminResetPassword">👁</button>
+                            </div>
                         </label>
 
                         <div class="form-actions">
