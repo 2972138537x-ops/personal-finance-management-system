@@ -1,677 +1,185 @@
 <script setup>
-import { onMounted } from "vue";
-import { initLegacyApp } from "./legacy/legacyApp.js";
-import "./styles/main.css";
+import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
+import TopBar from "@/components/TopBar.vue";
+import Toast from "@/components/Toast.vue";
+import AppLayout from "@/components/AppLayout.vue";
+import AuthView from "@/views/AuthView.vue";
+import Home from "@/views/Home.vue";
+import MyPage from "@/views/MyPage.vue";
+import Category from "@/views/Category.vue";
+import Record from "@/views/Record.vue";
+import Stats from "@/views/Stats.vue";
+import AiAssistant from "@/views/AiAssistant.vue";
+import Admin from "@/views/Admin.vue";
+import { messages, createI18n } from "@/i18n/index.js";
+import { authApi } from "@/api/authApi.js";
+import { setAuthExpiredHandler, getResultData } from "@/api/request.js";
+import { getToken, setToken, clearAuth, getCurrentUser, setCurrentUser } from "@/auth/token.js";
+import { loadAppearance, saveAppearance, applyAppearance } from "@/utils/appearance.js";
 
-onMounted(() => {
-  initLegacyApp();
+const lang = ref(localStorage.getItem("pf.lang") || "zh");
+const t = createI18n(() => lang.value);
+const token = ref(getToken());
+const user = ref(getCurrentUser());
+const activeTab = ref("home");
+const appearance = reactive(loadAppearance());
+const toastState = reactive({ message: "", show: false });
+const currentView = ref(null);
+
+const loggedIn = computed(() => !!token.value);
+const role = computed(() => String(user.value?.role || "USER").toUpperCase());
+
+function showToast(message) {
+  toastState.message = localizeMessage(message || "");
+  toastState.show = true;
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => { toastState.show = false; }, 2300);
+}
+
+function localizeMessage(message) {
+  const raw = String(message || "");
+  const exactMap = {
+    "登录已失效，请重新登录": "loginRequired",
+    "请求失败": "requestFailed",
+    "请输入用户名和密码": "usernamePasswordRequired",
+    "登录成功，但后端没有返回 token": "loginSuccessNoToken",
+    "登录成功": "loginSuccess",
+    "注册成功，请登录": "registerSuccess",
+    "密码修改成功": "changePasswordSuccess",
+    "保存成功": "saveSuccess",
+    "删除成功": "deleteSuccess"
+  };
+  if (exactMap[raw]) return t(exactMap[raw]);
+  return raw;
+}
+
+function changeLang(value) {
+  lang.value = value;
+  localStorage.setItem("pf.lang", value);
+  document.documentElement.lang = value === "zh" ? "zh-CN" : value;
+}
+
+function updateAppearance(next) {
+  Object.assign(appearance, next);
+  saveAppearance(appearance);
+  applyAppearance(appearance);
+}
+
+function clearLoginState() {
+  token.value = "";
+  user.value = null;
+  clearAuth();
+  activeTab.value = "home";
+}
+
+async function loadMe() {
+  const data = getResultData(await authApi.me());
+  if (data) {
+    user.value = { ...(user.value || {}), ...data };
+    setCurrentUser(user.value);
+  }
+}
+
+async function handleLogin({ username, password }) {
+  if (!username || !password) return showToast(t("usernamePasswordRequired"));
+  try {
+    const result = await authApi.login(username, password);
+    const data = getResultData(result);
+    let nextToken = "";
+    if (typeof data === "string") nextToken = data;
+    else if (data) nextToken = data.token || data.authorization || data.Authorization || "";
+    if (!nextToken && result) nextToken = result.token || "";
+    if (!nextToken) throw new Error(t("loginSuccessNoToken"));
+
+    token.value = nextToken;
+    setToken(nextToken);
+    user.value = { username, role: "USER" };
+    setCurrentUser(user.value);
+    await loadMe().catch(() => {});
+    activeTab.value = "home";
+    showToast(t("loginSuccess"));
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function handleRegister({ username, password }) {
+  if (!username || !password) return showToast(t("usernamePasswordRequired"));
+  try {
+    const result = await authApi.register(username, password);
+    showToast(result.message || t("registerSuccess"));
+  } catch (error) {
+    showToast(error.message);
+    throw error;
+  }
+}
+
+async function logout() {
+  try { await authApi.logout(); } catch {}
+  clearLoginState();
+  showToast(t("logout"));
+}
+
+function handleAuthExpired(message) {
+  clearLoginState();
+  showToast(message || t("loginRequired"));
+}
+
+function handleDeleted() {
+  clearLoginState();
+}
+
+function handlePasswordChanged() {
+  clearLoginState();
+  showToast(t("passwordChangedRelogin"));
+}
+
+async function changeTab(tab) {
+  if (tab === "admin" && role.value !== "ADMIN") return;
+  activeTab.value = tab;
+  await nextTick();
+  if (currentView.value && typeof currentView.value.refresh === "function") {
+    currentView.value.refresh();
+  }
+}
+
+async function refreshCurrent() {
+  if (!loggedIn.value) return;
+  if (currentView.value && typeof currentView.value.refresh === "function") {
+    await currentView.value.refresh();
+  }
+  showToast(t("refreshed"));
+}
+
+onMounted(async () => {
+  applyAppearance(appearance);
+  document.documentElement.lang = lang.value === "zh" ? "zh-CN" : lang.value;
+  setAuthExpiredHandler(handleAuthExpired);
+  if (token.value) {
+    await loadMe().catch(() => {});
+  }
 });
+
+watch(() => appearance.theme, () => applyAppearance(appearance));
+watch(lang, () => nextTick(() => applyAppearance(appearance)));
 </script>
 
 <template>
-<header class="topbar">
-    <div class="brand">
-        <div class="logo">PF</div>
-        <div>
-            <h1 data-i18n="appTitle">个人财务管理系统</h1>
-            <p data-i18n="appSubTitle">Spring Boot + MyBatis + MySQL</p>
-        </div>
-    </div>
-
-    <div class="language-select-wrap">
-        <select id="languageSelect" class="language-select" aria-label="Language" onchange="window.setPfLanguage && window.setPfLanguage(this.value)">
-            <option value="zh">中文</option>
-            <option value="ja">日本語</option>
-            <option value="en">English</option>
-        </select>
-    </div>
-</header>
-
-<main>
-    <section id="authView" class="auth-view">
-        <div class="auth-card">
-            <div class="segmented">
-                <button type="button" id="loginTab" class="segment active" data-i18n="login">登录</button>
-                <button type="button" id="registerTab" class="segment" data-i18n="register">注册</button>
-            </div>
-
-            <form id="loginForm" class="auth-form">
-                <h2 data-i18n="login">登录</h2>
-                <p class="muted" data-i18n="loginHint">登录后进入财务管理系统。</p>
-
-                <label>
-                    <span data-i18n="username">用户名</span>
-                    <input id="loginUsername" type="text" autocomplete="username">
-                </label>
-
-                <label>
-                    <span data-i18n="password">密码</span>
-                    <div class="password-field">
-                        <input id="loginPassword" type="password" autocomplete="current-password">
-                        <button type="button" class="password-toggle" data-target="loginPassword">👁</button>
-                    </div>
-                </label>
-
-                <button type="submit" class="primary" data-i18n="login">登录</button>
-
-                <p class="auth-link">
-                    <span data-i18n="noAccount">还没有账号？</span>
-                    <button type="button" id="goRegisterBtn" data-i18n="goRegister">去注册</button>
-                </p>
-            </form>
-
-            <form id="registerForm" class="auth-form hidden">
-                <h2 data-i18n="register">注册</h2>
-                <p class="muted" data-i18n="registerHint">创建普通用户账号。</p>
-
-                <label>
-                    <span data-i18n="username">用户名</span>
-                    <input id="registerUsername" type="text" autocomplete="username">
-                </label>
-
-                <label>
-                    <span data-i18n="password">密码</span>
-                    <div class="password-field">
-                        <input id="registerPassword" type="password" autocomplete="new-password">
-                        <button type="button" class="password-toggle" data-target="registerPassword">👁</button>
-                    </div>
-                </label>
-
-                <button type="submit" class="primary" data-i18n="register">注册</button>
-
-                <p class="auth-link">
-                    <span data-i18n="hasAccount">已有账号？</span>
-                    <button type="button" id="goLoginBtn" data-i18n="goLogin">去登录</button>
-                </p>
-            </form>
-        </div>
-    </section>
-
-    <section id="appView" class="app-layout hidden">
-        <aside class="sidebar">
-            <section class="side-card mobile-hidden-account">
-                <p class="muted" data-i18n="loggedIn">已登录</p>
-                <strong id="currentUsername">-</strong>
-                <p><span data-i18n="role">角色</span>：<span id="currentRole">-</span></p>
-
-                <div class="side-actions">
-                    <button type="button" id="refreshBtn" data-i18n="refresh">刷新</button>
-                    <button type="button" id="logoutBtn" data-i18n="logout">退出</button>
-                </div>
-
-            </section>
-
-            <nav class="nav">
-                <button type="button" class="nav-btn active" data-tab="home" data-i18n="home">首页</button>
-                <button type="button" class="nav-btn" data-tab="profile" data-i18n="profileNav">个人信息</button>
-                <button type="button" class="nav-btn" data-tab="categories" data-i18n="categories">分类管理</button>
-                <button type="button" class="nav-btn" data-tab="records" data-i18n="records">收支记录</button>
-                <button type="button" class="nav-btn" data-tab="stats" data-i18n="stats">统计</button>
-                <button type="button" class="nav-btn" data-tab="ai" data-i18n="aiAssistant">AI助手</button>
-                <button type="button" id="navAdmin" class="nav-btn hidden" data-tab="admin" data-i18n="admin">管理员</button>
-            </nav>
-        </aside>
-
-        <div class="content">
-            <section id="homePanel" class="view-panel active">
-                <div class="content-header">
-                    <div>
-                        <h2 data-i18n="home">首页</h2>
-                        <p data-i18n="homeHint">查看指定月份的收入、支出、结余和最近记录。</p>
-                    </div>
-                </div>
-
-                <section class="panel">
-                    <h3 data-i18n="monthFilter">月份筛选</h3>
-                    <form id="homeMonthForm" class="inline-form">
-                        <label>
-                            <span data-i18n="year">年份</span>
-                            <input id="homeYear" type="number">
-                        </label>
-
-                        <label>
-                            <span data-i18n="month">月份</span>
-                            <input id="homeMonth" type="number" min="1" max="12">
-                        </label>
-
-                        <button type="submit" class="primary" data-i18n="query">查询</button>
-                    </form>
-                </section>
-
-                <div class="summary-grid">
-                    <div class="summary-card income-card">
-                        <span data-i18n="incomeTotal">收入合计</span>
-                        <strong id="homeIncome" class="amount-income">0.00</strong>
-                    </div>
-                    <div class="summary-card expense-card">
-                        <span data-i18n="expenseTotal">支出合计</span>
-                        <strong id="homeExpense" class="amount-expense">0.00</strong>
-                    </div>
-                    <div class="summary-card balance-card">
-                        <span data-i18n="balance">结余</span>
-                        <strong id="homeBalance">0.00</strong>
-                    </div>
-                </div>
-
-                <section class="panel">
-                    <h3 data-i18n="recentRecords">最近记录</h3>
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th data-i18n="category">分类</th>
-                                <th data-i18n="type">类型</th>
-                                <th data-i18n="amount">金额</th>
-                                <th data-i18n="date">日期</th>
-                            </tr>
-                            </thead>
-                            <tbody id="recentRecordsBody"></tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <div class="two-col">
-                    <section class="panel">
-                        <h3 data-i18n="incomeCategoryStats">收入分类统计</h3>
-                        <div id="homeIncomeStats" class="stat-list"></div>
-                    </section>
-
-                    <section class="panel">
-                        <h3 data-i18n="expenseCategoryStats">支出分类统计</h3>
-                        <div id="homeExpenseStats" class="stat-list"></div>
-                    </section>
-                </div>
-            </section>
-
-            <section id="profilePanel" class="view-panel">
-                <div class="content-header">
-                    <div>
-                        <h2 data-i18n="profile">个人信息</h2>
-                        <p data-i18n="profileHint">查看账号信息、管理账号安全和显示设置。</p>
-                    </div>
-                </div>
-
-                <section class="panel account-info-panel collapsible-panel collapsed" data-mobile-panel="accountInfoPanel">
-                    <h3>
-                        <button type="button" class="mobile-panel-toggle always-toggle" data-mobile-toggle="accountInfoPanel">
-                            <span data-i18n="accountInfo">账号信息</span>
-                            <span class="mobile-panel-arrow">＋</span>
-                        </button>
-                    </h3>
-
-                    <div class="collapsible-body">
-                        <div class="detail-box">
-                            <div class="detail-row">
-                                <span data-i18n="username">用户名</span>
-                                <strong id="profileUsername">-</strong>
-                            </div>
-                            <div class="detail-row">
-                                <span data-i18n="role">角色</span>
-                                <strong id="profileRole">-</strong>
-                            </div>
-                        </div>
-
-                        <div class="profile-actions">
-                            <button type="button" id="profileLogoutBtn" class="danger" data-i18n="logout" onclick="window.logoutPf && window.logoutPf()">退出</button>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="panel account-security-panel collapsible-panel collapsed" data-mobile-panel="accountSecurity">
-                    <h3>
-                        <button type="button" class="mobile-panel-toggle always-toggle" data-mobile-toggle="accountSecurity">
-                            <span data-i18n="accountSecurity">账号安全</span>
-                            <span class="mobile-panel-arrow">＋</span>
-                        </button>
-                    </h3>
-
-                    <div class="collapsible-body account-security-body">
-                        <section class="security-section nested-security-panel collapsible-panel collapsed" data-mobile-panel="changePasswordPanel">
-                            <h4>
-                                <button type="button" class="mobile-panel-toggle always-toggle nested-toggle" data-mobile-toggle="changePasswordPanel">
-                                    <span data-i18n="changePassword">修改密码</span>
-                                    <span class="mobile-panel-arrow">＋</span>
-                                </button>
-                            </h4>
-
-                            <form id="changePasswordForm" class="form-grid security-form collapsible-body">
-                                <label>
-                                    <span data-i18n="oldPassword">当前密码</span>
-                                    <div class="password-field">
-                                        <input id="meOldPassword" type="password" autocomplete="current-password">
-                                        <button type="button" class="password-toggle" data-target="meOldPassword">👁</button>
-                                    </div>
-                                </label>
-
-                                <label>
-                                    <span data-i18n="newPassword">新密码</span>
-                                    <div class="password-field">
-                                        <input id="meNewPassword" type="password" autocomplete="new-password">
-                                        <button type="button" class="password-toggle" data-target="meNewPassword">👁</button>
-                                    </div>
-                                </label>
-
-                                <label>
-                                    <span data-i18n="confirmPassword">确认新密码</span>
-                                    <div class="password-field">
-                                        <input id="meConfirmPassword" type="password" autocomplete="new-password">
-                                        <button type="button" class="password-toggle" data-target="meConfirmPassword">👁</button>
-                                    </div>
-                                </label>
-
-                                <div class="form-actions">
-                                    <button type="submit" class="primary" data-i18n="save">保存</button>
-                                    <button type="reset" data-i18n="clear">清空</button>
-                                </div>
-                            </form>
-                        </section>
-
-                        <section class="security-section danger-zone-inline nested-security-panel collapsible-panel collapsed" data-mobile-panel="deleteAccountPanel">
-                            <h4>
-                                <button type="button" class="mobile-panel-toggle always-toggle nested-toggle danger-toggle" data-mobile-toggle="deleteAccountPanel">
-                                    <span data-i18n="deleteAccount">注销账号</span>
-                                    <span class="mobile-panel-arrow">＋</span>
-                                </button>
-                            </h4>
-
-                            <div class="collapsible-body">
-                                <p class="muted danger-help" data-i18n="deleteAccountHint">注销账号会删除当前账号以及相关数据，请谨慎操作。</p>
-
-                                <form id="deleteAccountForm" class="form-grid">
-                                    <label>
-                                        <span data-i18n="deletePassword">当前密码</span>
-                                        <div class="password-field">
-                                            <input id="deletePassword" type="password" autocomplete="current-password">
-                                            <button type="button" class="password-toggle" data-target="deletePassword">👁</button>
-                                        </div>
-                                    </label>
-
-                                    <label>
-                                        <span data-i18n="deleteConfirmPassword">再次输入当前密码</span>
-                                        <div class="password-field">
-                                            <input id="deleteConfirmPassword" type="password" autocomplete="current-password">
-                                            <button type="button" class="password-toggle" data-target="deleteConfirmPassword">👁</button>
-                                        </div>
-                                    </label>
-
-                                    <div class="form-actions">
-                                        <button type="submit" class="danger strong-danger" data-i18n="deleteAccount">注销账号</button>
-                                        <button type="reset" data-i18n="clear">清空</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </section>
-                    </div>
-                </section>
-
-                <section class="panel settings-panel collapsible-panel collapsed" data-mobile-panel="displaySettings">
-                    <h3>
-                        <button type="button" class="mobile-panel-toggle always-toggle" data-mobile-toggle="displaySettings">
-                            <span data-i18n="displaySettings">显示设置</span>
-                            <span class="mobile-panel-arrow">＋</span>
-                        </button>
-                    </h3>
-
-                    <div class="collapsible-body">
-                        <p class="muted settings-help" data-i18n="settingsHint">设置夜间模式、收入颜色、支出颜色和主题颜色。</p>
-
-                        <div class="settings-grid">
-                            <label>
-                                <span data-i18n="theme">主题模式</span>
-                                <select id="themeSelect">
-                                    <option value="light" data-i18n="themeLight">浅色模式</option>
-                                    <option value="dark" data-i18n="themeDark">夜间模式</option>
-                                    <option value="system" data-i18n="themeSystem">跟随系统</option>
-                                </select>
-                            </label>
-
-                            <label>
-                                <span data-i18n="incomeColor">收入金额颜色</span>
-                                <input id="incomeColorInput" type="color">
-                            </label>
-
-                            <label>
-                                <span data-i18n="expenseColor">支出金额颜色</span>
-                                <input id="expenseColorInput" type="color">
-                            </label>
-
-                            <label>
-                                <span data-i18n="primaryColor">主题颜色</span>
-                                <input id="primaryColorInput" type="color">
-                            </label>
-                        </div>
-
-                        <div class="settings-preview">
-                            <div>
-                                <span data-i18n="income">收入</span>
-                                <strong class="amount-income">180000.00</strong>
-                            </div>
-                            <div>
-                                <span data-i18n="expense">支出</span>
-                                <strong class="amount-expense">78600.00</strong>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" id="resetAppearanceBtn" data-i18n="resetAppearance">恢复默认显示设置</button>
-                        </div>
-                    </div>
-                </section>
-            </section>
-
-            <section id="categoriesPanel" class="view-panel">
-                <div class="content-header">
-                    <div>
-                        <h2 data-i18n="categories">分类管理</h2>
-                        <p data-i18n="categoriesHint">管理当前登录用户自己的收入、支出分类。</p>
-                    </div>
-                </div>
-
-                <section class="panel mobile-collapsible collapsed" data-mobile-panel="categoryForm">
-                    <h3>
-                        <button type="button" class="mobile-panel-toggle" data-mobile-toggle="categoryForm">
-                            <span data-i18n="categoryForm">分类表单</span>
-                            <span class="mobile-panel-arrow">＋</span>
-                        </button>
-                    </h3>
-                    <form id="categoryForm" class="form-grid mobile-collapsible-body">
-                        <input id="categoryId" type="hidden">
-
-                        <label>
-                            <span data-i18n="categoryName">分类名</span>
-                            <input id="categoryName" type="text">
-                        </label>
-
-                        <label>
-                            <span data-i18n="type">类型</span>
-                            <select id="categoryType"></select>
-                        </label>
-
-                        <div class="form-actions">
-                            <button type="submit" class="primary" data-i18n="save">保存</button>
-                            <button type="button" id="clearCategoryBtn" data-i18n="clear">清空</button>
-                        </div>
-                    </form>
-                </section>
-
-                <section class="panel">
-                    <h3 data-i18n="myCategories">分类列表</h3>
-                    <div class="table-wrap categories-table-wrap">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th data-i18n="categoryName">分类名</th>
-                                <th data-i18n="type">类型</th>
-                                <th data-i18n="actions">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody id="categoriesBody"></tbody>
-                        </table>
-                    </div>
-
-                    <div id="mobileCategoriesList" class="mobile-category-list"></div>
-                </section>
-            </section>
-
-            <section id="recordsPanel" class="view-panel">
-                <div class="content-header">
-                    <div>
-                        <h2 data-i18n="records">收支记录</h2>
-                        <p data-i18n="recordsHint">新增、修改、删除当前登录用户自己的收支记录。</p>
-                    </div>
-                </div>
-
-                <section class="panel mobile-collapsible collapsed" data-mobile-panel="recordForm">
-                    <h3>
-                        <button type="button" class="mobile-panel-toggle" data-mobile-toggle="recordForm">
-                            <span data-i18n="recordForm">记录表单</span>
-                            <span class="mobile-panel-arrow">＋</span>
-                        </button>
-                    </h3>
-                    <form id="recordForm" class="form-grid mobile-collapsible-body">
-                        <input id="recordId" type="hidden">
-
-                        <label>
-                            <span data-i18n="type">类型</span>
-                            <select id="recordType"></select>
-                        </label>
-
-                        <label>
-                            <span data-i18n="category">分类</span>
-                            <select id="recordCategory"></select>
-                        </label>
-
-                        <label>
-                            <span data-i18n="amount">金额</span>
-                            <input id="recordAmount" type="number" min="0.01" max="99999999.99" step="0.01">
-                        </label>
-
-                        <label>
-                            <span data-i18n="date">日期</span>
-                            <input id="recordDate" type="date">
-                        </label>
-
-                        <label class="wide">
-                            <span data-i18n="remark">备注</span>
-                            <input id="recordRemark" type="text">
-                        </label>
-
-                        <div class="form-actions">
-                            <button type="submit" class="primary" data-i18n="save">保存</button>
-                            <button type="button" id="clearRecordBtn" data-i18n="clear">清空</button>
-                        </div>
-                    </form>
-                </section>
-
-                <section class="panel mobile-collapsible collapsed" data-mobile-panel="recordFilter">
-                    <h3>
-                        <button type="button" class="mobile-panel-toggle" data-mobile-toggle="recordFilter">
-                            <span data-i18n="filter">筛选</span>
-                            <span class="mobile-panel-arrow">＋</span>
-                        </button>
-                    </h3>
-
-                    <div class="mobile-collapsible-body">
-                        <div class="inline-form">
-                            <button type="button" id="loadAllRecordsBtn" data-i18n="allRecords">全部记录</button>
-                            <button type="button" id="filterIncomeBtn" data-i18n="incomeOnly">只看收入</button>
-                            <button type="button" id="filterExpenseBtn" data-i18n="expenseOnly">只看支出</button>
-                        </div>
-
-                        <form id="rangeFilterForm" class="inline-form">
-                            <label>
-                                <span data-i18n="category">分类</span>
-                                <select id="filterCategory"></select>
-                            </label>
-
-                            <label>
-                                <span data-i18n="startDate">开始日期</span>
-                                <input id="startRecordDate" type="date">
-                            </label>
-
-                            <label>
-                                <span data-i18n="endDate">结束日期</span>
-                                <input id="endOfRecordDate" type="date">
-                            </label>
-
-                            <button type="submit" class="primary" data-i18n="queryByDate">按日期查询</button>
-                        </form>
-                    </div>
-                </section>
-
-                <section id="recordsListPanel" class="panel">
-                    <h3 data-i18n="myRecords">我的记录</h3>
-                    <div class="table-wrap records-table-wrap">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th data-i18n="category">分类</th>
-                                <th data-i18n="type">类型</th>
-                                <th data-i18n="amount">金额</th>
-                                <th data-i18n="remark">备注</th>
-                                <th data-i18n="date">日期</th>
-                                <th data-i18n="actions">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody id="recordsBody"></tbody>
-                        </table>
-                    </div>
-
-                    <div id="mobileRecordsList" class="mobile-record-list"></div>
-
-                    <div id="recordPagination" class="pagination"></div>
-                </section>
-            </section>
-
-            <section id="statsPanel" class="view-panel">
-                <div class="content-header">
-                    <div>
-                        <h2 data-i18n="stats">统计</h2>
-                        <p data-i18n="statsHint">按月份查看收入、支出、结余和分类统计。</p>
-                    </div>
-                </div>
-
-                <section class="panel">
-                    <h3 data-i18n="monthlyStats">月度统计</h3>
-                    <form id="monthlyStatsForm" class="inline-form">
-                        <label>
-                            <span data-i18n="year">年份</span>
-                            <input id="statsYear" type="number">
-                        </label>
-
-                        <label>
-                            <span data-i18n="month">月份</span>
-                            <input id="statsMonth" type="number" min="1" max="12">
-                        </label>
-
-                        <button type="submit" class="primary" data-i18n="query">查询</button>
-                    </form>
-
-                    <div class="summary-grid compact">
-                        <div class="summary-card income-card">
-                            <span data-i18n="incomeTotal">收入合计</span>
-                            <strong id="statsIncome" class="amount-income">0.00</strong>
-                        </div>
-                        <div class="summary-card expense-card">
-                            <span data-i18n="expenseTotal">支出合计</span>
-                            <strong id="statsExpense" class="amount-expense">0.00</strong>
-                        </div>
-                        <div class="summary-card balance-card">
-                            <span data-i18n="balance">结余</span>
-                            <strong id="statsBalance">0.00</strong>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="two-col">
-                    <section class="panel">
-                        <h3 data-i18n="incomeCategoryStats">收入分类统计</h3>
-                        <div id="incomeCategoryStats" class="stat-list"></div>
-                    </section>
-
-                    <section class="panel">
-                        <h3 data-i18n="expenseCategoryStats">支出分类统计</h3>
-                        <div id="expenseCategoryStats" class="stat-list"></div>
-                    </section>
-                </div>
-
-            </section>
-
-            <section id="aiPanel" class="view-panel">
-                <div class="content-header">
-                    <div>
-                        <h2 data-i18n="aiAssistant">AI助手</h2>
-                        <p data-i18n="aiAssistantHint">向 AI 提问，获取记账、消费分析和省钱建议。</p>
-                    </div>
-                </div>
-
-                <section class="panel">
-                    <h3 data-i18n="aiQuestion">你的问题</h3>
-                    <form id="aiForm" class="ai-form">
-                        <textarea id="aiQuestionInput" rows="5" data-i18n-placeholder="aiQuestionPlaceholder" placeholder="例如：请给我一些控制生活支出的建议"></textarea>
-
-                        <div class="form-actions">
-                            <button type="submit" id="aiSendBtn" class="primary" data-i18n="aiSend">发送问题</button>
-                            <button type="reset" data-i18n="clear">清空</button>
-                        </div>
-                    </form>
-                </section>
-
-                <section class="panel">
-                    <h3 data-i18n="aiAnswer">AI回复</h3>
-                    <div id="aiAnswerBox" class="ai-answer" data-i18n="aiDefaultAnswer">请在上方输入问题，然后点击发送。</div>
-                </section>
-            </section>
-
-            <section id="adminPanel" class="view-panel">
-                <div class="content-header">
-                    <div>
-                        <h2 data-i18n="admin">管理员</h2>
-                        <p data-i18n="adminHint">查询用户、查看详情、重置密码、删除用户。</p>
-                    </div>
-                </div>
-
-                <section class="panel">
-                    <h3 data-i18n="userManagement">用户管理</h3>
-
-                    <form id="adminSearchForm" class="inline-form">
-                        <label>
-                            <span data-i18n="username">用户名</span>
-                            <input id="adminSearchUsername" type="text">
-                        </label>
-                        <button type="submit" class="primary" data-i18n="queryOneUser">查询单个用户</button>
-                        <button type="button" id="adminLoadAllBtn" data-i18n="queryAllUsers">查询全部用户</button>
-                    </form>
-
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th data-i18n="username">用户名</th>
-                                <th data-i18n="role">角色</th>
-                                <th data-i18n="actions">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody id="adminUsersBody"></tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section class="panel">
-                    <h3 data-i18n="userDetail">用户详情</h3>
-                    <div id="adminDetail" class="detail-box">
-                        点击“详情”后显示用户信息。
-                    </div>
-                </section>
-
-                <section class="panel">
-                    <h3 data-i18n="resetPassword">重置密码</h3>
-                    <form id="adminResetForm" class="form-grid">
-                        <label>
-                            <span data-i18n="username">用户名</span>
-                            <input id="adminResetUsername" type="text">
-                        </label>
-
-                        <label>
-                            <span data-i18n="newPassword">新密码</span>
-                            <div class="password-field">
-                                <input id="adminResetPassword" type="password">
-                                <button type="button" class="password-toggle" data-target="adminResetPassword">👁</button>
-                            </div>
-                        </label>
-
-                        <div class="form-actions">
-                            <button type="submit" class="primary" data-i18n="save">保存</button>
-                        </div>
-                    </form>
-                </section>
-            </section>
-        </div>
-    </section>
-</main>
-
-<div id="toast" class="toast"></div>
+  <TopBar :lang="lang" :t="t" @change-lang="changeLang" />
+
+  <main>
+    <AuthView v-if="!loggedIn" :t="t" @login="handleLogin" @register="handleRegister" />
+
+    <AppLayout v-else :user="user" :active-tab="activeTab" :t="t" @tab="changeTab" @refresh="refreshCurrent" @logout="logout">
+      <Home v-if="activeTab === 'home'" ref="currentView" :t="t" :toast="showToast" @navigate="changeTab" />
+      <MyPage v-else-if="activeTab === 'profile'" ref="currentView" :user="user" :appearance="appearance" :t="t" :toast="showToast" @update-appearance="updateAppearance" @logout="logout" @deleted="handleDeleted" @password-changed="handlePasswordChanged" />
+      <Category v-else-if="activeTab === 'categories'" ref="currentView" :t="t" :toast="showToast" />
+      <Record v-else-if="activeTab === 'records'" ref="currentView" :t="t" :toast="showToast" />
+      <Stats v-else-if="activeTab === 'stats'" ref="currentView" :t="t" :toast="showToast" />
+      <AiAssistant v-else-if="activeTab === 'ai'" ref="currentView" :t="t" :toast="showToast" />
+      <Admin v-else-if="activeTab === 'admin'" ref="currentView" :t="t" :toast="showToast" />
+    </AppLayout>
+  </main>
+
+  <Toast :message="toastState.message" :show="toastState.show" />
 </template>

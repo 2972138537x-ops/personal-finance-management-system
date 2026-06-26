@@ -1,3 +1,10 @@
+<script setup>
+defineProps({
+  message: { type: String, default: "" },
+  show: { type: Boolean, default: false }
+});
+</script>
+
 <template>
-  <div class="vue-placeholder" hidden>Toast.vue</div>
+  <div class="toast" :class="{ show }">{{ message }}</div>
 </template>

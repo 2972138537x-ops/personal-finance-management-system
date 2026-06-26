@@ -4342,3 +4342,1896 @@ button.primary:active,
     }
 }
 
+
+
+/* ==========================================================
+   Vue componentized v3 UI fix
+   目标：修复完整 Vue 化 v1/v2 的半成品细节，恢复旧版自然体验
+   ========================================================== */
+
+:root {
+    --danger: #b42318;
+    --danger-soft: #fff2f0;
+}
+
+:root[data-theme="dark"] {
+    --bg: #0f171a;
+    --panel: #162126;
+    --line: #2b3d43;
+    --muted: #9fb0b5;
+    --text: #e8f1f3;
+    --soft: rgba(79, 209, 197, 0.12);
+    --danger-soft: rgba(180, 35, 24, 0.14);
+}
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] main,
+:root[data-theme="dark"] .app-layout,
+:root[data-theme="dark"] .content {
+    background:
+        radial-gradient(circle at top left, rgba(15, 130, 119, 0.13), transparent 34%),
+        linear-gradient(135deg, #0f171a 0%, #121d21 100%) !important;
+    color: var(--text) !important;
+}
+
+:root[data-theme="dark"] .topbar,
+:root[data-theme="dark"] .auth-card,
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .side-card,
+:root[data-theme="dark"] .summary-card,
+:root[data-theme="dark"] .detail-box,
+:root[data-theme="dark"] .mobile-record-card,
+:root[data-theme="dark"] .mobile-category-card {
+    background: rgba(22, 33, 38, 0.94) !important;
+    border-color: rgba(69, 91, 99, 0.72) !important;
+    color: var(--text) !important;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] .password-field {
+    background: rgba(12, 20, 23, 0.86) !important;
+    border-color: rgba(69, 91, 99, 0.72) !important;
+    color: var(--text) !important;
+}
+
+/* 支出颜色只影响金额，不影响删除按钮 */
+.amount-expense,
+.expense.amount-expense,
+.mobile-record-amount.expense {
+    color: var(--expense) !important;
+}
+
+button.danger,
+.danger,
+.mobile-record-actions .danger,
+.mobile-category-actions .danger,
+.actions .danger {
+    color: var(--danger) !important;
+    border-color: rgba(180, 35, 24, 0.34) !important;
+    background: var(--danger-soft) !important;
+}
+
+button.danger:hover,
+.mobile-record-actions .danger:hover,
+.mobile-category-actions .danger:hover,
+.actions .danger:hover {
+    border-color: rgba(180, 35, 24, 0.58) !important;
+    background: rgba(180, 35, 24, 0.10) !important;
+    transform: translateY(-1px);
+}
+
+/* 取消奇怪的左右绿色边线跟随感，改成稳定柔和的 hover */
+.nav-btn,
+.segment,
+button,
+.mobile-record-main,
+.chart-legend-item {
+    transition:
+        background-color 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 160ms ease,
+        color 160ms ease !important;
+}
+
+.nav-btn::before,
+.nav-btn::after,
+.segment::before,
+.segment::after,
+button::before,
+button::after {
+    pointer-events: none;
+}
+
+.nav-btn:hover,
+.segment:hover,
+button:hover {
+    box-shadow: 0 8px 18px rgba(15, 130, 119, 0.08);
+}
+
+.nav-btn.active,
+.segment.active {
+    border-color: var(--primary) !important;
+    background: rgba(15, 130, 119, 0.10) !important;
+    color: var(--primary-dark) !important;
+    box-shadow: inset 0 0 0 1px rgba(15, 130, 119, 0.10);
+}
+
+/* 表单折叠更自然 */
+.collapsible-panel .collapsible-body,
+.mobile-collapsible .mobile-collapsible-body {
+    overflow: hidden;
+    transition: max-height 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease, transform 200ms ease;
+    max-height: 1300px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.collapsible-panel.collapsed .collapsible-body,
+.mobile-collapsible.collapsed .mobile-collapsible-body {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+}
+
+/* AI 输入框恢复正常大小 */
+.ai-question-label {
+    grid-column: 1 / -1;
+}
+
+.ai-question-input,
+textarea.ai-question-input {
+    width: 100% !important;
+    min-height: 128px !important;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.ai-answer {
+    min-height: 190px !important;
+    white-space: pre-wrap;
+}
+
+/* 统计图交互 */
+.pie-canvas {
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.chart-legend-item {
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.chart-legend-item.active {
+    background: rgba(15, 130, 119, 0.08) !important;
+    border-color: rgba(15, 130, 119, 0.22) !important;
+    transform: translateX(3px);
+}
+
+/* 手机端：不要表格和卡片同时出现 */
+.mobile-record-list,
+.mobile-category-list {
+    display: none;
+}
+
+@media screen and (max-width: 1024px) {
+    .table-wrap {
+        display: none !important;
+    }
+
+    .mobile-record-list,
+    .mobile-category-list {
+        display: grid !important;
+        gap: 12px;
+    }
+
+    .content {
+        padding-bottom: 108px !important;
+    }
+
+    .panel {
+        border-radius: 24px;
+    }
+
+    .mobile-category-card,
+    .mobile-record-card {
+        display: block;
+        border-radius: 22px;
+        padding: 14px;
+        border: 1px solid rgba(220, 232, 232, 0.95);
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 10px 26px rgba(16, 36, 42, 0.06);
+    }
+
+    .mobile-category-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .mobile-category-main strong {
+        font-size: 18px;
+    }
+
+    .mobile-category-main span {
+        color: var(--muted);
+        font-weight: 700;
+    }
+
+    .mobile-category-actions,
+    .mobile-record-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .mobile-category-actions button,
+    .mobile-record-actions button {
+        width: 100%;
+        min-height: 44px;
+        border-radius: 16px;
+    }
+
+    .bottom-nav,
+    .nav {
+        backdrop-filter: blur(18px);
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .two-col {
+        grid-template-columns: 1fr !important;
+    }
+
+    .chart-box {
+        grid-template-columns: 1fr !important;
+        justify-items: center;
+    }
+}
+
+/* PC 表格保持显示，手机卡片隐藏 */
+@media screen and (min-width: 1025px) {
+    .table-wrap {
+        display: block;
+    }
+
+    .mobile-record-list,
+    .mobile-category-list {
+        display: none !important;
+    }
+}
+
+/* 颜色输入不要拉得难看 */
+input[type="color"] {
+    min-height: 44px;
+    padding: 6px;
+}
+
+/* 让编辑滚动后的表单不被顶栏遮住 */
+.panel,
+.view-panel {
+    scroll-margin-top: 110px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
+/* ==========================================================
+   Vue componentized v4 motion & chart polish
+   修复：突兀绿色边线、表格行高亮、饼图百分比位置、mac/iOS 动画自然度
+   ========================================================== */
+
+/* 全局运动基准：像 macOS/iOS 一样轻微、短促、柔和 */
+:root {
+    --motion-fast: 150ms;
+    --motion-normal: 220ms;
+    --motion-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --hover-shadow: 0 10px 26px rgba(16, 36, 42, 0.08);
+    --active-shadow: 0 14px 34px rgba(15, 130, 119, 0.14);
+}
+
+/* 彻底压掉旧版/浏览器可能产生的突兀伪元素线条 */
+table tr::before,
+table tr::after,
+tbody tr::before,
+tbody tr::after,
+.nav-btn::before,
+.nav-btn::after,
+.segment::before,
+.segment::after,
+button::before,
+button::after,
+.chart-legend-item::before,
+.chart-legend-item::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* 表格行：不再出现左边绿色竖线，不整行突兀刷绿，只做轻微底色 */
+tbody tr,
+.table-wrap tbody tr {
+    border-left: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition:
+        background-color var(--motion-normal) ease,
+        transform var(--motion-fast) ease,
+        box-shadow var(--motion-normal) ease !important;
+}
+
+tbody tr:hover,
+.table-wrap tbody tr:hover {
+    background: rgba(15, 130, 119, 0.045) !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+tbody td,
+.table-wrap td {
+    border-left: 0 !important;
+}
+
+/* 按钮：不再像“线追鼠标”，改为 macOS/iOS 式轻微浮起 */
+button,
+.nav-btn,
+.segment,
+.language-select,
+input,
+select,
+textarea,
+.mobile-record-card,
+.mobile-category-card,
+.panel,
+.summary-card {
+    transition:
+        background-color var(--motion-normal) ease,
+        border-color var(--motion-normal) ease,
+        color var(--motion-normal) ease,
+        box-shadow var(--motion-normal) ease,
+        transform var(--motion-fast) var(--motion-spring),
+        opacity var(--motion-normal) ease !important;
+}
+
+button:hover,
+.nav-btn:hover,
+.segment:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--hover-shadow);
+}
+
+button:active,
+.nav-btn:active,
+.segment:active {
+    transform: translateY(0) scale(0.985);
+    box-shadow: 0 5px 14px rgba(16, 36, 42, 0.08);
+}
+
+.nav-btn.active,
+.segment.active {
+    background:
+        linear-gradient(180deg, rgba(15, 130, 119, 0.12), rgba(15, 130, 119, 0.06)) !important;
+    border-color: rgba(15, 130, 119, 0.48) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.44),
+        0 10px 24px rgba(15, 130, 119, 0.10) !important;
+    transform: none !important;
+}
+
+/* 主按钮更稳，不要绿色边线乱跑 */
+button.primary,
+.primary {
+    box-shadow: 0 10px 22px rgba(15, 130, 119, 0.16);
+}
+
+button.primary:hover,
+.primary:hover {
+    box-shadow: 0 14px 30px rgba(15, 130, 119, 0.22);
+}
+
+/* 饼图：固定舒适空间，允许外侧标签，不被裁剪 */
+.chart-box {
+    overflow: visible !important;
+    align-items: center;
+}
+
+.pie-canvas {
+    width: 320px;
+    max-width: 100%;
+    height: 260px;
+    cursor: default;
+    overflow: visible;
+    transition: filter var(--motion-normal) ease, transform var(--motion-fast) var(--motion-spring);
+}
+
+.pie-canvas:hover {
+    filter: drop-shadow(0 10px 18px rgba(16, 36, 42, 0.08));
+}
+
+/* 图例 hover 只轻微浮起，不突兀变形 */
+.chart-legend-item {
+    border-radius: 15px;
+    transition:
+        background-color var(--motion-normal) ease,
+        border-color var(--motion-normal) ease,
+        transform var(--motion-fast) var(--motion-spring),
+        box-shadow var(--motion-normal) ease !important;
+}
+
+.chart-legend-item:hover,
+.chart-legend-item.active {
+    background: rgba(15, 130, 119, 0.065) !important;
+    border-color: rgba(15, 130, 119, 0.16) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(16, 36, 42, 0.06);
+}
+
+/* 卡片 hover：像 mac 窗口轻微浮起，不夸张 */
+.panel:hover,
+.summary-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 22px 44px rgba(16, 36, 42, 0.08);
+}
+
+/* 输入框 focus：去掉刺眼绿色框，改为柔和光晕 */
+input:focus,
+select:focus,
+textarea:focus,
+.password-field:focus-within {
+    outline: none !important;
+    border-color: rgba(15, 130, 119, 0.42) !important;
+    box-shadow:
+        0 0 0 4px rgba(15, 130, 119, 0.08),
+        0 8px 22px rgba(15, 130, 119, 0.06) !important;
+}
+
+/* 夜间模式下阴影变柔和，避免灰白发脏 */
+:root[data-theme="dark"] {
+    --hover-shadow: 0 12px 28px rgba(0, 0, 0, 0.26);
+    --active-shadow: 0 14px 34px rgba(15, 130, 119, 0.18);
+}
+
+:root[data-theme="dark"] tbody tr:hover,
+:root[data-theme="dark"] .table-wrap tbody tr:hover {
+    background: rgba(79, 209, 197, 0.07) !important;
+}
+
+/* 手机端 iOS 感：按下缩小一点，松开自然恢复 */
+@media screen and (max-width: 1024px) {
+    button:hover,
+    .nav-btn:hover,
+    .segment:hover,
+    .panel:hover,
+    .summary-card:hover {
+        transform: none;
+        box-shadow: inherit;
+    }
+
+    button:active,
+    .nav-btn:active,
+    .segment:active,
+    .mobile-record-main:active,
+    .mobile-category-card:active {
+        transform: scale(0.985);
+        transition-duration: 90ms !important;
+    }
+
+    .bottom-nav .nav-btn.active {
+        background:
+            linear-gradient(180deg, rgba(15, 130, 119, 0.14), rgba(15, 130, 119, 0.06)) !important;
+        box-shadow:
+            inset 0 0 0 1px rgba(255,255,255,0.72),
+            0 12px 26px rgba(15, 130, 119, 0.12) !important;
+    }
+
+    .pie-canvas {
+        width: 300px;
+        height: 250px;
+    }
+}
+
+/* 避免任何 hover 状态残留边线 */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ==========================================================
+   Vue componentized v5 final polish
+   修复：饼图正常高级感、扇区突出、百分比不裁切、表格 hover 绿线彻底去除
+   ========================================================== */
+
+/* 彻底去掉表格 hover 左侧/中间绿色线条和旧边框残留 */
+.table-wrap table,
+.table-wrap tbody,
+.table-wrap tr,
+.table-wrap td,
+.table-wrap th,
+table,
+tbody,
+tr,
+td,
+th {
+    border-left: 0 !important;
+    outline: 0 !important;
+}
+
+.table-wrap tbody tr,
+tbody tr {
+    position: relative;
+    transform-origin: center;
+    transition:
+        transform 90ms cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 80ms ease,
+        box-shadow 90ms ease !important;
+}
+
+.table-wrap tbody tr:hover,
+tbody tr:hover {
+    background: rgba(15, 130, 119, 0.065) !important;
+    transform: scale(1.006);
+    box-shadow: 0 10px 22px rgba(16, 36, 42, 0.075) !important;
+    z-index: 2;
+}
+
+.table-wrap tbody tr:hover td,
+tbody tr:hover td {
+    background: transparent !important;
+    border-left: 0 !important;
+}
+
+.table-wrap tbody tr:hover td:first-child,
+tbody tr:hover td:first-child {
+    border-left: 0 !important;
+    box-shadow: none !important;
+}
+
+/* 如果旧 CSS 有伪元素画线，继续强制消除 */
+.table-wrap tbody tr:hover::before,
+.table-wrap tbody tr:hover::after,
+tbody tr:hover::before,
+tbody tr:hover::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* 图表区域要能容纳外侧百分比标签 */
+.chart-box {
+    overflow: visible !important;
+    grid-template-columns: minmax(330px, 1fr) minmax(220px, 0.85fr);
+    gap: 18px;
+}
+
+.panel,
+.two-col,
+.chart-box,
+canvas {
+    overflow: visible;
+}
+
+.pie-canvas {
+    width: 420px;
+    height: 300px;
+    max-width: 100%;
+    cursor: pointer;
+    filter: drop-shadow(0 12px 22px rgba(16, 36, 42, 0.08));
+    transform: translateZ(0);
+}
+
+.pie-canvas:hover {
+    filter: drop-shadow(0 16px 28px rgba(16, 36, 42, 0.11));
+}
+
+/* 图例更像 macOS 列表项：即时、轻微、无拖影 */
+.chart-legend-item {
+    transition:
+        background-color 90ms ease,
+        border-color 90ms ease,
+        transform 90ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 90ms ease !important;
+}
+
+.chart-legend-item:hover,
+.chart-legend-item.active {
+    transform: scale(1.018);
+    background: rgba(15, 130, 119, 0.075) !important;
+    border-color: rgba(15, 130, 119, 0.18) !important;
+    box-shadow: 0 8px 18px rgba(16, 36, 42, 0.06) !important;
+}
+
+@media screen and (max-width: 1024px) {
+    .table-wrap {
+        display: none !important;
+    }
+
+    .chart-box {
+        grid-template-columns: 1fr !important;
+        justify-items: center;
+        overflow: visible !important;
+    }
+
+    .pie-canvas {
+        width: 340px;
+        height: 270px;
+        max-width: 100%;
+    }
+
+    .chart-legend-item:hover,
+    .chart-legend-item.active {
+        transform: scale(1.006);
+    }
+}
+
+
+/* ==========================================================
+   Vue componentized v6 premium dashboard charts & motion
+   高级图表、趋势图、macOS/iOS式动效
+   ========================================================== */
+
+.content-header {
+    padding: 8px 0 4px;
+}
+
+.content-header h2 {
+    letter-spacing: -0.03em;
+    font-size: clamp(28px, 2.3vw, 38px);
+}
+
+.content-header p {
+    margin-top: 6px;
+    font-size: 15px;
+}
+
+/* 图表卡片做得更高级：空间更足、内发光更柔 */
+.chart-panel,
+.trend-panel {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.80)),
+        radial-gradient(circle at 15% 10%, rgba(15,130,119,0.08), transparent 34%) !important;
+    border: 1px solid rgba(220, 232, 232, 0.78) !important;
+    box-shadow:
+        0 28px 70px rgba(16, 36, 42, 0.08),
+        inset 0 1px 0 rgba(255,255,255,0.78) !important;
+}
+
+.premium-chart-grid {
+    align-items: stretch;
+}
+
+.chart-panel h3 {
+    font-size: 20px;
+    letter-spacing: -0.02em;
+}
+
+/* 饼图整体放大，避免小气、土 */
+.premium-pie-box,
+.chart-box {
+    min-height: 330px;
+    grid-template-columns: minmax(360px, 1.2fr) minmax(230px, 0.8fr) !important;
+    gap: 22px !important;
+    align-items: center;
+    overflow: visible !important;
+}
+
+.premium-pie-canvas,
+.pie-canvas {
+    width: 520px !important;
+    height: 380px !important;
+    max-width: min(100%, 520px);
+    filter: drop-shadow(0 18px 30px rgba(16, 36, 42, 0.10));
+}
+
+.premium-chart-legend,
+.chart-legend {
+    gap: 12px;
+}
+
+.chart-legend-item {
+    min-height: 46px;
+    padding: 12px 14px !important;
+    border-radius: 18px !important;
+    background: rgba(255,255,255,0.58);
+    backdrop-filter: blur(10px);
+}
+
+/* macOS-style：更流畅的卡片动效，但不要浮夸 */
+.panel,
+.summary-card,
+.side-card,
+.auth-card {
+    will-change: transform, box-shadow;
+}
+
+.panel:hover,
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 28px 62px rgba(16, 36, 42, 0.095),
+        inset 0 1px 0 rgba(255,255,255,0.72) !important;
+}
+
+button,
+.nav-btn,
+.segment {
+    will-change: transform, box-shadow;
+}
+
+button:hover,
+.nav-btn:hover,
+.segment:hover {
+    transform: translateY(-1.5px);
+}
+
+button:active,
+.nav-btn:active,
+.segment:active {
+    transform: translateY(0) scale(0.972);
+}
+
+/* Trend chart */
+.trend-chart {
+    width: 100%;
+}
+
+.trend-chart-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.trend-chart-head h3 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+}
+
+.trend-chart-head p {
+    margin: 6px 0 0;
+    color: var(--muted);
+}
+
+.trend-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.trend-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 32px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.72);
+    border: 1px solid rgba(220,232,232,0.9);
+    font-size: 13px;
+    color: var(--muted);
+    box-shadow: 0 8px 20px rgba(16,36,42,0.045);
+}
+
+.trend-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+}
+
+.income-dot::before { background: #0f8277; }
+.expense-dot::before { background: #b42318; }
+.balance-dot::before { background: #4a90d9; }
+
+.trend-svg {
+    width: 100%;
+    min-height: 300px;
+    overflow: visible;
+    border-radius: 24px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.64), rgba(255,255,255,0.24)),
+        radial-gradient(circle at 20% 5%, rgba(15,130,119,0.08), transparent 32%);
+}
+
+.trend-grid line {
+    stroke: rgba(96,114,118,0.14);
+    stroke-width: 1;
+}
+
+.trend-line {
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: opacity 160ms ease;
+}
+
+.trend-income { stroke: #0f8277; }
+.trend-expense { stroke: #b42318; }
+.trend-balance { stroke: #4a90d9; stroke-width: 3; stroke-dasharray: 7 8; opacity: 0.72; }
+
+.trend-point {
+    stroke: rgba(255,255,255,0.96);
+    stroke-width: 3;
+    cursor: pointer;
+    transition: r 120ms ease, filter 120ms ease;
+}
+
+.trend-point:hover {
+    r: 7;
+    filter: drop-shadow(0 6px 10px rgba(16,36,42,0.16));
+}
+
+.trend-income-point { fill: #0f8277; }
+.trend-expense-point { fill: #b42318; }
+
+.trend-cursor {
+    stroke: rgba(15,130,119,0.22);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 5;
+}
+
+.trend-date {
+    font-size: 12px;
+    fill: var(--muted);
+    text-anchor: middle;
+}
+
+.trend-tooltip rect {
+    fill: rgba(255,255,255,0.94);
+    stroke: rgba(220,232,232,0.9);
+    filter: drop-shadow(0 14px 26px rgba(16,36,42,0.12));
+}
+
+.trend-tooltip text {
+    fill: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* 表格 hover 进一步自然化：无绿色残线，仅整体轻微呼吸 */
+.table-wrap tbody tr:hover,
+tbody tr:hover {
+    background: rgba(15, 130, 119, 0.055) !important;
+    transform: scale(1.004) !important;
+    box-shadow: 0 8px 20px rgba(16, 36, 42, 0.055) !important;
+}
+
+/* 不再允许 table 单元格自己出现独立背景块 */
+.table-wrap tbody tr:hover td,
+tbody tr:hover td {
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* 深色模式适配高级图表 */
+:root[data-theme="dark"] .chart-panel,
+:root[data-theme="dark"] .trend-panel {
+    background:
+        linear-gradient(180deg, rgba(22,33,38,0.96), rgba(22,33,38,0.82)),
+        radial-gradient(circle at 15% 10%, rgba(79,209,197,0.11), transparent 34%) !important;
+    box-shadow:
+        0 28px 70px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+:root[data-theme="dark"] .trend-svg,
+:root[data-theme="dark"] .chart-legend-item,
+:root[data-theme="dark"] .trend-badge {
+    background: rgba(12,20,23,0.50);
+}
+
+:root[data-theme="dark"] .trend-tooltip rect {
+    fill: rgba(22,33,38,0.96);
+    stroke: rgba(69,91,99,0.82);
+}
+
+/* 手机端：保持 iOS 卡片感，图表不要过大溢出 */
+@media screen and (max-width: 1024px) {
+    .premium-pie-box,
+    .chart-box {
+        grid-template-columns: 1fr !important;
+        min-height: auto;
+        gap: 12px !important;
+    }
+
+    .premium-pie-canvas,
+    .pie-canvas {
+        width: min(100%, 360px) !important;
+        height: 300px !important;
+    }
+
+    .trend-chart-head {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .trend-badges {
+        justify-content: flex-start;
+    }
+
+    .trend-svg {
+        min-height: 260px;
+    }
+
+    .panel:hover,
+    .summary-card:hover {
+        transform: none;
+    }
+}
+
+
+/* ==========================================================
+   v7 Home/Stats separation + premium pie redesign
+   ========================================================== */
+
+/* 防止右侧图例被裁切、页面横向滚动 */
+html,
+body,
+#app,
+main,
+.content,
+.view-panel,
+.panel {
+    max-width: 100%;
+}
+
+body {
+    overflow-x: hidden !important;
+}
+
+.content {
+    overflow-x: hidden !important;
+}
+
+.view-panel {
+    min-width: 0;
+}
+
+.analytics-chart-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+}
+
+.analytics-chart-grid .chart-panel {
+    width: 100%;
+    overflow: hidden !important;
+}
+
+.analytics-chart-grid .chart-panel .premium-pie-layout {
+    width: 100%;
+}
+
+/* 新饼图：更清爽、更高级，不再土，不再裁切 */
+.premium-pie-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.95fr) minmax(260px, 0.9fr);
+    align-items: center;
+    gap: 22px;
+    min-height: 330px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.premium-pie-stage {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+}
+
+.premium-pie-svg {
+    width: min(100%, 390px);
+    height: auto;
+    overflow: visible;
+}
+
+.pie-base-shadow {
+    fill: rgba(15, 130, 119, 0.16);
+    filter: blur(1px);
+}
+
+.premium-pie-slice {
+    stroke: rgba(255, 255, 255, 0.92);
+    stroke-width: 2.4;
+    cursor: pointer;
+    transition:
+        transform 150ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 120ms ease,
+        filter 150ms ease;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.premium-pie-slice.active {
+    transform: scale(1.035);
+    filter: brightness(1.04);
+}
+
+.premium-pie-slice.dimmed {
+    opacity: 0.62;
+}
+
+.pie-leader-line {
+    fill: none;
+    stroke: rgba(15, 130, 119, 0.56);
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.pie-percent-box {
+    fill: rgba(255,255,255,0.96);
+    stroke: rgba(15,130,119,0.18);
+    filter: drop-shadow(0 8px 14px rgba(16,36,42,0.13));
+}
+
+.pie-percent-text {
+    fill: var(--text);
+    font-size: 12px;
+    font-weight: 800;
+    text-anchor: middle;
+}
+
+.premium-chart-legend {
+    display: grid;
+    gap: 11px;
+    min-width: 0;
+    width: 100%;
+}
+
+.premium-legend-row {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(220, 232, 232, 0.82);
+    background: rgba(255,255,255,0.64);
+    box-shadow: 0 8px 18px rgba(16,36,42,0.045);
+    cursor: pointer;
+    text-align: left;
+}
+
+.premium-legend-row:hover,
+.premium-legend-row.active {
+    transform: translateY(-1px) scale(1.006);
+    background: rgba(15,130,119,0.065);
+    border-color: rgba(15,130,119,0.22);
+    box-shadow: 0 12px 24px rgba(16,36,42,0.07);
+}
+
+.legend-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 首页和统计职责区分：首页是概览，不再重复放两个大饼图 */
+.home-insight-panel {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.76)),
+        radial-gradient(circle at 12% 18%, rgba(15,130,119,0.08), transparent 35%) !important;
+}
+
+.home-insight-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.home-insight-card {
+    min-height: 118px;
+    padding: 18px;
+    border-radius: 22px;
+    border: 1px solid rgba(220,232,232,0.86);
+    background: rgba(255,255,255,0.66);
+    box-shadow:
+        0 16px 34px rgba(16,36,42,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.72);
+    transition:
+        transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 160ms ease;
+}
+
+.home-insight-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 22px 42px rgba(16,36,42,0.085),
+        inset 0 1px 0 rgba(255,255,255,0.72);
+}
+
+.home-insight-card span {
+    display: block;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.home-insight-card strong {
+    display: block;
+    font-size: 23px;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+}
+
+.home-insight-card em {
+    font-style: normal;
+    font-weight: 800;
+}
+
+/* 统计页标题更像分析中心 */
+.view-panel .content-header h2 {
+    letter-spacing: -0.035em;
+}
+
+:root[data-theme="dark"] .premium-legend-row,
+:root[data-theme="dark"] .home-insight-card {
+    background: rgba(12,20,23,0.50);
+    border-color: rgba(69,91,99,0.72);
+}
+
+:root[data-theme="dark"] .pie-percent-box {
+    fill: rgba(22,33,38,0.96);
+    stroke: rgba(79,209,197,0.20);
+}
+
+@media screen and (max-width: 1280px) {
+    .premium-pie-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .premium-chart-legend {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .home-insight-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .premium-pie-layout {
+        grid-template-columns: 1fr !important;
+        min-height: auto;
+        overflow: visible;
+    }
+
+    .analytics-chart-grid .chart-panel {
+        overflow: visible !important;
+    }
+
+    .premium-pie-svg {
+        width: min(100%, 340px);
+    }
+
+    .premium-chart-legend {
+        max-width: 100%;
+    }
+}
+
+
+/* ==========================================================
+   v8 Home/Auth/i18n fix
+   首页和统计彻底区分；改密/注销回登录；三语同步
+   ========================================================== */
+
+/* 首页不再像统计页：总览和快捷操作优先 */
+.home-insight-panel,
+.home-shortcut-panel {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.78)),
+        radial-gradient(circle at 10% 15%, rgba(15,130,119,0.07), transparent 34%) !important;
+}
+
+.home-section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.home-section-head h3 {
+    margin: 0;
+    font-size: 21px;
+    letter-spacing: -0.02em;
+}
+
+.home-section-head p {
+    margin: 6px 0 0;
+    color: var(--muted);
+}
+
+/* 首页筛选降级，不要抢首页主视觉 */
+.compact-filter-panel {
+    padding: 20px 22px !important;
+}
+
+.compact-filter-panel .inline-form {
+    max-width: 560px;
+}
+
+/* 快捷入口，让首页更像 Dashboard 而不是统计页 */
+.home-shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.home-shortcut-card {
+    display: grid;
+    gap: 8px;
+    min-height: 106px;
+    padding: 18px;
+    border-radius: 22px;
+    border: 1px solid rgba(220,232,232,0.88);
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,255,255,0.50));
+    box-shadow:
+        0 16px 34px rgba(16,36,42,0.055),
+        inset 0 1px 0 rgba(255,255,255,0.74);
+    text-align: left;
+}
+
+.home-shortcut-card strong {
+    font-size: 18px;
+    letter-spacing: -0.01em;
+}
+
+.home-shortcut-card span {
+    color: var(--muted);
+    line-height: 1.45;
+}
+
+.home-shortcut-card:hover {
+    transform: translateY(-2px) scale(1.006);
+    box-shadow:
+        0 24px 48px rgba(16,36,42,0.085),
+        inset 0 1px 0 rgba(255,255,255,0.76);
+}
+
+/* 首页概览在最上面，视觉更清楚 */
+.home-insight-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+/* 统计页负责分析，图表更集中 */
+.analytics-chart-grid {
+    margin-top: 4px;
+}
+
+.trend-panel {
+    margin-top: 6px;
+}
+
+/* 暗色模式 */
+:root[data-theme="dark"] .home-insight-panel,
+:root[data-theme="dark"] .home-shortcut-panel,
+:root[data-theme="dark"] .home-shortcut-card {
+    background:
+        linear-gradient(180deg, rgba(22,33,38,0.96), rgba(22,33,38,0.82)),
+        radial-gradient(circle at 10% 15%, rgba(79,209,197,0.10), transparent 34%) !important;
+    border-color: rgba(69,91,99,0.72);
+}
+
+@media screen and (max-width: 1024px) {
+    .home-shortcut-grid,
+    .home-insight-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .compact-filter-panel .inline-form {
+        max-width: none;
+    }
+}
+
+
+/* ==========================================================
+   v9 Home cleanup
+   首页去掉月份筛选，避免和统计页重复；三语补丁生效
+   ========================================================== */
+
+.home-insight-panel {
+    margin-top: 6px;
+}
+
+.home-shortcut-panel {
+    margin-top: 20px;
+}
+
+.summary-grid {
+    margin-top: 20px;
+}
+
+.home-shortcut-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.home-shortcut-card::after {
+    content: "›";
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    font-size: 24px;
+    color: rgba(15,130,119,0.35);
+    transform: translateX(-2px);
+    transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1), color 160ms ease;
+}
+
+.home-shortcut-card:hover::after {
+    transform: translateX(2px);
+    color: rgba(15,130,119,0.70);
+}
+
+/* 首页表格保留最近记录属性，不承载复杂分析 */
+.home-insight-card,
+.home-shortcut-card {
+    backdrop-filter: blur(14px);
+}
+
+@media screen and (max-width: 1024px) {
+    .home-shortcut-card::after {
+        top: 14px;
+        right: 16px;
+    }
+}
+
+
+/* ==========================================================
+   v10 Home final fix
+   首页：本月概览 -> 最近记录 -> 快捷操作
+   删除重复的收入/支出/结余卡片；手机端显示最近记录卡片
+   ========================================================== */
+
+.home-insight-panel {
+    margin-top: 6px;
+}
+
+.home-insight-panel + .panel {
+    margin-top: 18px;
+}
+
+.home-mobile-recent-list {
+    display: none;
+}
+
+.home-shortcut-panel {
+    margin-top: 18px !important;
+}
+
+/* 首页最近记录比收支记录页更像预览，不做复杂操作 */
+.home-mobile-recent-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    min-height: 76px;
+    padding: 14px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(220,232,232,0.86);
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.80), rgba(255,255,255,0.58));
+    box-shadow:
+        0 12px 28px rgba(16,36,42,0.055),
+        inset 0 1px 0 rgba(255,255,255,0.70);
+}
+
+.home-mobile-recent-card strong {
+    display: block;
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.home-mobile-recent-card span {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.home-mobile-recent-card em {
+    font-style: normal;
+    font-weight: 900;
+    font-size: 18px;
+    white-space: nowrap;
+}
+
+:root[data-theme="dark"] .home-mobile-recent-card {
+    background: rgba(12,20,23,0.50);
+    border-color: rgba(69,91,99,0.72);
+}
+
+@media screen and (max-width: 1024px) {
+    /* 首页最近记录手机端不显示表格，显示卡片 */
+    .home-mobile-recent-list {
+        display: grid !important;
+        gap: 12px;
+    }
+
+    .home-mobile-recent-list + .empty {
+        display: none;
+    }
+
+    .panel:has(.home-mobile-recent-list) .table-wrap {
+        display: none !important;
+    }
+
+    /* 防止最近记录只剩标题，看起来像空白 */
+    .panel:has(.home-mobile-recent-list) {
+        padding-bottom: 18px;
+    }
+
+    .home-shortcut-panel {
+        margin-top: 16px !important;
+    }
+}
+
+
+/* ==========================================================
+   v11 mobile final fix
+   手机端饼图标签不出屏；记录详情自然展开/收起；分页按钮有触感
+   ========================================================== */
+
+/* 图例显示百分比，手机端不依赖外侧指示线 */
+.legend-value {
+    display: grid;
+    justify-items: end;
+    gap: 2px;
+    min-width: 92px;
+}
+
+.legend-value small {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* 手机端饼图：禁用外侧百分比标签，避免跑到屏幕外 */
+@media screen and (max-width: 1024px) {
+    .premium-pie-layout {
+        overflow: hidden !important;
+    }
+
+    .premium-pie-stage {
+        overflow: hidden !important;
+        width: 100%;
+    }
+
+    .premium-pie-svg {
+        width: min(100%, 330px) !important;
+        max-width: 330px !important;
+        overflow: hidden !important;
+    }
+
+    .pie-label-layer,
+    .pie-leader-line,
+    .pie-leader-dot,
+    .pie-percent-box,
+    .pie-percent-text {
+        display: none !important;
+    }
+
+    .premium-pie-slice.active {
+        transform: scale(1.022);
+    }
+
+    .premium-chart-legend {
+        width: 100%;
+    }
+
+    .premium-legend-row {
+        grid-template-columns: 12px minmax(0, 1fr) auto;
+    }
+
+    .legend-value {
+        min-width: 84px;
+    }
+}
+
+/* 手机端记录卡片：去掉点击后残留的白色方块/focus状态 */
+.mobile-record-main,
+.mobile-record-main:focus,
+.mobile-record-main:focus-visible,
+.mobile-record-main:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-record-main::before,
+.mobile-record-main::after,
+.mobile-record-card::before,
+.mobile-record-card::after {
+    content: none !important;
+    display: none !important;
+}
+
+@media screen and (max-width: 1024px) {
+    .mobile-record-card {
+        overflow: hidden;
+        transition:
+            transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 180ms ease,
+            border-color 180ms ease,
+            background-color 180ms ease !important;
+    }
+
+    .mobile-record-card.is-pressing {
+        transform: scale(0.986);
+    }
+
+    .mobile-record-card.is-open {
+        border-color: rgba(15, 130, 119, 0.28) !important;
+        box-shadow:
+            0 14px 32px rgba(16, 36, 42, 0.075),
+            inset 0 1px 0 rgba(255, 255, 255, 0.66) !important;
+    }
+
+    .mobile-record-main {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        transition:
+            background-color 180ms ease,
+            transform 120ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+
+    .mobile-record-main:active,
+    .mobile-record-main.pressing {
+        transform: scale(0.992);
+        background: rgba(15, 130, 119, 0.045) !important;
+    }
+
+    .mobile-record-main.open {
+        background: rgba(15, 130, 119, 0.035) !important;
+    }
+
+    .mobile-record-arrow {
+        transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 160ms ease !important;
+    }
+
+    .mobile-record-main.open .mobile-record-arrow {
+        transform: rotate(180deg);
+    }
+
+    .mobile-record-detail {
+        display: block !important;
+        overflow: hidden !important;
+        margin-top: 0;
+        padding-top: 12px;
+        border-top: 1px solid rgba(220, 232, 232, 0.82);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(248, 252, 252, 0.88));
+        transform-origin: top;
+    }
+
+    .record-detail-enter-active {
+        transition:
+            max-height 260ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 180ms ease,
+            transform 220ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+
+    .record-detail-leave-active {
+        transition:
+            max-height 210ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 150ms ease,
+            transform 180ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+
+    .record-detail-enter-from,
+    .record-detail-leave-to {
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(-8px) scaleY(0.98);
+    }
+
+    .record-detail-enter-to,
+    .record-detail-leave-from {
+        max-height: 180px;
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+
+    :root[data-theme="dark"] .mobile-record-detail {
+        border-top-color: rgba(51, 73, 79, 0.78);
+        background:
+            linear-gradient(180deg, rgba(23, 35, 38, 0.72), rgba(16, 27, 30, 0.92));
+    }
+}
+
+/* 上一页 / 下一页：手机端有明确点击反馈，不残留 */
+.pagination .pager-button {
+    touch-action: manipulation;
+    transition:
+        transform 110ms cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 150ms ease,
+        border-color 150ms ease,
+        box-shadow 150ms ease,
+        opacity 150ms ease !important;
+}
+
+.pagination .pager-button:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(16, 36, 42, 0.075);
+}
+
+.pagination .pager-button:not(:disabled):active {
+    transform: scale(0.965) !important;
+    background: rgba(15, 130, 119, 0.10) !important;
+    border-color: rgba(15, 130, 119, 0.42) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(15, 130, 119, 0.12),
+        0 6px 14px rgba(15, 130, 119, 0.08) !important;
+}
+
+.pagination .pager-button:disabled {
+    opacity: 0.45;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+@media (hover: none) {
+    .pagination .pager-button:not(:disabled):active {
+        transform: scale(0.955) !important;
+    }
+}
+
+/* 减少动画时也保证详情不会蹦出来 */
+@media (prefers-reduced-motion: reduce) {
+    .record-detail-enter-active,
+    .record-detail-leave-active,
+    .mobile-record-card,
+    .mobile-record-main,
+    .pagination .pager-button {
+        transition: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v12 Admin mobile final fix
+   管理员页面手机端优化 + 底部导航不换行挤压
+   ========================================================== */
+
+/* 管理员表单：按钮不会点击后变成白块 */
+.admin-search-form {
+    display: grid;
+    gap: 16px;
+}
+
+.admin-search-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.admin-action-button,
+.admin-action-button:focus,
+.admin-action-button:active,
+.admin-action-button:focus-visible {
+    min-height: 46px;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.admin-action-button.primary {
+    background: var(--primary) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+}
+
+.admin-action-button.secondary {
+    background: rgba(255, 255, 255, 0.78) !important;
+    color: var(--text) !important;
+    border-color: var(--line) !important;
+}
+
+.admin-action-button.primary:active {
+    background: var(--primary-dark) !important;
+    color: #fff !important;
+}
+
+.admin-action-button.secondary:active {
+    background: rgba(15, 130, 119, 0.08) !important;
+}
+
+/* 管理员详情更明显，不再像一块普通提示 */
+.admin-detail-card {
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid rgba(220,232,232,0.90);
+    background: rgba(248, 252, 252, 0.84);
+}
+
+.admin-detail-card .detail-row {
+    padding: 15px 16px;
+    border-bottom: 1px solid rgba(220,232,232,0.72);
+}
+
+.admin-detail-card .detail-row:last-child {
+    border-bottom: 0;
+}
+
+.admin-empty-detail {
+    border-radius: 18px;
+    background: rgba(248, 252, 252, 0.84);
+}
+
+.admin-mobile-user-list {
+    display: none;
+}
+
+.admin-user-card {
+    border-radius: 22px;
+    border: 1px solid rgba(220,232,232,0.88);
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.62));
+    box-shadow:
+        0 14px 30px rgba(16,36,42,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.74);
+    padding: 16px;
+}
+
+.admin-user-card-head strong {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.admin-user-card-head span {
+    color: var(--muted);
+    font-weight: 800;
+}
+
+.admin-user-card-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.admin-user-card-actions button {
+    min-height: 44px;
+}
+
+:root[data-theme="dark"] .admin-action-button.secondary,
+:root[data-theme="dark"] .admin-detail-card,
+:root[data-theme="dark"] .admin-empty-detail,
+:root[data-theme="dark"] .admin-user-card {
+    background: rgba(12,20,23,0.56) !important;
+    border-color: rgba(69,91,99,0.72) !important;
+}
+
+/* 手机端底部导航：管理员账号有 7 个按钮，必须单行横向滚动，不能挤成两行 */
+@media screen and (max-width: 1024px) {
+    .nav {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        grid-template-columns: none !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        gap: 6px !important;
+        padding: 8px 10px calc(8px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav .nav-btn {
+        flex: 0 0 72px !important;
+        width: 72px !important;
+        min-width: 72px !important;
+        max-width: 72px !important;
+        min-height: 58px !important;
+        border-radius: 18px !important;
+        padding: 6px 4px !important;
+        font-size: 12px !important;
+        white-space: nowrap !important;
+        word-break: keep-all !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .nav.admin-nav .nav-btn {
+        flex-basis: 72px !important;
+    }
+
+    .nav .nav-btn.active {
+        box-shadow:
+            inset 0 0 0 1px rgba(255,255,255,0.76),
+            0 10px 24px rgba(15,130,119,0.12) !important;
+    }
+
+    .content {
+        padding-bottom: calc(104px + env(safe-area-inset-bottom)) !important;
+    }
+
+    /* 管理员页手机端布局 */
+    .admin-view {
+        padding-bottom: 28px;
+    }
+
+    .admin-search-form {
+        gap: 14px;
+    }
+
+    .admin-search-actions {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .admin-action-button {
+        width: 100%;
+        min-height: 52px;
+        border-radius: 20px;
+        font-size: 16px;
+        font-weight: 900;
+    }
+
+    .admin-table-wrap {
+        display: none !important;
+    }
+
+    .admin-mobile-user-list {
+        display: grid !important;
+        gap: 12px;
+        margin-top: 14px;
+    }
+
+    .admin-panel {
+        border-radius: 28px !important;
+    }
+
+    .admin-detail-panel,
+    .admin-reset-panel {
+        scroll-margin-top: 18px;
+    }
+
+    .admin-reset-form {
+        gap: 14px;
+    }
+
+    .admin-reset-form .form-actions button {
+        width: 100%;
+        min-height: 52px;
+        border-radius: 20px;
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .nav .nav-btn {
+        flex-basis: 68px !important;
+        width: 68px !important;
+        min-width: 68px !important;
+        max-width: 68px !important;
+        font-size: 11px !important;
+    }
+}
