@@ -1,0 +1,4344 @@
+:root {
+    --bg: #f4f8f8;
+    --panel: #ffffff;
+    --line: #dce8e8;
+    --muted: #607276;
+    --text: #10242a;
+    --primary: #0f8277;
+    --primary-dark: #09665e;
+    --danger: #b42318;
+    --soft: #e7f4f2;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+button:hover {
+    border-color: var(--primary);
+}
+
+button.primary,
+.primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+button.primary:hover,
+.primary:hover {
+    background: var(--primary-dark);
+}
+
+button.danger,
+.danger {
+    color: var(--danger);
+    border-color: #efb8b3;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.topbar {
+    min-height: 86px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 18px 32px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.brand p {
+    margin: 6px 0 0;
+    color: var(--muted);
+}
+
+.language-switch {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.lang-btn.active {
+    background: var(--soft);
+    border-color: var(--primary);
+    color: var(--primary-dark);
+    font-weight: 700;
+}
+
+main {
+    width: 100%;
+    min-height: calc(100vh - 86px);
+}
+
+.auth-view {
+    min-height: calc(100vh - 86px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-card {
+    width: 460px;
+    max-width: calc(100vw - 40px);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 20px 45px rgba(16, 36, 42, 0.08);
+}
+
+.segmented {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.segment.active {
+    background: var(--soft);
+    border-color: var(--primary);
+    color: var(--primary-dark);
+    font-weight: 700;
+}
+
+.auth-form h2 {
+    margin: 0 0 8px;
+}
+
+.auth-form label {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 10px;
+}
+
+.auth-form button[type="submit"] {
+    margin-top: 14px;
+}
+
+.auth-link {
+    margin-top: 18px;
+}
+
+.auth-link button {
+    border: 0;
+    background: transparent;
+    color: var(--primary);
+    font-weight: 700;
+    padding: 0;
+}
+
+.app-layout {
+    display: grid;
+    grid-template-columns: 290px minmax(0, 1fr);
+    min-height: calc(100vh - 86px);
+}
+
+.sidebar {
+    padding: 24px;
+    background: #fbfdfd;
+    border-right: 1px solid var(--line);
+}
+
+.side-card,
+.panel,
+.summary-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.side-card {
+    padding: 18px;
+    margin-bottom: 22px;
+}
+
+.side-card strong {
+    display: block;
+    margin: 8px 0;
+    font-size: 20px;
+}
+
+.side-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.side-password-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.side-password-form p {
+    margin: 0;
+    font-weight: 700;
+}
+
+.side-password-form label {
+    margin: 0;
+}
+
+.side-password-form input {
+    min-height: 38px;
+}
+
+.side-password-form button {
+    width: 100%;
+}
+
+.nav {
+    display: grid;
+    gap: 10px;
+}
+
+.nav-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 700;
+}
+
+.nav-btn.active {
+    background: var(--soft);
+    border-color: var(--primary);
+    color: var(--primary-dark);
+}
+
+.content {
+    padding: 28px;
+    overflow: auto;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.content-header h2 {
+    margin: 0 0 8px;
+    font-size: 26px;
+}
+
+.content-header p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.view-panel {
+    display: none;
+}
+
+.view-panel.active {
+    display: block;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.summary-grid.compact {
+    margin-top: 16px;
+}
+
+.summary-card {
+    padding: 18px;
+}
+
+.summary-card span {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+
+.summary-card strong {
+    font-size: 26px;
+}
+
+.panel {
+    padding: 22px;
+    margin-bottom: 18px;
+}
+
+.panel h3 {
+    margin: 0 0 18px;
+}
+
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.form-grid .wide,
+.form-grid .form-actions {
+    grid-column: 1 / -1;
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+label span {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+input,
+select {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    min-height: 42px;
+    padding: 9px 12px;
+    background: #fff;
+    color: var(--text);
+}
+
+.inline-form {
+    display: flex;
+    align-items: end;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.inline-form label {
+    min-width: 150px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    color: var(--muted);
+    background: #f8fbfb;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.empty {
+    color: var(--muted);
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-list {
+    display: grid;
+    gap: 10px;
+}
+
+.stat-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.big-number {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 18px 0 0;
+}
+
+.detail-box {
+    display: grid;
+    gap: 12px;
+    min-height: 100px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #f8fbfb;
+    color: var(--text);
+    overflow: auto;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.detail-row:last-child {
+    border-bottom: 0;
+}
+
+.detail-row span {
+    color: var(--muted);
+}
+
+.detail-row strong {
+    font-size: 16px;
+}
+
+.toast {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    max-width: 420px;
+    background: #10242a;
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(16, 36, 42, 0.22);
+    transform: translate(-50%, -50%) scale(0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s ease;
+    z-index: 9999;
+    text-align: center;
+    font-weight: 700;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.pagination button {
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.chart-box {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: center;
+    gap: 20px;
+}
+
+.chart-box canvas {
+    width: 220px;
+    height: 220px;
+    max-width: 100%;
+}
+
+.chart-legend {
+    display: grid;
+    gap: 10px;
+}
+
+.chart-legend-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.chart-legend-item strong {
+    font-weight: 800;
+}
+
+.chart-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+@media (max-width: 900px) {
+    .topbar {
+        display: grid;
+        align-items: start;
+    }
+
+    .app-layout {
+        display: block;
+    }
+
+    .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .summary-grid,
+    .two-col,
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    .chart-box {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .chart-legend {
+        width: 100%;
+    }
+}
+
+
+.ai-form {
+    display: grid;
+    gap: 14px;
+}
+
+.ai-form textarea {
+    width: 100%;
+    min-height: 130px;
+    resize: vertical;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    line-height: 1.6;
+}
+
+.ai-answer {
+    min-height: 180px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #f8fbfb;
+    color: var(--text);
+    line-height: 1.8;
+    white-space: normal;
+    overflow: auto;
+}
+
+.ai-answer:empty::before {
+    content: "请在上方输入问题，然后点击发送。";
+    color: var(--muted);
+}
+
+
+/* 密码输入框：显示/隐藏按钮 */
+/* パスワード入力欄：表示/非表示ボタン */
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-field input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.password-field .password-toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    min-height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    font-size: 16px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+}
+
+.password-field .password-toggle:hover {
+    background: var(--soft);
+}
+
+/* 尽量隐藏浏览器自带的密码显示按钮，避免出现两个小眼睛 */
+/* ブラウザ標準のパスワード表示ボタンをできるだけ隠し、二重表示を防ぐ */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* ==========================================================
+   v12 人性化显示优化：夜间模式、颜色自定义、金额颜色、PC/手机视觉增强
+   v12 UX表示改善：ダークモード、色カスタム、金額色、PC/スマホの見た目改善
+   ========================================================== */
+
+:root {
+    --income: #0f8277;
+    --expense: #b42318;
+    --shadow: 0 18px 45px rgba(16, 36, 42, 0.08);
+    --panel-soft: #f8fbfb;
+}
+
+:root[data-theme="dark"] {
+    --bg: #0f1719;
+    --panel: #172326;
+    --line: #2a3b40;
+    --muted: #93a7ad;
+    --text: #edf6f7;
+    --danger: var(--expense);
+    --panel-soft: #101a1d;
+    --shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 4px 18px rgba(16, 36, 42, 0.05);
+}
+
+.sidebar {
+    position: sticky;
+    top: 86px;
+    height: calc(100vh - 86px);
+    overflow: auto;
+}
+
+.content {
+    max-width: 1180px;
+    width: 100%;
+}
+
+.panel,
+.summary-card,
+.side-card,
+.auth-card {
+    box-shadow: var(--shadow);
+}
+
+.panel,
+.summary-card,
+.side-card,
+.auth-card,
+input,
+select,
+textarea,
+button,
+.detail-box,
+.ai-answer {
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input,
+select,
+textarea,
+.ai-answer,
+.detail-box,
+th {
+    background: var(--panel-soft);
+    color: var(--text);
+}
+
+table tbody tr:hover {
+    background: var(--panel-soft);
+}
+
+.summary-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary);
+}
+
+.income-card::before {
+    background: var(--income);
+}
+
+.expense-card::before {
+    background: var(--expense);
+}
+
+.balance-card::before {
+    background: linear-gradient(90deg, var(--income), var(--primary));
+}
+
+.amount-income,
+.mobile-record-amount.income {
+    color: var(--income) !important;
+}
+
+.amount-expense,
+.mobile-record-amount.expense {
+    color: var(--expense) !important;
+}
+
+.amount-cell {
+    font-weight: 800;
+}
+
+.settings-help {
+    margin: -6px 0 16px;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.settings-grid input[type="color"] {
+    height: 44px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.settings-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.settings-preview > div {
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--panel-soft);
+}
+
+.settings-preview span {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.settings-preview strong {
+    font-size: 22px;
+}
+
+.profile-actions .danger {
+    background: rgba(180, 35, 24, 0.05);
+}
+
+.language-select-wrap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.language-select {
+    width: auto;
+    min-width: 96px;
+    min-height: 38px;
+    padding: 6px 28px 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel);
+    color: var(--text);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.language-switch {
+    display: none !important;
+}
+
+.profile-actions {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.profile-actions button {
+    min-width: 120px;
+}
+
+.mobile-record-list,
+.mobile-category-list {
+    display: none;
+}
+
+.mobile-panel-toggle {
+    display: none;
+}
+
+@media (max-width: 1100px) {
+    .settings-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        background: var(--bg);
+    }
+
+    body {
+        font-size: 14px;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    button {
+        min-height: 40px;
+        touch-action: manipulation;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        min-height: auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 2px 10px rgba(16, 36, 42, 0.04);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-width: 0;
+    }
+
+    .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 14px;
+        flex: 0 0 auto;
+    }
+
+    .brand h1 {
+        margin: 0;
+        font-size: 17px;
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .brand p {
+        display: none;
+    }
+
+    .language-select {
+        min-width: 86px;
+        min-height: 34px;
+        padding: 5px 24px 5px 8px;
+        border-radius: 9px;
+        font-size: 12px;
+    }
+
+    #appView.app-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        grid-template-columns: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+    }
+
+    #appView.app-layout.hidden {
+        display: none !important;
+    }
+
+    .sidebar {
+        position: static;
+        height: auto;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        border-right: 0 !important;
+        border-bottom: 0 !important;
+        background: transparent !important;
+    }
+
+    .mobile-hidden-account {
+        display: none !important;
+    }
+
+    .nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 60;
+        display: grid !important;
+        grid-template-columns: repeat(6, minmax(58px, 1fr)) !important;
+        gap: 0 !important;
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+        background: var(--panel);
+        border-top: 1px solid var(--line);
+        box-shadow: 0 -8px 24px rgba(16, 36, 42, 0.08);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-btn {
+        width: 100%;
+        min-height: 50px;
+        padding: 4px 2px;
+        border: 0;
+        border-radius: 14px;
+        background: transparent;
+        color: var(--muted);
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.2;
+        white-space: normal;
+    }
+
+    .nav-btn::before {
+        display: block;
+        margin: 0 auto 3px;
+        width: 22px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 18px;
+        font-weight: 800;
+        color: currentColor;
+    }
+
+    .nav-btn[data-tab="home"]::before { content: "⌂"; }
+    .nav-btn[data-tab="profile"]::before { content: "◉"; }
+    .nav-btn[data-tab="categories"]::before { content: "▣"; }
+    .nav-btn[data-tab="records"]::before { content: "≡"; }
+    .nav-btn[data-tab="stats"]::before { content: "▥"; }
+    .nav-btn[data-tab="ai"]::before {
+        content: "AI";
+        font-size: 13px;
+        letter-spacing: -0.5px;
+    }
+    .nav-btn[data-tab="admin"]::before { content: "⚙"; }
+
+    .nav-btn.active {
+        background: var(--soft);
+        color: var(--primary-dark);
+        border-color: transparent;
+    }
+
+    .content {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 10px 12px 84px !important;
+        overflow: visible !important;
+    }
+
+    .content-header {
+        display: block;
+        margin: 8px 0 10px;
+        padding: 2px 2px 0;
+    }
+
+    .content-header h2 {
+        margin: 0 0 4px;
+        font-size: 21px;
+        line-height: 1.3;
+    }
+
+    .content-header p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--muted);
+    }
+
+    .panel,
+    .summary-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 13px;
+        margin-bottom: 10px;
+        border-radius: 14px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+    }
+
+    .panel h3 {
+        margin: 0 0 10px;
+        font-size: 16px;
+        line-height: 1.3;
+    }
+
+    .summary-grid,
+    .summary-grid.compact,
+    .two-col,
+    .form-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 9px !important;
+    }
+
+    .summary-card span {
+        margin-bottom: 5px;
+        font-size: 13px;
+    }
+
+    .summary-card strong {
+        display: block;
+        font-size: 21px;
+        line-height: 1.25;
+        word-break: break-all;
+        overflow-wrap: anywhere;
+    }
+
+    .inline-form {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        align-items: stretch !important;
+        gap: 9px !important;
+        margin-bottom: 10px;
+    }
+
+    .inline-form label {
+        width: 100%;
+        min-width: 0;
+    }
+
+    label span {
+        margin-bottom: 5px;
+        font-size: 13px;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        min-height: 42px;
+        padding: 8px 10px;
+        border-radius: 10px;
+    }
+
+    .inline-form button,
+    .form-actions button,
+    .ai-form button,
+    .profile-actions button {
+        width: 100%;
+        min-height: 42px;
+    }
+
+    .form-actions,
+    .profile-actions {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+
+    .settings-grid,
+    .settings-preview {
+        grid-template-columns: 1fr;
+    }
+
+    .mobile-panel-toggle {
+        display: flex !important;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 44px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 800;
+        text-align: left;
+    }
+
+    .mobile-panel-arrow {
+        color: var(--primary-dark);
+        font-size: 18px;
+        line-height: 1;
+        transition: transform 0.18s ease;
+    }
+
+    .mobile-collapsible.collapsed .mobile-collapsible-body {
+        display: none !important;
+    }
+
+    .mobile-collapsible:not(.collapsed) .mobile-panel-arrow {
+        transform: rotate(45deg);
+    }
+
+    .table-wrap {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--panel);
+    }
+
+    .table-wrap table {
+        width: 100%;
+        min-width: 470px;
+    }
+
+    th,
+    td {
+        padding: 7px 5px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 62px;
+    }
+
+    .actions button {
+        width: 100%;
+        min-height: 30px;
+        padding: 4px 6px;
+        font-size: 12px;
+        border-radius: 7px;
+    }
+
+    .categories-table-wrap {
+        display: none !important;
+    }
+
+    .mobile-category-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .mobile-category-card {
+        display: grid;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel);
+    }
+
+    .mobile-category-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .mobile-category-main strong {
+        font-size: 15px;
+    }
+
+    .mobile-category-main span {
+        color: var(--muted);
+        font-weight: 700;
+    }
+
+    .mobile-category-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .mobile-category-actions button {
+        width: 100%;
+        min-height: 36px;
+    }
+
+    .records-table-wrap {
+        display: none !important;
+    }
+
+    .mobile-record-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .mobile-empty {
+        padding: 18px;
+        text-align: center;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel);
+    }
+
+    .mobile-record-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel);
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(16, 36, 42, 0.04);
+    }
+
+    .mobile-record-main {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        text-align: left;
+    }
+
+    .mobile-record-left {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    .mobile-record-left strong {
+        font-size: 15px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mobile-record-left em {
+        font-style: normal;
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .mobile-record-amount {
+        font-weight: 900;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    .mobile-record-arrow {
+        color: var(--muted);
+        font-size: 16px;
+        transition: transform 0.18s ease;
+    }
+
+    .mobile-record-main.open .mobile-record-arrow {
+        transform: rotate(180deg);
+    }
+
+    .mobile-record-detail {
+        padding: 0 12px 12px;
+        border-top: 1px solid var(--line);
+    }
+
+    .mobile-record-row {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 8px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .mobile-record-row span {
+        color: var(--muted);
+        font-weight: 700;
+    }
+
+    .mobile-record-row strong {
+        font-weight: 700;
+        word-break: break-word;
+    }
+
+    .mobile-record-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding-top: 10px;
+    }
+
+    .mobile-record-actions button {
+        width: 100%;
+        min-height: 38px;
+    }
+
+    .pagination {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .pagination button {
+        width: 100%;
+    }
+
+    .pagination-info {
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .detail-box {
+        min-height: auto;
+        padding: 11px;
+        border-radius: 10px;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4px;
+        align-items: start;
+        padding: 8px 0;
+    }
+
+    .stat-list {
+        gap: 8px;
+    }
+
+    .stat-line {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 8px 0;
+    }
+
+    .chart-box {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        justify-items: center;
+        gap: 10px;
+    }
+
+    .chart-box canvas {
+        width: 190px;
+        height: 190px;
+    }
+
+    .chart-legend {
+        width: 100%;
+        gap: 8px;
+    }
+
+    .chart-legend-item {
+        grid-template-columns: auto 1fr;
+        gap: 8px;
+        padding: 8px 0;
+    }
+
+    .chart-legend-item strong {
+        grid-column: 1 / -1;
+        justify-self: end;
+    }
+
+    .ai-form {
+        gap: 9px;
+    }
+
+    .ai-form textarea {
+        min-height: 110px;
+        max-height: 34vh;
+        line-height: 1.6;
+    }
+
+    .ai-answer {
+        min-height: 140px;
+        max-height: 43vh;
+        padding: 12px;
+        line-height: 1.7;
+        border-radius: 10px;
+    }
+
+    .password-field input {
+        padding-right: 44px;
+    }
+
+    .password-field .password-toggle {
+        width: 32px;
+        height: 32px;
+        min-height: 32px;
+    }
+
+    .toast {
+        width: calc(100vw - 32px);
+        max-width: calc(100vw - 32px);
+        padding: 11px 13px;
+        font-size: 14px;
+        border-radius: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .topbar {
+        padding: 9px 10px;
+    }
+
+    .brand h1 {
+        font-size: 16px;
+    }
+
+    .language-select {
+        min-width: 78px;
+        font-size: 12px;
+    }
+
+    .nav {
+        grid-template-columns: repeat(6, 66px) !important;
+        justify-content: start;
+    }
+
+    .content {
+        padding: 8px 10px 82px !important;
+    }
+
+    .content-header h2 {
+        font-size: 19px;
+    }
+
+    .content-header p {
+        font-size: 12px;
+    }
+
+    .panel,
+    .summary-card {
+        padding: 12px;
+    }
+
+    .summary-card strong {
+        font-size: 20px;
+    }
+
+    .table-wrap table {
+        min-width: 450px;
+    }
+
+    th,
+    td {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+
+    .mobile-record-amount {
+        font-size: 14px;
+    }
+
+    .chart-box canvas {
+        width: 175px;
+        height: 175px;
+    }
+}
+
+
+/* ==========================================================
+   v13 夜间模式按钮修复 + 账号注销入口
+   v13 ダークモードのボタン修正 + アカウント削除導線
+   ========================================================== */
+
+/* 基础按钮不再写死白底，避免夜间模式下按钮发白 */
+/* 基本ボタンは白背景に固定しない。ダークモードで白くなる問題を防ぐ */
+button {
+    background: var(--panel);
+    color: var(--text);
+    border-color: var(--line);
+}
+
+button:hover {
+    background: var(--panel-soft);
+    border-color: var(--primary);
+}
+
+button.primary,
+.primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+}
+
+button.primary:hover,
+.primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #ffffff;
+}
+
+button.danger,
+.danger {
+    background: rgba(180, 35, 24, 0.06);
+    color: var(--expense);
+    border-color: rgba(180, 35, 24, 0.38);
+}
+
+button.danger:hover,
+.danger:hover {
+    background: rgba(180, 35, 24, 0.12);
+    border-color: var(--expense);
+}
+
+button:disabled,
+button:disabled:hover {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--panel-soft);
+    color: var(--muted);
+    border-color: var(--line);
+}
+
+/* 夜间模式下的按钮、输入框、卡片颜色进一步修正 */
+/* ダークモードでのボタン、入力欄、カード色をさらに調整 */
+:root[data-theme="dark"] button {
+    background: #152326;
+    color: var(--text);
+    border-color: #365057;
+}
+
+:root[data-theme="dark"] button:hover {
+    background: #1d3034;
+    border-color: var(--primary);
+}
+
+:root[data-theme="dark"] button.primary,
+:root[data-theme="dark"] .primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+}
+
+:root[data-theme="dark"] button.primary:hover,
+:root[data-theme="dark"] .primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #ffffff;
+}
+
+:root[data-theme="dark"] button.danger,
+:root[data-theme="dark"] .danger {
+    background: rgba(239, 68, 68, 0.10);
+    color: #ff7b72;
+    border-color: rgba(239, 68, 68, 0.45);
+}
+
+:root[data-theme="dark"] button.danger:hover,
+:root[data-theme="dark"] .danger:hover {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: #ff7b72;
+}
+
+:root[data-theme="dark"] button:disabled,
+:root[data-theme="dark"] button:disabled:hover {
+    background: #111b1e;
+    color: #5f7378;
+    border-color: #283a40;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] .detail-box,
+:root[data-theme="dark"] .ai-answer,
+:root[data-theme="dark"] th {
+    background: #101b1e;
+    color: var(--text);
+    border-color: #33494f;
+}
+
+:root[data-theme="dark"] .side-card,
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .summary-card,
+:root[data-theme="dark"] .mobile-category-card,
+:root[data-theme="dark"] .mobile-record-card,
+:root[data-theme="dark"] .settings-preview > div {
+    background: #172326;
+    border-color: #2d4349;
+}
+
+:root[data-theme="dark"] .sidebar {
+    background: #0f1719;
+}
+
+:root[data-theme="dark"] .nav-btn.active {
+    background: rgba(15, 130, 119, 0.22);
+    color: #d9fffb;
+}
+
+:root[data-theme="dark"] .toast {
+    background: #0b1214;
+    border: 1px solid #365057;
+}
+
+/* 账号安全区 */
+/* アカウント安全エリア */
+.danger-zone {
+    border-color: rgba(180, 35, 24, 0.35);
+}
+
+.danger-help {
+    margin-top: -6px;
+    margin-bottom: 14px;
+}
+
+.strong-danger {
+    width: auto;
+    min-width: 160px;
+    font-weight: 800;
+}
+
+@media screen and (max-width: 1024px) {
+    .strong-danger {
+        width: 100%;
+        min-height: 44px;
+    }
+}
+
+
+/* ==========================================================
+   v14 个人信息页折叠优化 + 注销账号密码确认表单
+   v14 個人情報ページ折りたたみ改善 + アカウント削除パスワード確認フォーム
+   ========================================================== */
+
+/* PC 和手机都可用的折叠面板 */
+/* PC・スマホ共通の折りたたみパネル */
+.always-toggle {
+    display: flex !important;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent !important;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 800;
+    text-align: left;
+}
+
+.always-toggle:hover {
+    background: transparent !important;
+    color: var(--primary-dark);
+}
+
+.collapsible-panel h3 {
+    margin-bottom: 0;
+}
+
+.collapsible-panel:not(.collapsed) h3 {
+    margin-bottom: 18px;
+}
+
+.collapsible-panel.collapsed .collapsible-body {
+    display: none !important;
+}
+
+.collapsible-panel:not(.collapsed) .mobile-panel-arrow {
+    transform: rotate(45deg);
+}
+
+.danger-toggle {
+    color: var(--expense);
+}
+
+.danger-zone .collapsible-body {
+    margin-top: 12px;
+}
+
+.danger-zone .form-grid {
+    margin-top: 12px;
+}
+
+.danger-zone .form-actions {
+    align-items: center;
+}
+
+/* 注销账号按钮强调危险，但不要夜间模式下白到刺眼 */
+/* アカウント削除ボタンは危険操作として強調しつつ、ダークモードで白飛びしない */
+.strong-danger {
+    min-width: 160px;
+    font-weight: 800;
+}
+
+:root[data-theme="dark"] .always-toggle {
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .always-toggle:hover {
+    color: #d9fffb;
+}
+
+:root[data-theme="dark"] .danger-toggle {
+    color: #ff9b92;
+}
+
+@media screen and (max-width: 1024px) {
+    .always-toggle {
+        font-size: 16px;
+    }
+
+    .strong-danger {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .danger-zone .form-actions {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* ==========================================================
+   v15 个人信息页结构优化：账号安全合并修改密码和注销账号，显示设置折叠
+   v15 個人情報ページ構造改善：安全設定にパスワード変更と退会を統合、表示設定を折りたたみ
+   ========================================================== */
+
+.account-security-panel .collapsible-body {
+    display: grid;
+    gap: 18px;
+}
+
+.security-section {
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--panel-soft);
+}
+
+.security-section h4 {
+    margin: 0 0 14px;
+    font-size: 16px;
+}
+
+.danger-zone-inline {
+    border-color: rgba(180, 35, 24, 0.35);
+}
+
+.danger-zone-inline h4 {
+    color: var(--expense);
+}
+
+.security-form,
+.danger-zone-inline .form-grid {
+    margin-top: 0;
+}
+
+.settings-panel .collapsible-body {
+    display: block;
+}
+
+.settings-panel.collapsed .collapsible-body,
+.account-security-panel.collapsed .collapsible-body {
+    display: none !important;
+}
+
+.settings-panel:not(.collapsed) h3,
+.account-security-panel:not(.collapsed) h3 {
+    margin-bottom: 18px;
+}
+
+:root[data-theme="dark"] .security-section {
+    background: #101b1e;
+    border-color: #33494f;
+}
+
+:root[data-theme="dark"] .danger-zone-inline {
+    border-color: rgba(239, 68, 68, 0.42);
+}
+
+@media screen and (max-width: 1024px) {
+    .security-section {
+        padding: 13px;
+    }
+
+    .account-security-panel .collapsible-body {
+        gap: 12px;
+    }
+}
+
+
+/* ==========================================================
+   v19 Apple-like UI：更丝滑的卡片、按钮、导航、输入框和页面切换（完整替换版）
+   v19 Apple風 UI：カード、ボタン、ナビ、入力欄、画面切替をより滑らかに（完全置換版）
+   ========================================================== */
+
+:root {
+    --radius-xs: 10px;
+    --radius-sm: 14px;
+    --radius-md: 18px;
+    --radius-lg: 24px;
+    --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-pop: cubic-bezier(0.16, 1, 0.3, 1);
+    --glass: rgba(255, 255, 255, 0.78);
+    --glass-strong: rgba(255, 255, 255, 0.92);
+    --focus-ring: 0 0 0 4px rgba(15, 130, 119, 0.16);
+}
+
+:root[data-theme="dark"] {
+    --glass: rgba(23, 35, 38, 0.72);
+    --glass-strong: rgba(23, 35, 38, 0.92);
+    --focus-ring: 0 0 0 4px rgba(15, 130, 119, 0.24);
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+            radial-gradient(circle at top left, rgba(15, 130, 119, 0.08), transparent 32rem),
+            linear-gradient(180deg, var(--bg), var(--bg));
+    letter-spacing: 0.01em;
+}
+
+:root[data-theme="dark"] body {
+    background:
+            radial-gradient(circle at top left, rgba(15, 130, 119, 0.18), transparent 34rem),
+            linear-gradient(180deg, #0e1719, var(--bg));
+}
+
+.topbar {
+    background: var(--glass-strong);
+    backdrop-filter: blur(18px) saturate(1.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+    border-bottom-color: rgba(220, 232, 232, 0.72);
+}
+
+.logo {
+    box-shadow: 0 10px 24px rgba(15, 130, 119, 0.24);
+    transform: translateZ(0);
+}
+
+.brand h1 {
+    letter-spacing: -0.03em;
+}
+
+.content {
+    padding: 34px;
+}
+
+.view-panel.active {
+    animation: pageIn 360ms var(--ease-smooth);
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.995);
+        filter: blur(2px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.panel,
+.summary-card,
+.side-card,
+.auth-card,
+.mobile-record-card,
+.mobile-category-card,
+.detail-box,
+.settings-preview > div,
+.ai-answer,
+.table-wrap {
+    border-radius: var(--radius-md);
+    box-shadow:
+            0 18px 46px rgba(16, 36, 42, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .summary-card,
+:root[data-theme="dark"] .side-card,
+:root[data-theme="dark"] .auth-card,
+:root[data-theme="dark"] .mobile-record-card,
+:root[data-theme="dark"] .mobile-category-card,
+:root[data-theme="dark"] .detail-box,
+:root[data-theme="dark"] .settings-preview > div,
+:root[data-theme="dark"] .ai-answer,
+:root[data-theme="dark"] .table-wrap {
+    box-shadow:
+            0 18px 46px rgba(0, 0, 0, 0.28),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .panel:hover,
+    .summary-card:hover,
+    .mobile-record-card:hover,
+    .mobile-category-card:hover {
+        transform: translateY(-2px);
+        box-shadow:
+                0 24px 56px rgba(16, 36, 42, 0.10),
+                inset 0 1px 0 rgba(255, 255, 255, 0.48);
+    }
+}
+
+button,
+input,
+select,
+textarea,
+.panel,
+.summary-card,
+.mobile-record-card,
+.mobile-category-card,
+.nav-btn,
+.language-select,
+.password-toggle {
+    transition:
+            transform 180ms var(--ease-pop),
+            background-color 220ms var(--ease-smooth),
+            color 220ms var(--ease-smooth),
+            border-color 220ms var(--ease-smooth),
+            box-shadow 220ms var(--ease-smooth),
+            opacity 180ms var(--ease-smooth);
+}
+
+button,
+.nav-btn,
+.mobile-record-main,
+.language-select {
+    position: relative;
+    overflow: hidden;
+    will-change: transform;
+}
+
+button:not(:disabled):active,
+.nav-btn:active,
+.mobile-record-main:active,
+.language-select:active,
+.is-pressing {
+    transform: scale(0.975);
+}
+
+button {
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+}
+
+button.primary,
+.primary {
+    box-shadow: 0 10px 22px rgba(15, 130, 119, 0.22);
+}
+
+button.primary:hover,
+.primary:hover {
+    box-shadow: 0 14px 28px rgba(15, 130, 119, 0.28);
+}
+
+button.danger,
+.danger {
+    box-shadow: 0 8px 20px rgba(180, 35, 24, 0.08);
+}
+
+.ui-ripple {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.12;
+    transform: scale(0);
+    animation: uiRipple 520ms var(--ease-smooth);
+}
+
+@keyframes uiRipple {
+    to {
+        opacity: 0;
+        transform: scale(2.2);
+    }
+}
+
+input,
+select,
+textarea {
+    border-radius: var(--radius-sm);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--focus-ring);
+}
+
+.sidebar {
+    background: var(--panel);
+}
+
+.nav-btn {
+    border-radius: var(--radius-sm);
+}
+
+.nav-btn.active {
+    box-shadow:
+            inset 0 0 0 1px rgba(15, 130, 119, 0.28),
+            0 10px 22px rgba(15, 130, 119, 0.10);
+}
+
+table {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+th {
+    font-weight: 800;
+}
+
+tbody tr {
+    transition: background-color 160ms var(--ease-smooth);
+}
+
+.summary-card strong,
+.mobile-record-amount,
+.amount-cell {
+    letter-spacing: -0.02em;
+}
+
+.always-toggle,
+.nested-toggle,
+.mobile-panel-toggle {
+    border-radius: var(--radius-sm);
+}
+
+.always-toggle:hover,
+.nested-toggle:hover,
+.mobile-panel-toggle:hover {
+    background: rgba(15, 130, 119, 0.07) !important;
+}
+
+.mobile-panel-arrow {
+    transition: transform 220ms var(--ease-pop), color 180ms var(--ease-smooth);
+}
+
+.toast {
+    border-radius: 999px;
+    padding: 13px 20px;
+    background: rgba(16, 36, 42, 0.92);
+    color: #ffffff;
+    backdrop-filter: blur(16px) saturate(1.25);
+    -webkit-backdrop-filter: blur(16px) saturate(1.25);
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+    transition:
+            opacity 220ms var(--ease-smooth),
+            transform 260ms var(--ease-pop);
+}
+
+:root[data-theme="dark"] .toast {
+    background: rgba(237, 246, 247, 0.92);
+    color: #10242a;
+}
+
+@media screen and (max-width: 1024px) {
+    body {
+        background:
+                radial-gradient(circle at top, rgba(15, 130, 119, 0.10), transparent 22rem),
+                var(--bg);
+    }
+
+    .topbar {
+        backdrop-filter: blur(20px) saturate(1.3);
+        -webkit-backdrop-filter: blur(20px) saturate(1.3);
+    }
+
+    .content {
+        padding: 12px 12px 92px !important;
+    }
+
+    .panel,
+    .summary-card,
+    .mobile-record-card,
+    .mobile-category-card {
+        border-radius: 18px;
+    }
+
+    .nav {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
+        background: rgba(255, 255, 255, 0.90);
+        backdrop-filter: blur(22px) saturate(1.35);
+        -webkit-backdrop-filter: blur(22px) saturate(1.35);
+        box-shadow:
+                0 -6px 28px rgba(16, 36, 42, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    :root[data-theme="dark"] .nav {
+        background: rgba(23, 35, 38, 0.84);
+        box-shadow:
+                0 -6px 30px rgba(0, 0, 0, 0.38),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn {
+        border-radius: 18px;
+        min-height: 54px;
+    }
+
+    .nav-btn.active {
+        transform: translateY(-2px);
+        box-shadow:
+                0 8px 20px rgba(15, 130, 119, 0.18),
+                inset 0 0 0 1px rgba(15, 130, 119, 0.18);
+    }
+
+    .mobile-record-main {
+        border-radius: 0;
+    }
+
+    .mobile-record-card,
+    .mobile-category-card {
+        animation: cardIn 260ms var(--ease-smooth);
+    }
+
+    @keyframes cardIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        min-height: 44px;
+    }
+
+    .language-select {
+        border-radius: 999px;
+    }
+
+    .toast {
+        width: auto;
+        max-width: calc(100vw - 44px);
+        top: auto;
+        bottom: calc(110px + env(safe-area-inset-bottom));
+        transform: translateX(-50%) translateY(12px) scale(0.96);
+    }
+
+    .toast.show {
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+
+/* ==========================================================
+   v21 交互自然度优化：安全区互斥展开、减少卡顿、统计图 hover 动画
+   v21 UX改善：安全設定の排他展開、カクつき軽減、統計グラフ hover アニメーション
+   ========================================================== */
+
+/* 1. 账号安全内二级按钮间距：不要挤在一起 */
+/* 1. 安全設定内の二階層ボタン間隔を広げる */
+.account-security-body {
+    gap: 18px !important;
+}
+
+.nested-security-panel + .nested-security-panel {
+    margin-top: 2px;
+}
+
+.nested-security-panel {
+    border-radius: 18px;
+}
+
+.nested-toggle {
+    min-height: 58px;
+    padding: 16px 18px;
+}
+
+/* 2. 折叠动画交给 JS 控制 height，CSS 只负责柔和透明和状态 */
+/* 2. 折りたたみの高さは JS で制御し、CSS は透明度と質感を担当 */
+.collapsible-panel > .collapsible-body,
+.mobile-collapsible > .mobile-collapsible-body,
+.mobile-collapsible > div.mobile-collapsible-body,
+.nested-security-panel > .collapsible-body,
+.nested-security-panel > form.collapsible-body {
+    transition:
+        height 340ms cubic-bezier(0.2, 0.9, 0.22, 1),
+        opacity 260ms ease,
+        transform 320ms cubic-bezier(0.18, 0.95, 0.22, 1),
+        padding-top 260ms ease,
+        padding-bottom 260ms ease,
+        margin-top 260ms ease !important;
+}
+
+/* 关闭时不要强行 display:none，否则会闪现；让 JS 做高度动画 */
+/* 閉じる時に display:none を強制しない。JS の高さアニメーションを使う */
+.collapsible-panel.collapsed > .collapsible-body,
+.mobile-collapsible.collapsed > .mobile-collapsible-body,
+.mobile-collapsible.collapsed > div.mobile-collapsible-body,
+.nested-security-panel.collapsed > .collapsible-body,
+.nested-security-panel.collapsed > form.collapsible-body {
+    display: block !important;
+    max-height: none !important;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-6px);
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* form 折叠时仍保持 grid，避免展开瞬间布局重排很明显 */
+/* form は grid を維持し、展開時のレイアウト崩れを減らす */
+.collapsible-panel > form.collapsible-body,
+.mobile-collapsible > form.mobile-collapsible-body,
+.nested-security-panel > form.collapsible-body {
+    display: grid !important;
+}
+
+/* 3. 按下效果不要残留颜色：按下只缩放，不改变长期背景 */
+/* 3. 押下状態の色残りを防ぎ、押下はスケール中心にする */
+.is-pressing {
+    transform: scale(0.982) !important;
+}
+
+button.is-pressing,
+.panel.is-pressing,
+.summary-card.is-pressing,
+.mobile-category-card.is-pressing,
+.mobile-record-card.is-pressing {
+    filter: brightness(0.99);
+}
+
+button:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: inherit;
+}
+
+button:focus-visible,
+.nav-btn:focus-visible,
+.mobile-panel-toggle:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+}
+
+/* 4. 手机端减少卡顿：少用 blur/filter，保留轻微滑动 */
+/* 4. スマホでは blur/filter を減らしてカクつきを軽減 */
+@media screen and (max-width: 1024px) {
+    .view-panel.active {
+        animation: pageMobileIn 260ms cubic-bezier(0.2, 0.9, 0.22, 1) !important;
+    }
+
+    @keyframes pageMobileIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .panel:hover,
+    .summary-card:hover,
+    .mobile-record-card:hover,
+    .mobile-category-card:hover {
+        transform: none;
+    }
+
+    .mobile-record-card,
+    .mobile-category-card {
+        animation: cardSoftIn 220ms cubic-bezier(0.2, 0.9, 0.22, 1);
+    }
+
+    @keyframes cardSoftIn {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .nav {
+        backdrop-filter: blur(14px) saturate(1.12);
+        -webkit-backdrop-filter: blur(14px) saturate(1.12);
+    }
+}
+
+/* 5. 统计图 hover：鼠标放到图表区域，图稍微浮起，图例行也有反馈 */
+/* 5. 統計グラフ hover：グラフを少し浮かせ、凡例行にも反応を付ける */
+.chart-box {
+    transition:
+        transform 260ms cubic-bezier(0.2, 0.9, 0.22, 1),
+        box-shadow 260ms ease;
+}
+
+.chart-box canvas {
+    transition:
+        transform 260ms cubic-bezier(0.2, 0.9, 0.22, 1),
+        filter 260ms ease;
+    transform-origin: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .chart-box:hover canvas {
+        transform: scale(1.035);
+        filter: drop-shadow(0 12px 20px rgba(16, 36, 42, 0.14));
+    }
+
+    .chart-legend-item {
+        border-radius: 12px;
+        padding-left: 8px;
+        padding-right: 8px;
+        transition:
+            transform 200ms cubic-bezier(0.2, 0.9, 0.22, 1),
+            background-color 200ms ease,
+            box-shadow 200ms ease;
+    }
+
+    .chart-legend-item:hover {
+        transform: translateX(4px);
+        background: var(--panel-soft);
+        box-shadow: 0 8px 18px rgba(16, 36, 42, 0.06);
+    }
+
+    .chart-legend-item:hover .chart-dot {
+        transform: scale(1.25);
+    }
+}
+
+.chart-dot {
+    transition: transform 200ms cubic-bezier(0.2, 0.9, 0.22, 1);
+}
+
+/* 6. PC 端统计卡片 hover 更有层次，但不夸张 */
+/* 6. PC の統計カード hover を控えめに上品に */
+@media (hover: hover) and (pointer: fine) {
+    .summary-card:hover strong {
+        transform: translateY(-1px);
+    }
+
+    .summary-card strong {
+        display: inline-block;
+        transition: transform 220ms cubic-bezier(0.2, 0.9, 0.22, 1);
+    }
+}
+
+/* 7. 尊重减少动画设置 */
+/* 7. モーション低減設定を尊重 */
+@media (prefers-reduced-motion: reduce) {
+    .collapsible-panel > .collapsible-body,
+    .mobile-collapsible > .mobile-collapsible-body,
+    .nested-security-panel > .collapsible-body,
+    .nested-security-panel > form.collapsible-body,
+    .chart-box,
+    .chart-box canvas,
+    .chart-legend-item {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v22 手机端统计图优化：触摸突出、图例卡片化、减少卡顿
+   v22 スマホ統計グラフ改善：タッチ強調、凡例カード化、カクつき軽減
+   ========================================================== */
+
+/* 手机端没有 hover，所以用 active/touching 做“轻微突出” */
+/* スマホには hover がないため、active/touching で軽く強調する */
+@media screen and (max-width: 1024px) {
+    .chart-box {
+        width: 100%;
+        padding: 14px 8px 4px;
+        border-radius: 18px;
+        transition:
+            transform 240ms cubic-bezier(0.2, 0.9, 0.22, 1),
+            background-color 240ms ease,
+            box-shadow 240ms ease;
+    }
+
+    .chart-box canvas {
+        width: min(230px, 72vw) !important;
+        height: min(230px, 72vw) !important;
+        transition:
+            transform 260ms cubic-bezier(0.2, 0.9, 0.22, 1),
+            filter 260ms ease;
+        transform-origin: center;
+    }
+
+    .chart-box:active canvas,
+    .chart-box.chart-touching canvas {
+        transform: scale(1.035);
+        filter: drop-shadow(0 12px 20px rgba(16, 36, 42, 0.14));
+    }
+
+    :root[data-theme="dark"] .chart-box:active canvas,
+    :root[data-theme="dark"] .chart-box.chart-touching canvas {
+        filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.34));
+    }
+
+    .chart-legend {
+        width: 100%;
+        display: grid;
+        gap: 9px;
+        margin-top: 8px;
+    }
+
+    .chart-legend-item {
+        min-height: 46px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--panel-soft);
+        transition:
+            transform 220ms cubic-bezier(0.2, 0.9, 0.22, 1),
+            background-color 220ms ease,
+            border-color 220ms ease,
+            box-shadow 220ms ease;
+    }
+
+    .chart-legend-item:active,
+    .chart-legend-item.legend-touching {
+        transform: translateY(-2px) scale(1.01);
+        border-color: var(--primary);
+        box-shadow: 0 10px 22px rgba(16, 36, 42, 0.08);
+    }
+
+    :root[data-theme="dark"] .chart-legend-item:active,
+    :root[data-theme="dark"] .chart-legend-item.legend-touching {
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+    }
+
+    .chart-legend-item strong {
+        transition:
+            transform 220ms cubic-bezier(0.2, 0.9, 0.22, 1),
+            color 220ms ease;
+    }
+
+    .chart-legend-item:active strong,
+    .chart-legend-item.legend-touching strong {
+        transform: translateX(2px);
+    }
+
+    .chart-dot {
+        transition: transform 220ms cubic-bezier(0.2, 0.9, 0.22, 1);
+    }
+
+    .chart-legend-item:active .chart-dot,
+    .chart-legend-item.legend-touching .chart-dot {
+        transform: scale(1.25);
+    }
+
+    /* 统计页两张图在手机端间距更舒服 */
+    /* スマホで統計グラフ2枚の間隔を少し広げる */
+    #statsPanel .two-col {
+        gap: 12px !important;
+    }
+
+    #statsPanel .panel {
+        overflow: hidden;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .chart-box {
+        padding-top: 10px;
+    }
+
+    .chart-box canvas {
+        width: min(205px, 68vw) !important;
+        height: min(205px, 68vw) !important;
+    }
+
+    .chart-legend-item {
+        grid-template-columns: auto minmax(0, 1fr);
+        row-gap: 4px;
+    }
+
+    .chart-legend-item strong {
+        grid-column: 2;
+        justify-self: start;
+        font-size: 14px;
+    }
+}
+
+
+/* ==========================================================
+   v23 终极细化：展开更稳、按钮残留消失、统计图扇形真实突出
+   v23 最終調整：展開を安定化、押下色残り解消、統計グラフの扇形を実際に突出
+   ========================================================== */
+
+/* 1. 去掉移动端 sticky hover 造成的绿色残留 */
+/* 1. モバイルで hover が残って緑色が残る問題を解消 */
+@media (hover: none) {
+    .always-toggle:hover,
+    .nested-toggle:hover,
+    .mobile-panel-toggle:hover,
+    button:hover,
+    .nav-btn:hover {
+        background: transparent !important;
+        box-shadow: none;
+    }
+
+    .nav-btn.active:hover {
+        background: var(--soft) !important;
+    }
+}
+
+/* 2. 折叠区文字不再 scale，不再 blur，避免文字出现卡顿 */
+/* 2. 折りたたみ内の文字は scale/blur しない。文字のカクつきを防ぐ */
+.collapsible-panel > .collapsible-body,
+.mobile-collapsible > .mobile-collapsible-body,
+.nested-security-panel > .collapsible-body,
+.nested-security-panel > form.collapsible-body {
+    transform: none !important;
+    transition:
+        height 300ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 180ms ease,
+        padding-top 220ms ease,
+        padding-bottom 220ms ease,
+        margin-top 220ms ease !important;
+}
+
+.collapsible-panel.collapsed > .collapsible-body,
+.mobile-collapsible.collapsed > .mobile-collapsible-body,
+.nested-security-panel.collapsed > .collapsible-body,
+.nested-security-panel.collapsed > form.collapsible-body {
+    transform: none !important;
+}
+
+/* 3. 账号安全里面两个入口更像设置项，距离更自然 */
+/* 3. 安全設定内の2項目を設定項目らしくし、間隔を自然にする */
+.account-security-body {
+    gap: 20px !important;
+}
+
+.nested-security-panel {
+    border-radius: 20px;
+    background: var(--panel-soft);
+}
+
+.nested-toggle {
+    min-height: 64px;
+    padding: 18px 20px;
+}
+
+.danger-zone-inline {
+    background: rgba(180, 35, 24, 0.035);
+}
+
+:root[data-theme="dark"] .danger-zone-inline {
+    background: rgba(239, 68, 68, 0.06);
+}
+
+/* 4. 按压/点击状态更快淡出，不再停留 */
+/* 4. 押下/クリック状態を速く戻し、色残りを防ぐ */
+.is-pressing {
+    transform: scale(0.986) !important;
+    filter: none !important;
+    transition: transform 120ms ease, background-color 160ms ease !important;
+}
+
+button,
+.mobile-panel-toggle,
+.nested-toggle,
+.always-toggle {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* 5. 统计图：canvas 扇形由 JS 真实突出，CSS 只做容器高级感 */
+/* 5. 統計グラフ：扇形の突出は JS で描画。CSS は見た目を整える */
+.chart-box {
+    position: relative;
+    isolation: isolate;
+}
+
+.chart-box canvas {
+    cursor: pointer;
+    transition:
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 220ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .chart-box canvas:hover {
+        transform: scale(1.012);
+    }
+}
+
+.chart-legend-item {
+    cursor: pointer;
+}
+
+.chart-legend-item.active {
+    transform: translateX(6px);
+    background: var(--panel-soft);
+    border-color: var(--primary);
+    box-shadow: 0 10px 24px rgba(16, 36, 42, 0.08);
+}
+
+.chart-legend-item.active .chart-dot {
+    transform: scale(1.28);
+}
+
+.chart-legend-item.active strong {
+    transform: translateX(2px);
+}
+
+:root[data-theme="dark"] .chart-legend-item.active {
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+}
+
+/* 手机端统计图更稳定，不用 drop-shadow 大量计算 */
+/* スマホの統計グラフは重い drop-shadow を控えめにして安定化 */
+@media screen and (max-width: 1024px) {
+    .chart-box canvas {
+        transform: translateZ(0);
+    }
+
+    .chart-box:active canvas,
+    .chart-box.chart-touching canvas {
+        transform: scale(1.018);
+        filter: none;
+    }
+
+    .chart-legend-item.active,
+    .chart-legend-item:active,
+    .chart-legend-item.legend-touching {
+        transform: translateY(-2px) scale(1.006);
+        border-color: var(--primary);
+        box-shadow: 0 8px 18px rgba(16, 36, 42, 0.07);
+    }
+}
+
+/* 6. 如果用户系统要求减少动画，图表仍可突出但不做过渡 */
+/* 6. モーション低減時も突出表示は可能、ただし過渡効果は抑える */
+@media (prefers-reduced-motion: reduce) {
+    .chart-box canvas,
+    .chart-legend-item,
+    .chart-dot,
+    .chart-legend-item strong {
+        transition: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v24 PC/手机 UI 细化：修复空白折叠卡片，表格行微浮起，操作更像 Apple 系统
+   v24 PC/スマホ UI 微調整：空白カード修正、表の行を軽く浮かせる、操作感を Apple 風に改善
+   ========================================================== */
+
+/* 1. 修复 PC 端“新增/编辑分类、记录表单、筛选”折叠后变成雪白空卡片的问题 */
+/* 1. PCで「追加/編集」「フォーム」「フィルター」が白い空カードになる問題を修正 */
+.mobile-collapsible > h3 {
+    margin-bottom: 0;
+}
+
+.mobile-collapsible:not(.collapsed) > h3 {
+    margin-bottom: 18px;
+}
+
+.mobile-collapsible > h3 .mobile-panel-toggle {
+    display: flex !important;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 48px;
+    padding: 0;
+    border: 0;
+    background: transparent !important;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 800;
+    text-align: left;
+}
+
+.mobile-collapsible > h3 .mobile-panel-toggle:hover {
+    background: rgba(15, 130, 119, 0.06) !important;
+    color: var(--primary-dark);
+}
+
+.mobile-collapsible.collapsed {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+/* 2. PC端表格行：鼠标经过时微微浮起，不夸张，像 macOS 列表反馈 */
+/* 2. PCの表行：hover時に軽く浮き上がる。macOSリストのような控えめな反応 */
+@media (hover: hover) and (pointer: fine) {
+    .table-wrap {
+        overflow: visible;
+    }
+
+    table {
+        border-collapse: separate;
+        border-spacing: 0 3px;
+    }
+
+    thead tr {
+        transform: none !important;
+    }
+
+    tbody tr {
+        position: relative;
+        transition:
+            transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 180ms ease,
+            background-color 180ms ease,
+            filter 180ms ease;
+        will-change: transform;
+    }
+
+    tbody tr:hover {
+        transform: translateY(-2px) scale(1.002);
+        filter: brightness(1.002);
+        z-index: 2;
+    }
+
+    tbody tr:hover td {
+        background: var(--panel);
+        box-shadow:
+            0 12px 26px rgba(16, 36, 42, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.50);
+    }
+
+    :root[data-theme="dark"] tbody tr:hover td {
+        background: #1a292d;
+        box-shadow:
+            0 12px 26px rgba(0, 0, 0, 0.28),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    tbody tr td:first-child {
+        border-radius: 12px 0 0 12px;
+    }
+
+    tbody tr td:last-child {
+        border-radius: 0 12px 12px 0;
+    }
+
+    tbody tr:hover .actions button {
+        transform: translateY(-1px);
+    }
+}
+
+/* 3. 分类/记录操作按钮更像系统控件，hover 有轻微弹起 */
+/* 3. 編集/削除ボタンをシステムUI風にし、hoverで軽く浮かせる */
+.actions button,
+.mobile-category-actions button,
+.mobile-record-actions button {
+    transition:
+        transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .actions button:hover,
+    .mobile-category-actions button:hover,
+    .mobile-record-actions button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(16, 36, 42, 0.08);
+    }
+}
+
+/* 4. PC端折叠卡片 hover 更自然，不出现“整块乱跳” */
+/* 4. PCの折りたたみカード hover を自然にし、カード全体が大きく跳ねないようにする */
+@media (hover: hover) and (pointer: fine) {
+    .mobile-collapsible.panel:hover,
+    .collapsible-panel.panel:hover {
+        transform: translateY(-1px);
+    }
+
+    .mobile-collapsible > h3 .mobile-panel-toggle:hover .mobile-panel-arrow,
+    .always-toggle:hover .mobile-panel-arrow,
+    .nested-toggle:hover .mobile-panel-arrow {
+        background: rgba(15, 130, 119, 0.10);
+    }
+}
+
+/* 5. 手机端不要 hover 粘住颜色；点完后快速淡出 */
+/* 5. スマホでは hover 色が残らないようにし、タップ後すぐ自然に戻す */
+@media (hover: none) {
+    .mobile-collapsible > h3 .mobile-panel-toggle:hover,
+    .always-toggle:hover,
+    .nested-toggle:hover,
+    .mobile-panel-toggle:hover {
+        background: transparent !important;
+    }
+
+    .mobile-collapsible > h3 .mobile-panel-toggle:active,
+    .always-toggle:active,
+    .nested-toggle:active,
+    .mobile-panel-toggle:active {
+        background: rgba(15, 130, 119, 0.08) !important;
+    }
+}
+
+/* 6. 收支记录、分类列表、最近记录整体更有“可点击列表”的感觉 */
+/* 6. 記録・カテゴリ・最近記録をクリック可能なリストらしくする */
+.records-table-wrap table,
+.categories-table-wrap table,
+#recentRecordsBody {
+    transform: translateZ(0);
+}
+
+.table-wrap th,
+.table-wrap td {
+    border-color: rgba(220, 232, 232, 0.78);
+}
+
+:root[data-theme="dark"] .table-wrap th,
+:root[data-theme="dark"] .table-wrap td {
+    border-color: rgba(51, 73, 79, 0.78);
+}
+
+/* 7. 查询按钮和主要按钮 hover/active 更柔和 */
+/* 7. 検索ボタン・主要ボタンの hover/active を柔らかく */
+button.primary,
+.primary {
+    transition:
+        transform 150ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 200ms ease,
+        background-color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    button.primary:hover,
+    .primary:hover {
+        transform: translateY(-1px);
+    }
+}
+
+button.primary:active,
+.primary:active {
+    transform: scale(0.982);
+}
+
+/* 8. 手机端表格如果仍显示，不做复杂 hover，避免卡顿 */
+/* 8. スマホでは表に重い hover 処理を入れず、カクつきを防ぐ */
+@media screen and (max-width: 1024px) {
+    .table-wrap {
+        overflow-x: auto !important;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    tbody tr,
+    tbody tr:hover {
+        transform: none !important;
+        filter: none !important;
+    }
+
+    tbody tr:hover td {
+        box-shadow: none;
+    }
+
+    .mobile-collapsible > h3 .mobile-panel-toggle {
+        font-size: 16px;
+        min-height: 44px;
+    }
+}
+
+/* 9. 尊重系统减少动画设置 */
+/* 9. OSのモーション低減設定を尊重 */
+@media (prefers-reduced-motion: reduce) {
+    tbody tr,
+    tbody tr:hover,
+    .actions button,
+    .mobile-category-actions button,
+    .mobile-record-actions button {
+        transition: none !important;
+        transform: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v25 交互细化：编辑滚动更准确、表格悬浮更高级、分页按钮不残留、统计图更立体
+   v25 UX微調整：編集時スクロール改善、表ホバー上質化、ページボタン色残り解消、グラフ立体感
+   ========================================================== */
+
+/* 1. 编辑后滚动到表单时，顶部留出安全距离 */
+/* 1. 編集時にフォームへスクロールする際、上部に余白を残す */
+.mobile-collapsible,
+.collapsible-panel,
+.panel {
+    scroll-margin-top: 110px;
+}
+
+/* 2. PC 表格行 hover：不再像一整条白块突兀漂浮，改成微微分层 */
+/* 2. PC 表行 hover：大きく浮くのではなく、控えめに層が分かれる */
+@media (hover: hover) and (pointer: fine) {
+    .table-wrap {
+        overflow: visible;
+        background: transparent;
+    }
+
+    table {
+        border-collapse: separate;
+        border-spacing: 0 4px;
+    }
+
+    tbody tr {
+        transition:
+            transform 190ms cubic-bezier(0.22, 1, 0.36, 1),
+            filter 190ms ease;
+    }
+
+    tbody tr:hover {
+        transform: translateY(-1.5px);
+        filter: none;
+    }
+
+    tbody tr:hover td {
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 252, 252, 0.96));
+        box-shadow:
+            0 8px 18px rgba(16, 36, 42, 0.055),
+            0 1px 0 rgba(255, 255, 255, 0.82) inset;
+    }
+
+    :root[data-theme="dark"] tbody tr:hover td {
+        background:
+            linear-gradient(180deg, rgba(28, 43, 47, 0.98), rgba(23, 35, 38, 0.96));
+        box-shadow:
+            0 10px 20px rgba(0, 0, 0, 0.25),
+            0 1px 0 rgba(255, 255, 255, 0.04) inset;
+    }
+
+    tbody tr td:first-child {
+        border-radius: 14px 0 0 14px;
+    }
+
+    tbody tr td:last-child {
+        border-radius: 0 14px 14px 0;
+    }
+
+    tbody tr:hover .amount-cell,
+    tbody tr:hover .amount-income,
+    tbody tr:hover .amount-expense {
+        transform: translateY(-0.5px);
+    }
+
+    .amount-cell,
+    .amount-income,
+    .amount-expense {
+        transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+}
+
+/* 3. 编辑 / 删除按钮 hover 更细腻 */
+/* 3. 編集 / 削除ボタン hover をより繊細に */
+@media (hover: hover) and (pointer: fine) {
+    .actions button:hover,
+    .mobile-category-actions button:hover,
+    .mobile-record-actions button:hover {
+        transform: translateY(-1px) scale(1.015);
+        box-shadow:
+            0 7px 14px rgba(16, 36, 42, 0.07),
+            inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    }
+}
+
+/* 4. 手机端和触屏端：按钮点击颜色不残留 */
+/* 4. スマホ/タッチ端末：ボタンの押下色が残らないように */
+@media (hover: none) {
+    button:hover,
+    .nav-btn:hover,
+    .pagination button:hover,
+    .mobile-panel-toggle:hover,
+    .always-toggle:hover,
+    .nested-toggle:hover {
+        background: inherit;
+        box-shadow: inherit;
+    }
+
+    .pagination button:focus,
+    .pagination button:active,
+    .pagination button.is-pressing {
+        background: var(--panel) !important;
+        color: var(--text) !important;
+        border-color: var(--line) !important;
+        box-shadow: none !important;
+    }
+
+    .pagination button.primary:focus,
+    .pagination button.primary:active,
+    .pagination button.primary.is-pressing {
+        background: var(--primary) !important;
+        color: #ffffff !important;
+        border-color: var(--primary) !important;
+    }
+
+    button:focus:not(:focus-visible),
+    .nav-btn:focus:not(:focus-visible) {
+        outline: none !important;
+        box-shadow: inherit;
+    }
+}
+
+/* 5. 分页按钮本身更像 iOS 的轻按钮 */
+/* 5. ページボタンを iOS 風の軽いボタンに */
+.pagination button {
+    border-radius: 14px;
+    transition:
+        transform 150ms cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .pagination button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(16, 36, 42, 0.07);
+    }
+}
+
+/* 6. 统计图：突出扇形更像“微微分离+鼓起来”，但保持高级克制 */
+/* 6. グラフ：扇形が控えめに分離して盛り上がるように */
+.chart-box canvas {
+    transition:
+        transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .chart-box:hover canvas {
+        transform: scale(1.006);
+        filter: drop-shadow(0 8px 16px rgba(16, 36, 42, 0.08));
+    }
+
+    .chart-legend-item.active,
+    .chart-legend-item:hover {
+        transform: translateX(3px);
+        background:
+            linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,252,252,0.92));
+        border-color: rgba(15, 130, 119, 0.38);
+        box-shadow:
+            0 8px 18px rgba(16, 36, 42, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
+    :root[data-theme="dark"] .chart-legend-item.active,
+    :root[data-theme="dark"] .chart-legend-item:hover {
+        background: linear-gradient(180deg, rgba(28,43,47,0.95), rgba(23,35,38,0.92));
+        box-shadow:
+            0 10px 22px rgba(0, 0, 0, 0.24),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+}
+
+/* 7. 手机端图表点击也突出，但不使用重阴影，避免卡顿 */
+/* 7. スマホのグラフもタップで突出。ただし重い影は抑える */
+@media screen and (max-width: 1024px) {
+    .chart-box canvas {
+        transition:
+            transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+            filter 160ms ease;
+    }
+
+    .chart-box:active canvas,
+    .chart-box.chart-touching canvas {
+        transform: scale(1.012);
+        filter: none;
+    }
+
+    .chart-legend-item.active {
+        transform: translateY(-1px) scale(1.004);
+        border-color: rgba(15, 130, 119, 0.42);
+        box-shadow: 0 7px 14px rgba(16, 36, 42, 0.06);
+    }
+}
+
+/* 8. 折叠标题点击反馈更短，不残留色块 */
+/* 8. 折りたたみタイトルのタップフィードバックを短くし、色残りを防ぐ */
+.mobile-panel-toggle,
+.always-toggle,
+.nested-toggle {
+    transition:
+        background-color 140ms ease,
+        transform 120ms ease,
+        color 160ms ease;
+}
+
+.mobile-panel-toggle:active,
+.always-toggle:active,
+.nested-toggle:active {
+    background: rgba(15, 130, 119, 0.065) !important;
+}
+
+/* 9. 减少动画设置 */
+/* 9. モーション低減 */
+@media (prefers-reduced-motion: reduce) {
+    tbody tr,
+    tbody tr:hover,
+    .chart-box canvas,
+    .chart-legend-item,
+    .pagination button {
+        transition: none !important;
+        transform: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v26 最终交互修复：分页颜色不残留、统计图显示占比、移动端记录滚动更像 iOS
+   v26 最終UX修正：ページボタン色残り解消、グラフ割合表示、スマホ記録リストの滑らか表示
+   ========================================================== */
+
+/* 1. 手机端分页按钮颜色残留彻底修复 */
+/* 1. スマホのページボタン色残りを徹底修正 */
+@media (hover: none) {
+    .pagination button,
+    .pagination button:hover,
+    .pagination button:focus,
+    .pagination button:active,
+    .pagination button.is-pressing {
+        background: var(--panel) !important;
+        color: var(--text) !important;
+        border-color: var(--line) !important;
+        box-shadow: none !important;
+        filter: none !important;
+    }
+
+    .pagination button.primary,
+    .pagination button.primary:hover,
+    .pagination button.primary:focus,
+    .pagination button.primary:active,
+    .pagination button.primary.is-pressing {
+        background: var(--primary) !important;
+        color: #ffffff !important;
+        border-color: var(--primary) !important;
+    }
+
+    button,
+    .nav-btn,
+    .mobile-panel-toggle,
+    .always-toggle,
+    .nested-toggle {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus:not(:focus-visible),
+    .nav-btn:focus:not(:focus-visible) {
+        outline: none !important;
+    }
+}
+
+/* 2. 手机端记录卡片滚动动效：轻微浮入，像 iOS 列表，不夸张 */
+/* 2. スマホの記録カード：iOSリスト風に軽く浮き上がる */
+@media screen and (max-width: 1024px) {
+    .mobile-record-card,
+    .mobile-category-card {
+        opacity: 0.72;
+        transform: translateY(10px) scale(0.992);
+        transition:
+            opacity 360ms cubic-bezier(0.22, 1, 0.36, 1),
+            transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 220ms ease,
+            border-color 220ms ease;
+        transition-delay: calc(var(--motion-index, 0) * 18ms);
+        will-change: transform, opacity;
+    }
+
+    .mobile-record-card.in-view,
+    .mobile-category-card.in-view {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    .mobile-record-card:active,
+    .mobile-category-card:active {
+        transform: scale(0.992);
+        box-shadow: 0 10px 22px rgba(16, 36, 42, 0.08);
+    }
+}
+
+/* 3. 统计图突出效果更克制，减少白边，保留微立体 */
+/* 3. グラフ突出は控えめにし、白い縁を弱めて微立体感を残す */
+.chart-box canvas {
+    cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .chart-box:hover canvas {
+        transform: scale(1.004);
+        filter: drop-shadow(0 6px 12px rgba(16, 36, 42, 0.06));
+    }
+}
+
+.chart-legend-item.active {
+    border-color: rgba(15, 130, 119, 0.35);
+}
+
+.chart-legend-item.active span:not(.chart-dot) {
+    font-weight: 800;
+}
+
+/* 4. 图例 active 更像选中，不要太大动作 */
+/* 4. 凡例の active は控えめな選択状態 */
+@media (hover: hover) and (pointer: fine) {
+    .chart-legend-item.active,
+    .chart-legend-item:hover {
+        transform: translateX(2px);
+        box-shadow:
+            0 6px 14px rgba(16, 36, 42, 0.055),
+            inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .chart-legend-item.active,
+    .chart-legend-item:active,
+    .chart-legend-item.legend-touching {
+        transform: translateY(-1px) scale(1.003);
+        box-shadow: 0 6px 12px rgba(16, 36, 42, 0.055);
+    }
+
+    .chart-box:active canvas,
+    .chart-box.chart-touching canvas {
+        transform: scale(1.006);
+        filter: none;
+    }
+}
+
+/* 5. 表格 hover 更克制，不出现明显一整块白色浮层 */
+/* 5. 表の hover をさらに控えめにし、大きな白い浮き感を避ける */
+@media (hover: hover) and (pointer: fine) {
+    tbody tr:hover td {
+        box-shadow:
+            0 5px 12px rgba(16, 36, 42, 0.045),
+            inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    tbody tr:hover {
+        transform: translateY(-1px);
+    }
+}
+
+/* 6. 尊重减少动画设置 */
+/* 6. モーション低減設定 */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-record-card,
+    .mobile-category-card {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v27 动效收敛：去掉记录抖动，表格 hover 改成 macOS/iOS 式柔和高亮
+   v27 モーション抑制：記録リストの揺れを止め、表 hover を macOS/iOS 風の柔らかい強調へ
+   ========================================================== */
+
+/* 1. 手机端记录卡片不再滚动浮入、不再点击上飘，避免抖动 */
+/* 1. スマホの記録カードはスクロール浮入/タップ浮上を停止し、揺れを防ぐ */
+@media screen and (max-width: 1024px) {
+    .mobile-record-card,
+    .mobile-category-card,
+    .mobile-record-card.in-view,
+    .mobile-category-card.in-view,
+    .mobile-record-card:active,
+    .mobile-category-card:active {
+        opacity: 1 !important;
+        transform: none !important;
+        transition:
+            background-color 180ms ease,
+            border-color 180ms ease,
+            box-shadow 180ms ease !important;
+        transition-delay: 0ms !important;
+        will-change: auto !important;
+    }
+
+    .mobile-record-main:active {
+        transform: none !important;
+    }
+
+    .mobile-record-card:active,
+    .mobile-category-card:active {
+        border-color: rgba(15, 130, 119, 0.28);
+        box-shadow: 0 6px 14px rgba(16, 36, 42, 0.055);
+    }
+}
+
+/* 2. PC 表格 hover：去掉“一条一条线”的感觉，改成整行柔和胶囊高亮 */
+/* 2. PC 表 hover：線っぽさを消し、行全体を柔らかいカプセル状に強調 */
+@media (hover: hover) and (pointer: fine) {
+    .table-wrap {
+        overflow: hidden !important;
+        background: var(--panel);
+        border-radius: 18px;
+    }
+
+    table {
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        width: 100%;
+    }
+
+    tbody tr {
+        position: relative;
+        transform: none !important;
+        transition:
+            background-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 180ms ease;
+    }
+
+    tbody tr:hover {
+        transform: none !important;
+        filter: none !important;
+    }
+
+    tbody tr td {
+        background: transparent;
+        transition:
+            background-color 180ms ease,
+            box-shadow 180ms ease,
+            color 180ms ease;
+    }
+
+    tbody tr:hover td {
+        background: rgba(15, 130, 119, 0.045) !important;
+        box-shadow: none !important;
+    }
+
+    tbody tr:hover td:first-child {
+        border-radius: 14px 0 0 14px;
+    }
+
+    tbody tr:hover td:last-child {
+        border-radius: 0 14px 14px 0;
+    }
+
+    :root[data-theme="dark"] tbody tr:hover td {
+        background: rgba(15, 130, 119, 0.12) !important;
+        box-shadow: none !important;
+    }
+
+    /* 真正的“微微凸起”放在按钮和金额上，而不是整行乱飘 */
+    tbody tr:hover .actions button {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(16, 36, 42, 0.065);
+    }
+
+    tbody tr:hover .amount-cell,
+    tbody tr:hover .amount-income,
+    tbody tr:hover .amount-expense {
+        transform: scale(1.012);
+    }
+}
+
+/* 3. PC 列表 hover 进一步克制，像 macOS Finder 那种轻轻选中 */
+/* 3. PC リスト hover を Finder 風に控えめに */
+@media (hover: hover) and (pointer: fine) {
+    .categories-table-wrap tbody tr:hover td,
+    .records-table-wrap tbody tr:hover td {
+        background:
+            linear-gradient(90deg,
+                rgba(15, 130, 119, 0.055),
+                rgba(15, 130, 119, 0.032)
+            ) !important;
+    }
+
+    #recentRecordsBody tr:hover td {
+        background:
+            linear-gradient(90deg,
+                rgba(15, 130, 119, 0.045),
+                rgba(15, 130, 119, 0.026)
+            ) !important;
+    }
+}
+
+/* 4. 分页按钮触屏状态再兜底，颜色不残留 */
+/* 4. ページボタンのタッチ状態をさらにリセットし、色残りを防ぐ */
+@media (hover: none) {
+    .pagination button,
+    .pagination button:hover,
+    .pagination button:focus,
+    .pagination button:active,
+    .pagination button.is-pressing {
+        background: var(--panel) !important;
+        color: var(--text) !important;
+        border-color: var(--line) !important;
+        box-shadow: none !important;
+        transform: none !important;
+        filter: none !important;
+    }
+
+    .pagination button.primary,
+    .pagination button.primary:hover,
+    .pagination button.primary:focus,
+    .pagination button.primary:active,
+    .pagination button.primary.is-pressing {
+        background: var(--primary) !important;
+        color: #ffffff !important;
+        border-color: var(--primary) !important;
+    }
+}
+
+/* 5. 统计图：突出更高级，弱白边，保留占比显示 */
+/* 5. グラフ：突出を上品にし、白縁を弱め、割合表示は維持 */
+.chart-box canvas {
+    transition:
+        transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 160ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .chart-box:hover canvas {
+        transform: scale(1.002);
+        filter: drop-shadow(0 5px 10px rgba(16, 36, 42, 0.045));
+    }
+
+    .chart-legend-item:hover,
+    .chart-legend-item.active {
+        transform: translateX(2px);
+        background: rgba(15, 130, 119, 0.045);
+        border-color: rgba(15, 130, 119, 0.28);
+        box-shadow: none;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .chart-box:active canvas,
+    .chart-box.chart-touching canvas {
+        transform: none;
+        filter: none;
+    }
+
+    .chart-legend-item.active,
+    .chart-legend-item:active,
+    .chart-legend-item.legend-touching {
+        transform: none;
+        background: rgba(15, 130, 119, 0.055);
+        border-color: rgba(15, 130, 119, 0.32);
+        box-shadow: none;
+    }
+}
+
+/* 6. 卡片和表格的边框更轻，整体更安静 */
+/* 6. カードと表の境界線を軽くし、全体を落ち着かせる */
+.panel,
+.summary-card,
+.table-wrap,
+.mobile-record-card,
+.mobile-category-card {
+    border-color: rgba(220, 232, 232, 0.86);
+}
+
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .summary-card,
+:root[data-theme="dark"] .table-wrap,
+:root[data-theme="dark"] .mobile-record-card,
+:root[data-theme="dark"] .mobile-category-card {
+    border-color: rgba(51, 73, 79, 0.78);
+}
+
+/* 7. 减少动画设置 */
+/* 7. モーション低減 */
+@media (prefers-reduced-motion: reduce) {
+    tbody tr,
+    tbody tr td,
+    .mobile-record-card,
+    .mobile-category-card,
+    .chart-box canvas,
+    .chart-legend-item {
+        transition: none !important;
+        transform: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v28 详情展开动画 + macOS/iOS 列表质感微调
+   v28 詳細展開アニメーション + macOS/iOS リスト質感の微調整
+   ========================================================== */
+
+/* 1. 手机端记录详情：点击展开/收起更丝滑，长按临时展开也不遮挡其他记录 */
+/* 1. スマホの記録詳細：タップ展開/収納を滑らかに。長押し一時表示も他の記録を覆わない */
+@media screen and (max-width: 1024px) {
+    .mobile-record-detail {
+        overflow: hidden;
+        transform: none !important;
+        transform-origin: top;
+        border-top: 1px solid rgba(220, 232, 232, 0.86);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(248, 252, 252, 0.92));
+        transition:
+            height 260ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 180ms ease,
+            background-color 180ms ease;
+    }
+
+    :root[data-theme="dark"] .mobile-record-detail {
+        border-top-color: rgba(51, 73, 79, 0.78);
+        background:
+            linear-gradient(180deg, rgba(23, 35, 38, 0.72), rgba(16, 27, 30, 0.92));
+    }
+
+    .mobile-record-detail.hidden {
+        display: none;
+    }
+
+    .mobile-record-detail.detail-opening,
+    .mobile-record-detail.detail-closing {
+        display: block;
+    }
+
+    .mobile-record-main {
+        transition:
+            background-color 160ms ease,
+            border-color 160ms ease,
+            transform 120ms ease;
+    }
+
+    .mobile-record-main.open {
+        background: rgba(15, 130, 119, 0.035);
+    }
+
+    .mobile-record-main:active {
+        background: rgba(15, 130, 119, 0.045);
+    }
+
+    .mobile-record-card {
+        overflow: hidden;
+        transform: none !important;
+        transition:
+            border-color 180ms ease,
+            box-shadow 180ms ease,
+            background-color 180ms ease !important;
+    }
+
+    .mobile-record-card:has(.mobile-record-main.open) {
+        border-color: rgba(15, 130, 119, 0.26);
+        box-shadow: 0 8px 18px rgba(16, 36, 42, 0.06);
+    }
+
+    .mobile-record-actions {
+        gap: 12px;
+    }
+}
+
+/* 2. PC 表格：不要出现中间一条一条割裂线，改成柔和整行层次 */
+/* 2. PC表：行の中に線が目立たないよう、柔らかい行全体の反応にする */
+@media (hover: hover) and (pointer: fine) {
+    .table-wrap {
+        overflow: hidden !important;
+        background: var(--panel);
+        border-radius: 20px;
+    }
+
+    table {
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+    }
+
+    thead th {
+        background: rgba(244, 248, 248, 0.74);
+        border-bottom: 1px solid rgba(220, 232, 232, 0.82);
+    }
+
+    tbody td {
+        border-bottom: 1px solid rgba(220, 232, 232, 0.52);
+        background: transparent !important;
+        transition:
+            background-color 190ms cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 190ms ease,
+            color 160ms ease;
+    }
+
+    tbody tr:last-child td {
+        border-bottom-color: transparent;
+    }
+
+    tbody tr {
+        transform: none !important;
+        transition:
+            background-color 190ms cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 190ms ease;
+    }
+
+    tbody tr:hover {
+        transform: none !important;
+        filter: none !important;
+    }
+
+    tbody tr:hover td {
+        background: rgba(15, 130, 119, 0.055) !important;
+        box-shadow: none !important;
+    }
+
+    tbody tr:hover td:first-child {
+        box-shadow:
+            inset 4px 0 0 rgba(15, 130, 119, 0.38) !important;
+    }
+
+    tbody tr:hover .amount-income,
+    tbody tr:hover .amount-expense,
+    tbody tr:hover .amount-cell {
+        transform: scale(1.01);
+    }
+
+    tbody tr:hover .actions button {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(16, 36, 42, 0.065);
+    }
+
+    :root[data-theme="dark"] thead th {
+        background: rgba(16, 27, 30, 0.74);
+        border-bottom-color: rgba(51, 73, 79, 0.74);
+    }
+
+    :root[data-theme="dark"] tbody td {
+        border-bottom-color: rgba(51, 73, 79, 0.48);
+    }
+
+    :root[data-theme="dark"] tbody tr:hover td {
+        background: rgba(15, 130, 119, 0.11) !important;
+    }
+}
+
+/* 3. PC 表格行不是“放大遮挡”，而是内部内容微动，不压住表头/上下记录 */
+/* 3. PC表は行自体を拡大せず、内部要素だけ微細に反応。ヘッダーや上下行を覆わない */
+@media (hover: hover) and (pointer: fine) {
+    tbody tr:hover td {
+        position: relative;
+        z-index: 1;
+    }
+
+    tbody tr:hover td:first-child {
+        border-radius: 0;
+    }
+
+    tbody tr:hover td:last-child {
+        border-radius: 0;
+    }
+
+    .actions button,
+    .amount-income,
+    .amount-expense,
+    .amount-cell {
+        transition:
+            transform 170ms cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 170ms ease;
+    }
+}
+
+/* 4. 手机端分页按钮、记录卡片触摸反馈继续保持安静，不跳动 */
+/* 4. スマホのページボタン・記録カードのタッチ反応は静かにし、跳ねない */
+@media (hover: none) {
+    .mobile-record-card,
+    .mobile-record-card:active,
+    .mobile-category-card,
+    .mobile-category-card:active {
+        transform: none !important;
+    }
+
+    .pagination button,
+    .pagination button:hover,
+    .pagination button:focus,
+    .pagination button:active,
+    .pagination button.is-pressing {
+        transform: none !important;
+        background: var(--panel) !important;
+        color: var(--text) !important;
+        box-shadow: none !important;
+    }
+}
+
+/* 5. 减少动画设置 */
+/* 5. モーション低減 */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-record-detail,
+    tbody td,
+    tbody tr,
+    .actions button,
+    .amount-income,
+    .amount-expense,
+    .amount-cell {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v29：分页按键反馈、长按详情、PC 表格 macOS 式更明显柔和分离
+   v29：ページボタン反応、長押し詳細、PC表の macOS 風ホバーを強化
+   ========================================================== */
+
+/* 1. 手机分页按钮：有明显但短暂的按下反馈，不残留 */
+/* 1. スマホのページボタン：短く分かりやすい押下反応、色残りなし */
+@media (hover: none) {
+    .pagination button {
+        transition:
+            transform 130ms cubic-bezier(0.22, 1, 0.36, 1),
+            background-color 160ms ease,
+            border-color 160ms ease,
+            box-shadow 160ms ease !important;
+    }
+
+    .pagination button.pager-tap,
+    .pagination button:active {
+        transform: scale(0.982) !important;
+        background: rgba(15, 130, 119, 0.085) !important;
+        border-color: rgba(15, 130, 119, 0.42) !important;
+        box-shadow: inset 0 0 0 1px rgba(15, 130, 119, 0.10) !important;
+        color: var(--text) !important;
+    }
+
+    .pagination button.primary.pager-tap,
+    .pagination button.primary:active {
+        background: var(--primary) !important;
+        color: #ffffff !important;
+        border-color: var(--primary) !important;
+        box-shadow: 0 6px 14px rgba(15, 130, 119, 0.16) !important;
+    }
+
+    .pagination button:focus:not(:focus-visible) {
+        outline: none !important;
+    }
+}
+
+/* 2. 手机记录详情：点击展开、长按临时展开都使用柔和 height 动画 */
+/* 2. スマホ記録詳細：タップ展開・長押し一時表示とも height アニメーション */
+@media screen and (max-width: 1024px) {
+    .mobile-record-detail {
+        overflow: hidden;
+        border-top: 1px solid rgba(220, 232, 232, 0.82);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(248, 252, 252, 0.94));
+        transition:
+            height 260ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 180ms ease,
+            background-color 180ms ease;
+    }
+
+    .mobile-record-detail.hidden {
+        display: none;
+    }
+
+    .mobile-record-detail.detail-opening,
+    .mobile-record-detail.detail-closing {
+        display: block;
+    }
+
+    .mobile-record-main.long-pressing,
+    .mobile-record-main.open {
+        background: rgba(15, 130, 119, 0.04);
+    }
+
+    .mobile-record-card:has(.mobile-record-main.open),
+    .mobile-record-card:has(.mobile-record-main.long-pressing) {
+        border-color: rgba(15, 130, 119, 0.30);
+        box-shadow:
+            0 8px 18px rgba(16, 36, 42, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.54);
+    }
+
+    :root[data-theme="dark"] .mobile-record-detail {
+        border-top-color: rgba(51, 73, 79, 0.78);
+        background:
+            linear-gradient(180deg, rgba(23, 35, 38, 0.72), rgba(16, 27, 30, 0.94));
+    }
+}
+
+/* 3. PC 表格 hover：更明显、更丝滑，但不遮挡上下行和表头 */
+/* 3. PC表 hover：より分かりやすく滑らか。ただし上下行・ヘッダーを覆わない */
+@media (hover: hover) and (pointer: fine) {
+    .table-wrap {
+        overflow: hidden !important;
+        border-radius: 22px;
+        background: var(--panel);
+    }
+
+    table {
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        width: 100%;
+    }
+
+    thead th {
+        position: relative;
+        z-index: 2;
+        background:
+            linear-gradient(180deg, rgba(244, 248, 248, 0.92), rgba(244, 248, 248, 0.76));
+        border-bottom: 1px solid rgba(220, 232, 232, 0.82);
+    }
+
+    tbody tr {
+        transform: none !important;
+        filter: none !important;
+    }
+
+    tbody td {
+        position: relative;
+        background: transparent !important;
+        border-bottom: 1px solid rgba(220, 232, 232, 0.46);
+        transition:
+            background-color 210ms cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 210ms ease,
+            transform 210ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    tbody tr:hover td {
+        background: rgba(15, 130, 119, 0.072) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.70),
+            inset 0 -1px 0 rgba(15, 130, 119, 0.045) !important;
+    }
+
+    tbody tr:hover td:first-child {
+        box-shadow:
+            inset 4px 0 0 rgba(15, 130, 119, 0.44),
+            inset 0 1px 0 rgba(255, 255, 255, 0.70),
+            inset 0 -1px 0 rgba(15, 130, 119, 0.045) !important;
+    }
+
+    tbody td > *,
+    .amount-cell,
+    .amount-income,
+    .amount-expense {
+        transition:
+            transform 210ms cubic-bezier(0.22, 1, 0.36, 1),
+            color 180ms ease;
+    }
+
+    tbody tr:hover td > *,
+    tbody tr:hover .amount-cell,
+    tbody tr:hover .amount-income,
+    tbody tr:hover .amount-expense {
+        transform: translateY(-1px) scale(1.012);
+    }
+
+    tbody tr:hover .actions button {
+        transform: translateY(-1px) scale(1.02);
+        box-shadow:
+            0 7px 16px rgba(16, 36, 42, 0.075),
+            inset 0 1px 0 rgba(255, 255, 255, 0.62);
+    }
+
+    :root[data-theme="dark"] thead th {
+        background:
+            linear-gradient(180deg, rgba(16, 27, 30, 0.94), rgba(16, 27, 30, 0.78));
+        border-bottom-color: rgba(51, 73, 79, 0.74);
+    }
+
+    :root[data-theme="dark"] tbody td {
+        border-bottom-color: rgba(51, 73, 79, 0.46);
+    }
+
+    :root[data-theme="dark"] tbody tr:hover td {
+        background: rgba(15, 130, 119, 0.13) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.035),
+            inset 0 -1px 0 rgba(15, 130, 119, 0.08) !important;
+    }
+
+    :root[data-theme="dark"] tbody tr:hover td:first-child {
+        box-shadow:
+            inset 4px 0 0 rgba(45, 212, 191, 0.46),
+            inset 0 1px 0 rgba(255, 255, 255, 0.035),
+            inset 0 -1px 0 rgba(15, 130, 119, 0.08) !important;
+    }
+}
+
+/* 4. 触屏端记录卡片保持稳定，不上飘 */
+/* 4. タッチ端末の記録カードは安定させ、浮き上がらない */
+@media (hover: none) {
+    .mobile-record-card,
+    .mobile-record-card:active,
+    .mobile-category-card,
+    .mobile-category-card:active {
+        transform: none !important;
+    }
+}
+
+/* 5. 减少动画设置 */
+/* 5. モーション低減 */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-record-detail,
+    tbody td,
+    tbody td > *,
+    .amount-cell,
+    .amount-income,
+    .amount-expense,
+    .actions button,
+    .pagination button {
+        transition: none !important;
+        transform: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v31 登录/注册修复 + 认证页自然动画
+   v31 ログイン/登録修正 + 認証画面の自然なアニメーション
+   ========================================================== */
+
+/* 登录 / 注册表单切换：淡入、轻微上浮，避免“闪一下” */
+/* ログイン / 登録フォーム切替：フェードと軽い浮き上がりで自然に */
+.auth-form {
+    transform-origin: top center;
+    transition:
+        opacity 240ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 220ms ease;
+}
+
+.auth-form.auth-form-leaving {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.992);
+    filter: blur(1px);
+}
+
+.auth-form.auth-form-entering {
+    opacity: 0;
+    transform: translateY(10px) scale(0.992);
+}
+
+.auth-form.auth-form-entering.auth-form-entered {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* 登录 / 注册卡片更有系统应用质感 */
+/* ログイン / 登録カードをシステムアプリ風に */
+.auth-card {
+    animation: authCardIn 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes authCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.992);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 分段按钮：切换时像 iOS segmented control */
+/* セグメントボタン：iOS の segmented control 風 */
+.auth-tabs,
+.segmented,
+.auth-segment {
+    position: relative;
+}
+
+.segment,
+.auth-tabs button {
+    transition:
+        background-color 180ms ease,
+        color 180ms ease,
+        transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 180ms ease;
+}
+
+.segment:active,
+.auth-tabs button:active {
+    transform: scale(0.982);
+}
+
+.segment.active,
+.auth-tabs button.active {
+    box-shadow:
+        0 8px 18px rgba(15, 130, 119, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.52);
+}
+
+/* 输入框聚焦更柔和 */
+/* 入力欄フォーカスを柔らかく */
+.auth-form input {
+    transition:
+        border-color 190ms ease,
+        box-shadow 190ms ease,
+        background-color 190ms ease,
+        transform 140ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.auth-form input:focus {
+    transform: translateY(-1px);
+}
+
+/* 提交中：按钮轻微变暗，避免重复点击 */
+/* 送信中：ボタンを軽く無効っぽくし、連打を防ぐ */
+.auth-form.auth-submitting button[type="submit"] {
+    opacity: 0.78;
+    pointer-events: none;
+    transform: scale(0.992);
+}
+
+/* 手机端认证页动画要轻，避免卡顿 */
+/* スマホでは軽いアニメーションにしてカクつきを防ぐ */
+@media screen and (max-width: 1024px) {
+    .auth-card {
+        animation-duration: 320ms;
+    }
+
+    .auth-form.auth-form-leaving {
+        filter: none;
+        transform: translateY(-6px);
+    }
+
+    .auth-form.auth-form-entering {
+        transform: translateY(8px);
+    }
+}
+
+/* 减少动画设置 */
+/* モーション低減 */
+@media (prefers-reduced-motion: reduce) {
+    .auth-card,
+    .auth-form,
+    .segment,
+    .auth-tabs button,
+    .auth-form input {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+        filter: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v33 基于 v31 修复：记录详情点击/长按 + 三语文案后的交互补强
+   v33 v31ベース修正：記録詳細タップ/長押し + 三言語文言後の動作補強
+   ========================================================== */
+
+/* 手机端记录详情：点一下展开/收起，长按临时展开，松手收起 */
+/* スマホ記録詳細：タップで展開/収納、長押しで一時表示、指を離すと収納 */
+@media screen and (max-width: 1024px) {
+    .mobile-record-detail {
+        overflow: hidden;
+        border-top: 1px solid rgba(220, 232, 232, 0.82);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(248, 252, 252, 0.96));
+        transition:
+            height 260ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 180ms ease,
+            background-color 180ms ease;
+    }
+
+    .mobile-record-detail.hidden {
+        display: none !important;
+    }
+
+    .mobile-record-detail.detail-opening,
+    .mobile-record-detail.detail-closing {
+        display: block !important;
+    }
+
+    .mobile-record-main.open,
+    .mobile-record-main.long-pressing {
+        background: rgba(15, 130, 119, 0.045);
+    }
+
+    .mobile-record-main.open .mobile-record-arrow,
+    .mobile-record-main.long-pressing .mobile-record-arrow {
+        transform: rotate(180deg);
+    }
+
+    .mobile-record-card:has(.mobile-record-main.open),
+    .mobile-record-card:has(.mobile-record-main.long-pressing) {
+        border-color: rgba(15, 130, 119, 0.30);
+        box-shadow:
+            0 8px 18px rgba(16, 36, 42, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.54);
+    }
+
+    .mobile-record-card,
+    .mobile-record-card:active {
+        transform: none !important;
+    }
+
+    :root[data-theme="dark"] .mobile-record-detail {
+        border-top-color: rgba(51, 73, 79, 0.78);
+        background:
+            linear-gradient(180deg, rgba(23, 35, 38, 0.72), rgba(16, 27, 30, 0.96));
+    }
+}
+
+/* 上一页 / 下一页：有短暂按下反馈，但不残留 */
+/* 前へ / 次へ：短い押下反応を出し、色残りはしない */
+@media (hover: none) {
+    .pagination button.pager-tap,
+    .pagination button:active {
+        transform: scale(0.982) !important;
+        background: rgba(15, 130, 119, 0.085) !important;
+        border-color: rgba(15, 130, 119, 0.42) !important;
+        box-shadow: inset 0 0 0 1px rgba(15, 130, 119, 0.10) !important;
+    }
+}
+
+/* 减少动画设置 */
+/* モーション低減設定 */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-record-detail,
+    .mobile-record-main,
+    .pagination button {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+}
+
+
+/* ==========================================================
+   v35 名称调整：账号与个性化 / アカウントと個人設定 / Account & Personalization
+   v35 名称調整：アカウント設定と個人設定をまとめた表現
+   ========================================================== */
+
+/* 手机底部导航中“账号与个性化”较长，稍微压缩字号，避免拥挤 */
+/* スマホ下部ナビでは文言が長いため、少しだけ文字サイズを調整 */
+@media screen and (max-width: 1024px) {
+    .bottom-nav .nav-btn[data-page="profile"] span,
+    .bottom-nav .nav-btn[data-page="profile"] {
+        letter-spacing: -0.02em;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .bottom-nav .nav-btn[data-page="profile"] {
+        font-size: 11px;
+    }
+}
+
+
+/* ==========================================================
+   v36 修复导航对齐：页面标题用长名，导航用短名
+   v36 ナビ整列修正：ページタイトルは長い名前、ナビは短い名前
+   ========================================================== */
+
+/* 手机底部导航和 PC 侧边导航都保持统一高度，不让某一项换两行 */
+/* スマホ下部ナビとPC側ナビは高さを揃え、項目の折り返しを防ぐ */
+.nav .nav-btn {
+    white-space: nowrap;
+    word-break: keep-all;
+    line-height: 1.2;
+}
+
+@media screen and (max-width: 1024px) {
+    .bottom-nav .nav-btn,
+    .nav .nav-btn {
+        min-width: 0;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .bottom-nav .nav-btn span,
+    .nav .nav-btn span,
+    .bottom-nav .nav-btn,
+    .nav .nav-btn {
+        white-space: nowrap;
+        word-break: keep-all;
+        line-height: 1.15;
+    }
+
+    .bottom-nav .nav-icon {
+        flex: 0 0 auto;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .bottom-nav .nav-btn,
+    .nav .nav-btn {
+        font-size: 12px;
+    }
+}
+
+
+/* ==========================================================
+   v37 导航命名调整：账号 -> 我的 / マイページ / Me
+   v37 ナビ名称調整：アカウント -> マイページ / Me
+   ========================================================== */
+
+/* 底部导航使用更宽泛的“我的”，因此账号、安全、显示设置放在里面更自然 */
+/* 下部ナビは広い意味の「マイページ」にし、アカウント・安全・表示設定をまとめても自然にする */
+@media screen and (max-width: 1024px) {
+    .bottom-nav .nav-btn,
+    .nav .nav-btn {
+        white-space: nowrap;
+        word-break: keep-all;
+        line-height: 1.15;
+    }
+}
+

@@ -9,3 +9,16 @@ application-local.properties
 
 .DS_Store
 Thumbs.db
+
+
+# Frontend dependencies
+node_modules/
+frontend/node_modules/
+
+# Frontend build cache
+frontend/dist/
+frontend/.vite/
+
+# Temporary logs
+tmp-*.log
+tmp-*.err.log
