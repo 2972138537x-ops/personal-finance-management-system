@@ -47,5 +47,10 @@
         AND type = #{type}
     </select>
 
+    <!-- 注销账号时删除当前用户的全部收支分类 / アカウント退会時、現在ユーザーの全収支カテゴリを削除する -->
+    <delete id="deleteByUserId">
+        DELETE FROM transaction_category
+        WHERE user_id = #{userId}
+    </delete>
 
 </mapper>

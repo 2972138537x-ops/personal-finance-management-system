@@ -44,4 +44,8 @@ public interface TransactionCategoryMapper {
             @Param("name") String name,
             @Param("type") String type
     );
+
+    // 注销账号时删除当前用户的全部收支分类
+    // アカウント退会時、現在ユーザーの全収支カテゴリを削除する
+    int deleteByUserId(@Param("userId") Integer userId);
 }

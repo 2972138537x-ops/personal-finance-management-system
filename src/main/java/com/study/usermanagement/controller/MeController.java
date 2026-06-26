@@ -1,6 +1,7 @@
 package com.study.usermanagement.controller;
 
 import com.study.usermanagement.common.Result;
+import com.study.usermanagement.dto.DeleteAccountRequest;
 import com.study.usermanagement.dto.PasswordRequest;
 import com.study.usermanagement.entity.User;
 import com.study.usermanagement.service.UserService;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/me")
-@Tag(name = "当前用户", description = "处理当前登录用户查看个人信息和修改自己密码的接口")
+@Tag(name = "当前用户", description = "处理当前登录用户查看个人信息、修改自己密码和注销自己账号的接口")
 public class MeController {
     @Autowired
     private UserService userService;
@@ -35,6 +36,15 @@ public class MeController {
     public Result changeMyPassword(HttpServletRequest request, @RequestBody @Valid PasswordRequest passwordRequest) {
         User currentUser = (User) request.getAttribute("currentUser");
         return userService.changeMyPassword(currentUser.getUsername(), passwordRequest.getOldPassword(), passwordRequest.getNewPassword());
+    }
+
+    // 当前登录用户注销自己的账号：需要输入两遍当前密码，通过校验后才删除
+    // ログイン中のユーザーが自分のアカウントを退会する。現在のパスワードを2回入力し、検証後に削除する
+    @Operation(summary = "注销当前用户账号", description = "当前登录用户注销自己的账号，需要输入两遍当前密码，后端根据 token 获取 currentUser，不接收前端传来的 userId。")
+    @DeleteMapping
+    public Result deleteMe(HttpServletRequest request, @RequestBody @Valid DeleteAccountRequest deleteAccountRequest) {
+        User currentUser = (User) request.getAttribute("currentUser");
+        return userService.deleteMe(currentUser, deleteAccountRequest.getPassword(), deleteAccountRequest.getConfirmPassword());
     }
 
 

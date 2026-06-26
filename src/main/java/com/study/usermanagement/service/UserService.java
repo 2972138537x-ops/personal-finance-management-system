@@ -3,11 +3,14 @@ package com.study.usermanagement.service;
 
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.entity.User;
+import com.study.usermanagement.mapper.TransactionCategoryMapper;
+import com.study.usermanagement.mapper.TransactionRecordMapper;
 import com.study.usermanagement.mapper.UserMapper;
 import com.study.usermanagement.vo.LoginVO;
 import com.study.usermanagement.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,12 @@ import java.util.UUID;
 public class UserService {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private TransactionRecordMapper transactionRecordMapper;
+
+    @Autowired
+    private TransactionCategoryMapper transactionCategoryMapper;
 
     // 根据用户名查询用户；返回 UserVO，避免把 password 返回给前端
     // ユーザー名でユーザーを検索する。password を返さないように UserVO に変換する
@@ -216,5 +225,44 @@ public class UserService {
         }
 
         return new Result(false, "退出登录失败", null);
+    }
+
+    // 注销当前账号：先校验两遍密码和数据库密码，再删除自己的收支记录、分类和用户账号
+    // アカウント退会：2回入力したパスワードとDBのパスワードを確認してから、本人の収支記録、カテゴリ、ユーザーアカウントを削除する
+    @Transactional
+    public Result deleteMe(User currentUser, String password, String confirmPassword) {
+        if (currentUser == null) {
+            return new Result(false, "请先登录", null);
+        }
+        if (currentUser.getId() == null) {
+            return new Result(false, "用户信息无效", null);
+        }
+        if (password == null || password.isEmpty()) {
+            return new Result(false, "密码不能为空", null);
+        }
+        if (confirmPassword == null || confirmPassword.isEmpty()) {
+            return new Result(false, "确认密码不能为空", null);
+        }
+        if (!password.equals(confirmPassword)) {
+            return new Result(false, "两次输入的密码不一致", null);
+        }
+
+        User oldUser = userMapper.findByUsername(currentUser.getUsername());
+        if (oldUser == null) {
+            return new Result(false, "用户不存在", null);
+        }
+        if (!password.equals(oldUser.getPassword())) {
+            return new Result(false, "密码错误，不能注销账号", null);
+        }
+
+        transactionRecordMapper.deleteByUserId(currentUser.getId());
+        transactionCategoryMapper.deleteByUserId(currentUser.getId());
+
+        int rows = userMapper.deleteByUsername(currentUser.getUsername());
+        if (rows > 0) {
+            return new Result(true, "注销账号成功", currentUser.getUsername());
+        }
+
+        return new Result(false, "注销账号失败", null);
     }
 }

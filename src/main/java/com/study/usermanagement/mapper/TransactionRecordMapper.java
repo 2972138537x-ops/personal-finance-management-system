@@ -72,4 +72,8 @@ public interface TransactionRecordMapper {
                                 @Param("categoryId") Integer categoryId,
                                 @Param("startRecordDate") LocalDate startRecordDate,
                                 @Param("endOfRecordDate") LocalDate endOfRecordDate);
+
+    // 注销账号时删除当前用户的全部收支记录
+    // アカウント退会時、現在ユーザーの全収支記録を削除する
+    int deleteByUserId(@Param("userId") Integer userId);
 }
