@@ -26,7 +26,7 @@
     </select>
 
     <!-- 新增普通用户，默认 role 是 USER / 一般ユーザーを登録し、role は USER にする -->
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `user`(username, password, role, register_date)
         VALUES(#{username}, #{password}, 'USER', CURDATE())
     </insert>

@@ -5,23 +5,20 @@ import jakarta.validation.constraints.NotBlank;
 // 收支分类实体：对应 transaction_category 表
 // 収支カテゴリエンティティ：transaction_category テーブルに対応する
 public class TransactionCategory {
-    // 分类主键 id，由数据库自增生成
-    // カテゴリ主キー id。DB の自動採番で生成される
     private Integer id;
-
-    // 分类所属用户 id，不能由前端随意指定
-    // カテゴリ所有者のユーザー id。フロントから自由に指定させない
     private Integer userId;
 
-    // 分类名称，例如 餐饮、工资、交通
-    // カテゴリ名。例：食費、給料、交通
     @NotBlank(message = "分类名不能为空")
     private String name;
 
-    // 分类类型：income 表示收入，expense 表示支出
-    // カテゴリタイプ：income は収入、expense は支出
     @NotBlank(message = "类型不能为空")
     private String type;
+
+    // 默认分类编码，例如 SALARY、FOOD。用户自定义分类为 null
+    private String code;
+
+    // 是否系统默认分类：true 表示默认分类，false 表示用户自定义分类
+    private Boolean isDefault;
 
     public TransactionCategory() {
     }
@@ -31,6 +28,15 @@ public class TransactionCategory {
         this.userId = userId;
         this.name = name;
         this.type = type;
+    }
+
+    public TransactionCategory(Integer id, Integer userId, String name, String type, String code, Boolean isDefault) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.type = type;
+        this.code = code;
+        this.isDefault = isDefault;
     }
 
     public Integer getId() {
@@ -65,6 +71,22 @@ public class TransactionCategory {
         this.type = type;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
     @Override
     public String toString() {
         return "TransactionCategory{" +
@@ -72,6 +94,8 @@ public class TransactionCategory {
                 ", userId=" + userId +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
+                ", code='" + code + '\'' +
+                ", isDefault=" + isDefault +
                 '}';
     }
 }

@@ -1,11 +1,12 @@
 package com.study.usermanagement.vo;
 
-// 收支分类展示对象：只返回前端需要看的分类信息
-// 収支カテゴリ表示用オブジェクト：フロントに見せるカテゴリ情報だけを返す
+// 收支分类 VO：返回给前端的分类数据
 public class TransactionCategoryVO {
     private Integer id;
     private String name;
     private String type;
+    private String code;
+    private Boolean isDefault;
 
     public TransactionCategoryVO() {
     }
@@ -14,6 +15,14 @@ public class TransactionCategoryVO {
         this.id = id;
         this.name = name;
         this.type = type;
+    }
+
+    public TransactionCategoryVO(Integer id, String name, String type, String code, Boolean isDefault) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.code = code;
+        this.isDefault = isDefault;
     }
 
     public Integer getId() {
@@ -38,5 +47,21 @@ public class TransactionCategoryVO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
     }
 }

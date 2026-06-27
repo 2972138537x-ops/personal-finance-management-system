@@ -29,6 +29,9 @@ public class UserService {
     @Autowired
     private TransactionCategoryMapper transactionCategoryMapper;
 
+    @Autowired
+    private TransactionCategoryService transactionCategoryService;
+
     // 根据用户名查询用户；返回 UserVO，避免把 password 返回给前端
     // ユーザー名でユーザーを検索する。password を返さないように UserVO に変換する
     public Result findByUsername(String username) {
@@ -44,6 +47,7 @@ public class UserService {
 
     // 注册用户：校验用户名和密码，再判断用户名是否已存在，最后插入数据库
     // ユーザー登録：ユーザー名とパスワードを検証し、重複を確認してから DB に登録する
+    @Transactional
     public Result register(User user) {
         String username = user.getUsername();
         String password = user.getPassword();
@@ -62,6 +66,7 @@ public class UserService {
         }
         int rows = userMapper.insert(user);
         if (rows > 0) {
+            transactionCategoryService.createDefaultCategories(user.getId());
             return new Result(true, "注册成功", username);
         }
         return new Result(false, "注册失败", null);

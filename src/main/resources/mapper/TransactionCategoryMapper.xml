@@ -4,50 +4,68 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.usermanagement.mapper.TransactionCategoryMapper">
 
-    <!-- 新增收支分类 / 収支カテゴリを追加する -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO transaction_category(user_id, name, type)
-        VALUES(#{userId}, #{name}, #{type})
+        INSERT INTO transaction_category(user_id, name, type, code, is_default)
+        VALUES(#{userId}, #{name}, #{type}, #{code}, #{isDefault})
     </insert>
 
-    <!-- 查询当前登录用户自己的分类 / ログイン中ユーザー本人のカテゴリを取得する -->
     <select id="findByUserId" resultType="com.study.usermanagement.entity.TransactionCategory">
-        SELECT id, user_id AS userId, name, type
+        SELECT id,
+        user_id AS userId,
+        name,
+        type,
+        code,
+        is_default AS isDefault
         FROM transaction_category
         WHERE user_id = #{userId}
+        ORDER BY type, id
     </select>
 
-    <!-- 修改当前登录用户自己的分类 / ログイン中ユーザー本人のカテゴリを更新する -->
     <update id="updateByIdAndUserId">
         UPDATE transaction_category
         SET name = #{category.name},
-        type = #{category.type}
+        type = #{category.type},
+        code = #{category.code},
+        is_default = #{category.isDefault}
         WHERE id = #{id} AND user_id = #{userId}
     </update>
 
-    <!-- 删除当前登录用户自己的分类 / ログイン中ユーザー本人のカテゴリを削除する -->
     <delete id="deleteByIdAndUserId">
         DELETE FROM transaction_category
         WHERE id = #{id} AND user_id = #{userId}
     </delete>
 
-    <!-- 判断分类是否属于当前登录用户 / カテゴリがログイン中ユーザーのものか確認する -->
     <select id="findByIdAndUserId" resultType="com.study.usermanagement.entity.TransactionCategory">
-        SELECT id, user_id AS userId, name, type
+        SELECT id,
+        user_id AS userId,
+        name,
+        type,
+        code,
+        is_default AS isDefault
         FROM transaction_category
         WHERE id = #{id} AND user_id = #{userId}
     </select>
 
-    <!-- 检查同一用户是否已有同名同类型分类 / 同じユーザーに同名・同タイプのカテゴリが存在するか確認する -->
     <select id="findByUserIdAndNameAndType" resultType="com.study.usermanagement.entity.TransactionCategory">
-        SELECT id, user_id AS userId, name, type
+        SELECT id,
+        user_id AS userId,
+        name,
+        type,
+        code,
+        is_default AS isDefault
         FROM transaction_category
         WHERE user_id = #{userId}
         AND name = #{name}
         AND type = #{type}
     </select>
 
-    <!-- 注销账号时删除当前用户的全部收支分类 / アカウント退会時、現在ユーザーの全収支カテゴリを削除する -->
+    <select id="countDefaultCategories" resultType="int">
+        SELECT COUNT(*)
+        FROM transaction_category
+        WHERE user_id = #{userId}
+        AND is_default = 1
+    </select>
+
     <delete id="deleteByUserId">
         DELETE FROM transaction_category
         WHERE user_id = #{userId}
