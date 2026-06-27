@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import { currentYear, currentMonth, money, getResultData, getCategoryName } from "@/utils/format.js";
+import { currentYear, currentMonth, money, getResultData, getCategoryName, getCategoryDisplayName } from "@/utils/format.js";
 import { statsApi } from "@/api/statsApi.js";
 import { recordApi } from "@/api/recordApi.js";
 import { categoryApi } from "@/api/categoryApi.js";
@@ -21,7 +21,7 @@ const trendRecords = ref([]);
 function normalizeStats(list) {
   const raw = Array.isArray(list) ? list : [];
   return raw.map((item) => ({
-    name: item.categoryName || item.name || item.category || "-",
+    name: getCategoryDisplayName(item, props.t),
     amount: Number(item.totalAmount || item.amount || item.total || 0)
   })).filter((item) => item.amount > 0);
 }
@@ -96,7 +96,7 @@ defineExpose({ refresh: load });
             <tr v-if="!recent.length"><td colspan="5" class="empty">{{ t("noData") }}</td></tr>
             <tr v-for="record in recent" :key="record.id">
               <td>{{ record.id }}</td>
-              <td>{{ getCategoryName(record, categories) }}</td>
+              <td>{{ getCategoryName(record, categories, t) }}</td>
               <td>{{ record.type === 'income' ? t('income') : t('expense') }}</td>
               <td :class="record.type === 'income' ? 'amount-income' : 'amount-expense'">{{ money(record.amount) }}</td>
               <td>{{ record.recordDate }}</td>
@@ -108,7 +108,7 @@ defineExpose({ refresh: load });
       <div class="home-mobile-recent-list">
         <div v-for="record in recent" :key="record.id" class="home-mobile-recent-card">
           <div>
-            <strong>{{ record.categoryName || record.category || record.name || "-" }}</strong>
+            <strong>{{ getCategoryName(record, categories, t) }}</strong>
             <span>{{ record.type === "income" ? t("income") : t("expense") }} · {{ record.recordDate }}</span>
           </div>
           <em :class="record.type === 'income' ? 'amount-income' : 'amount-expense'">{{ money(record.amount) }}</em>

@@ -2,7 +2,7 @@
 import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { categoryApi } from "@/api/categoryApi.js";
 import { recordApi } from "@/api/recordApi.js";
-import { getResultData, getCategoryName, money, today } from "@/utils/format.js";
+import { getResultData, getCategoryDisplayName, getCategoryName, money, today } from "@/utils/format.js";
 import MobileRecordCard from "@/components/MobileRecordCard.vue";
 
 const props = defineProps({ t: Function, toast: Function });
@@ -105,7 +105,7 @@ defineExpose({ refresh: load });
       <form class="form-grid mobile-collapsible-body" @submit.prevent="save">
         <input v-model="form.id" type="hidden">
         <label><span>{{ t("type") }}</span><select v-model="form.type"><option value="income">{{ t("income") }}</option><option value="expense">{{ t("expense") }}</option></select></label>
-        <label><span>{{ t("category") }}</span><select v-model="form.categoryId"><option v-if="!filteredCategories.length" value="">{{ t("noData") }}</option><option v-for="item in filteredCategories" :key="item.id" :value="item.id">{{ item.name || item.categoryName }}</option></select></label>
+        <label><span>{{ t("category") }}</span><select v-model="form.categoryId"><option v-if="!filteredCategories.length" value="">{{ t("noData") }}</option><option v-for="item in filteredCategories" :key="item.id" :value="item.id">{{ getCategoryDisplayName(item, t) }}</option></select><em v-if="!filteredCategories.length" class="field-hint">{{ t("createCategoryFirst") }}</em></label>
         <label><span>{{ t("amount") }}</span><input v-model="form.amount" type="number" step="0.01"></label>
         <label><span>{{ t("date") }}</span><input v-model="form.recordDate" type="date"></label>
         <label><span>{{ t("remark") }}</span><input v-model="form.remark" type="text"></label>
@@ -124,7 +124,7 @@ defineExpose({ refresh: load });
         <form class="inline-form" @submit.prevent="applyRange">
           <label><span>{{ t("startDate") }}</span><input v-model="filter.startRecordDate" type="date"></label>
           <label><span>{{ t("endDate") }}</span><input v-model="filter.endOfRecordDate" type="date"></label>
-          <label><span>{{ t("category") }}</span><select v-model="filter.categoryId"><option value="">{{ t("allCategories") }}</option><option v-for="item in categories" :key="item.id" :value="item.id">{{ item.name || item.categoryName }} / {{ typeText(item.type) }}</option></select></label>
+          <label><span>{{ t("category") }}</span><select v-model="filter.categoryId"><option value="">{{ t("allCategories") }}</option><option v-for="item in categories" :key="item.id" :value="item.id">{{ getCategoryDisplayName(item, t) }} / {{ typeText(item.type) }}</option></select></label>
           <button type="submit" class="primary">{{ t("queryByDate") }}</button>
         </form>
       </div>
@@ -138,7 +138,7 @@ defineExpose({ refresh: load });
           <tbody>
             <tr v-if="!records.length"><td colspan="7" class="empty">{{ t("noData") }}</td></tr>
             <tr v-for="record in records" :key="record.id">
-              <td>{{ record.id }}</td><td>{{ getCategoryName(record, categories) }}</td><td>{{ typeText(record.type) }}</td><td :class="record.type === 'income' ? 'amount-income' : 'amount-expense'">{{ money(record.amount) }}</td><td>{{ record.remark }}</td><td>{{ record.recordDate }}</td>
+              <td>{{ record.id }}</td><td>{{ getCategoryName(record, categories, t) }}</td><td>{{ typeText(record.type) }}</td><td :class="record.type === 'income' ? 'amount-income' : 'amount-expense'">{{ money(record.amount) }}</td><td>{{ record.remark }}</td><td>{{ record.recordDate }}</td>
               <td class="actions"><button type="button" @click="edit(record)">{{ t("edit") }}</button><button type="button" class="danger" @click="remove(record)">{{ t("remove") }}</button></td>
             </tr>
           </tbody>

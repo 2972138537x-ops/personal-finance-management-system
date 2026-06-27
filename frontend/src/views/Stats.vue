@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { statsApi } from "@/api/statsApi.js";
-import { currentYear, currentMonth, money, getResultData } from "@/utils/format.js";
+import { currentYear, currentMonth, money, getResultData, getCategoryDisplayName } from "@/utils/format.js";
 import PieChart from "@/components/PieChart.vue";
 import TrendChart from "@/components/TrendChart.vue";
 import { recordApi } from "@/api/recordApi.js";
@@ -16,7 +16,7 @@ const trendRecords = ref([]);
 
 function normalize(list) {
   return (Array.isArray(list) ? list : []).map((item) => ({
-    name: item.categoryName || item.name || item.category || "-",
+    name: getCategoryDisplayName(item, props.t),
     amount: Number(item.totalAmount || item.amount || item.total || 0)
   })).filter((item) => item.amount > 0);
 }

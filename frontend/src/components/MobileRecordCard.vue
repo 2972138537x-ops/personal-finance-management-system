@@ -104,7 +104,7 @@ function handleRemove() {
       @blur="pressing = false"
     >
       <span class="mobile-record-left">
-        <strong>{{ getCategoryName(record, categories) }}</strong>
+        <strong>{{ getCategoryName(record, categories, t) }}</strong>
         <em>{{ typeText(record.type) }} · {{ record.recordDate || "" }}</em>
       </span>
       <span class="mobile-record-amount" :class="record.type === 'income' ? 'income amount-income' : 'expense amount-expense'">

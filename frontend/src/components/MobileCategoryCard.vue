@@ -1,4 +1,5 @@
 <script setup>
+import { getCategoryDisplayName, isDefaultCategory } from "@/utils/format.js";
 const props = defineProps({
   category: { type: Object, required: true },
   t: { type: Function, required: true }
@@ -6,7 +7,7 @@ const props = defineProps({
 defineEmits(["edit", "remove"]);
 
 function categoryName(item) {
-  return item.name || item.categoryName || "";
+  return getCategoryDisplayName(item, props.t);
 }
 function typeText(type) {
   return type === "income" ? props.t("income") : props.t("expense");
@@ -16,7 +17,7 @@ function typeText(type) {
 <template>
   <article class="mobile-category-card">
     <div class="mobile-category-main">
-      <strong>{{ categoryName(category) }}</strong>
+      <strong>{{ categoryName(category) }} <span v-if="isDefaultCategory(category)" class="category-badge">{{ t("defaultCategoryBadge") }}</span></strong>
       <span>{{ typeText(category.type) }}</span>
     </div>
     <div class="mobile-category-actions">

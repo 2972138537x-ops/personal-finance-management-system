@@ -666,3 +666,70 @@ Object.keys(adminFinalPatchMessages).forEach((lang) => {
   };
 });
 
+
+
+
+const defaultCategoryI18nPatchMessages = {
+  zh: {
+    defaultCategory_SALARY: "工资",
+    defaultCategory_PART_TIME: "兼职",
+    defaultCategory_BONUS: "奖金",
+    defaultCategory_OTHER_INCOME: "其他收入",
+    defaultCategory_FOOD: "餐饮",
+    defaultCategory_TRANSPORT: "交通",
+    defaultCategory_STUDY: "学习",
+    defaultCategory_DAILY_GOODS: "生活用品",
+    defaultCategory_RENT: "房租",
+    defaultCategory_UTILITIES: "水电网费",
+    defaultCategory_ENTERTAINMENT: "娱乐",
+    defaultCategory_OTHER_EXPENSE: "其他支出",
+    defaultCategoryBadge: "默认",
+    customCategoryBadge: "自定义",
+    createCategoryFirst: "请先创建分类后再添加记录。",
+    goCreateCategory: "去创建分类"
+  },
+  ja: {
+    defaultCategory_SALARY: "給与",
+    defaultCategory_PART_TIME: "アルバイト",
+    defaultCategory_BONUS: "ボーナス",
+    defaultCategory_OTHER_INCOME: "その他収入",
+    defaultCategory_FOOD: "食費",
+    defaultCategory_TRANSPORT: "交通費",
+    defaultCategory_STUDY: "学習",
+    defaultCategory_DAILY_GOODS: "日用品",
+    defaultCategory_RENT: "家賃",
+    defaultCategory_UTILITIES: "光熱費・通信費",
+    defaultCategory_ENTERTAINMENT: "娯楽",
+    defaultCategory_OTHER_EXPENSE: "その他支出",
+    defaultCategoryBadge: "デフォルト",
+    customCategoryBadge: "カスタム",
+    createCategoryFirst: "先にカテゴリを作成してから記録を追加してください。",
+    goCreateCategory: "カテゴリを作成"
+  },
+  en: {
+    defaultCategory_SALARY: "Salary",
+    defaultCategory_PART_TIME: "Part-time Job",
+    defaultCategory_BONUS: "Bonus",
+    defaultCategory_OTHER_INCOME: "Other Income",
+    defaultCategory_FOOD: "Food",
+    defaultCategory_TRANSPORT: "Transportation",
+    defaultCategory_STUDY: "Study",
+    defaultCategory_DAILY_GOODS: "Daily Goods",
+    defaultCategory_RENT: "Rent",
+    defaultCategory_UTILITIES: "Utilities & Internet",
+    defaultCategory_ENTERTAINMENT: "Entertainment",
+    defaultCategory_OTHER_EXPENSE: "Other Expense",
+    defaultCategoryBadge: "Default",
+    customCategoryBadge: "Custom",
+    createCategoryFirst: "Create a category before adding records.",
+    goCreateCategory: "Create Category"
+  }
+};
+
+Object.keys(defaultCategoryI18nPatchMessages).forEach((lang) => {
+  messages[lang] = {
+    ...(messages[lang] || {}),
+    ...defaultCategoryI18nPatchMessages[lang]
+  };
+});
+
