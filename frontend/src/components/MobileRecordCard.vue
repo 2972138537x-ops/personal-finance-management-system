@@ -7,11 +7,15 @@ const props = defineProps({
   categories: { type: Array, default: () => [] },
   t: { type: Function, required: true }
 });
+
 const emit = defineEmits(["edit", "remove"]);
+
 const open = ref(false);
 const pressing = ref(false);
+const longPressing = ref(false);
+
 let timer = null;
-let longPressed = false;
+let suppressClick = false;
 
 function typeText(type) {
   return type === "income" ? props.t("income") : props.t("expense");
@@ -27,24 +31,50 @@ function clearTimer() {
 function pointerDown(event) {
   if (event.pointerType === "mouse") return;
   clearTimer();
-  longPressed = false;
+  suppressClick = false;
+  longPressing.value = false;
   pressing.value = true;
+
   timer = setTimeout(() => {
-    longPressed = true;
+    longPressing.value = true;
+    suppressClick = true;
     open.value = true;
     pressing.value = false;
-  }, 430);
+  }, 420);
 }
 
 function pointerUp(event) {
   if (event.pointerType === "mouse") return;
   clearTimer();
   pressing.value = false;
+
+  if (longPressing.value) {
+    // 长按预览：松手后柔和收回，不再一直停留。
+    window.setTimeout(() => {
+      open.value = false;
+      longPressing.value = false;
+      window.setTimeout(() => {
+        suppressClick = false;
+      }, 80);
+    }, 90);
+  }
+}
+
+function pointerCancel(event) {
+  if (event.pointerType === "mouse") return;
+  clearTimer();
+  pressing.value = false;
+  if (longPressing.value) {
+    open.value = false;
+    longPressing.value = false;
+  }
+  window.setTimeout(() => {
+    suppressClick = false;
+  }, 80);
 }
 
 function toggle() {
-  if (longPressed) {
-    longPressed = false;
+  if (suppressClick) {
     return;
   }
   open.value = !open.value;
@@ -61,7 +91,7 @@ function handleRemove() {
 </script>
 
 <template>
-  <article class="mobile-record-card" :class="{ 'is-open': open, 'is-pressing': pressing }">
+  <article class="mobile-record-card" :class="{ 'is-open': open, 'is-pressing': pressing, 'is-long-preview': longPressing }">
     <button
       type="button"
       class="mobile-record-main"
@@ -69,8 +99,8 @@ function handleRemove() {
       @click="toggle"
       @pointerdown="pointerDown"
       @pointerup="pointerUp"
-      @pointercancel="pointerUp"
-      @pointerleave="pointerUp"
+      @pointercancel="pointerCancel"
+      @pointerleave="pointerCancel"
       @blur="pressing = false"
     >
       <span class="mobile-record-left">

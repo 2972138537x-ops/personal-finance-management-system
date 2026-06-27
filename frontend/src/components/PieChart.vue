@@ -74,6 +74,11 @@ function activeItem() {
 
   <div v-else class="premium-pie-layout">
     <div class="premium-pie-stage">
+      <div v-if="activeItem()" class="mobile-pie-active-label">
+        <strong>{{ activeItem().percent.toFixed(1) }}%</strong>
+        <span>{{ activeItem().name }} · {{ money(activeItem().amount) }}</span>
+      </div>
+
       <svg class="premium-pie-svg" viewBox="0 0 300 250" aria-label="category chart">
         <defs>
           <filter id="pieShadow" x="-30%" y="-30%" width="160%" height="160%">

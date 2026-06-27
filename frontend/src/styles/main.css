@@ -6235,3 +6235,123 @@ body {
         font-size: 11px !important;
     }
 }
+
+
+/* ==========================================================
+   v13 mobile chart percentage + long press preview final fix
+   手机端统计图可点击显示占比，绝不出屏；长按松手自然收回
+   ========================================================== */
+
+/* 默认桌面端不显示移动安全标签 */
+.mobile-pie-active-label {
+    display: none;
+}
+
+/* 手机端：点击饼图时，百分比在图表卡片内部显示，不使用外侧引导线 */
+@media screen and (max-width: 1024px) {
+    .premium-pie-stage {
+        position: relative;
+        width: 100%;
+        min-height: 285px;
+        overflow: hidden !important;
+        padding-top: 8px;
+    }
+
+    .mobile-pie-active-label {
+        position: absolute;
+        left: 50%;
+        top: 10px;
+        z-index: 5;
+        display: grid;
+        justify-items: center;
+        gap: 2px;
+        max-width: calc(100% - 28px);
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(15, 130, 119, 0.16);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow:
+            0 12px 26px rgba(16, 36, 42, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(16px);
+        transform: translateX(-50%);
+        pointer-events: none;
+        animation: mobilePieLabelIn 170ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .mobile-pie-active-label strong {
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 1.1;
+    }
+
+    .mobile-pie-active-label span {
+        max-width: 230px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @keyframes mobilePieLabelIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-6px) scale(0.96);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+    }
+
+    /* 手机端继续强制关闭外侧线，防止百分比跑到屏幕外 */
+    .pie-label-layer,
+    .pie-leader-line,
+    .pie-leader-dot,
+    .pie-percent-box,
+    .pie-percent-text {
+        display: none !important;
+    }
+
+    .premium-pie-svg {
+        margin-top: 18px;
+    }
+
+    :root[data-theme="dark"] .mobile-pie-active-label {
+        background: rgba(22, 33, 38, 0.94);
+        border-color: rgba(79, 209, 197, 0.20);
+    }
+}
+
+/* 长按预览时的 iOS 感反馈：松手后自动收回 */
+@media screen and (max-width: 1024px) {
+    .mobile-record-card.is-long-preview {
+        transform: scale(0.992);
+        border-color: rgba(15, 130, 119, 0.34) !important;
+        box-shadow:
+            0 18px 38px rgba(16, 36, 42, 0.10),
+            inset 0 1px 0 rgba(255, 255, 255, 0.70) !important;
+    }
+
+    .mobile-record-card.is-long-preview .mobile-record-detail {
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(248, 252, 252, 0.92));
+    }
+
+    .record-detail-enter-active {
+        transition:
+            max-height 230ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 160ms ease,
+            transform 210ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+
+    .record-detail-leave-active {
+        transition:
+            max-height 190ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 135ms ease,
+            transform 170ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+}
