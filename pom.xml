@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.study</groupId>
-	<artifactId>user-management-api</artifactId>
+	<artifactId>personal-finance-management-system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>personal-finance-management-system</name>
+	<description>Personal finance management system built with Spring Boot, MyBatis and MySQL</description>
 	<url/>
 	<licenses>
 		<license/>

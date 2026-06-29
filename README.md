@@ -340,21 +340,21 @@ frontend
 
 日本語説明：
 
-現在の開発環境では **MySQL 8.0.34** を使用しています。データベース名は `java_study` です。主に `user`、`transaction_category`、`transaction_record` の3つのテーブルを使用します。
+現在の開発環境では **MySQL 8.0.34** を使用しています。データベース名は `personal_finance` です。主に `user`、`transaction_category`、`transaction_record` の3つのテーブルを使用します。文字化けを防ぐため `utf8mb4` を使用し、文字列比較を区分するため `utf8mb4_bin` を指定しています。
 
 中文说明：
 
-当前开发环境使用 **MySQL 8.0.34**，数据库名为 `java_study`。项目主要使用三张表：`user`、`transaction_category`、`transaction_record`。
+当前开发环境使用 **MySQL 8.0.34**，数据库名为 `personal_finance`。项目主要使用三张表：`user`、`transaction_category`、`transaction_record`。项目使用 `utf8mb4` 防止中文、日文乱码，并使用 `utf8mb4_bin` 让字符串比较区分大小写。
 
 
 参考 SQL：
 
 ```sql
-CREATE DATABASE IF NOT EXISTS java_study
+CREATE DATABASE IF NOT EXISTS personal_finance
   DEFAULT CHARACTER SET utf8mb4
-  DEFAULT COLLATE utf8mb4_unicode_ci;
+  DEFAULT COLLATE utf8mb4_bin;
 
-USE java_study;
+USE personal_finance;
 
 CREATE TABLE `user` (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -393,17 +393,17 @@ CREATE TABLE transaction_record (
 
 日本語説明：
 
-まず `java_study` データベースを作成し、その後 `user`、`transaction_category`、`transaction_record` の3テーブルを作成します。
+まず `personal_finance` データベースを作成し、その後 `user`、`transaction_category`、`transaction_record` の3テーブルを作成します。本プロジェクトでは文字化けを防ぐため `utf8mb4` を使用し、文字列比較を区分するため `utf8mb4_bin` を指定しています。
 
 中文说明：
 
-先创建数据库 `java_study`，再创建 `user`、`transaction_category`、`transaction_record` 三张表。
+先创建数据库 `personal_finance`，再创建 `user`、`transaction_category`、`transaction_record` 三张表。本项目使用 `utf8mb4` 防止中文、日文乱码，并使用 `utf8mb4_bin` 让字符串比较区分大小写。
 
 
 ```sql
-CREATE DATABASE IF NOT EXISTS java_study
+CREATE DATABASE IF NOT EXISTS personal_finance
   DEFAULT CHARACTER SET utf8mb4
-  DEFAULT COLLATE utf8mb4_unicode_ci;
+  DEFAULT COLLATE utf8mb4_bin;
 ```
 
 ### DB 設定の変更 / 2. 修改数据库配置
@@ -418,7 +418,7 @@ CREATE DATABASE IF NOT EXISTS java_study
 
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/java_study?useSSL=false&serverTimezone=Asia/Tokyo
+spring.datasource.url=jdbc:mysql://localhost:3306/personal_finance?useSSL=false&serverTimezone=Asia/Tokyo
 spring.datasource.username=root
 spring.datasource.password=root
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
@@ -518,9 +518,9 @@ npm run build
 
 
 ```properties
-spring.application.name=user-management-api
+spring.application.name=personal-finance-management-system
 
-spring.datasource.url=jdbc:mysql://localhost:3306/java_study?useSSL=false&serverTimezone=Asia/Tokyo
+spring.datasource.url=jdbc:mysql://localhost:3306/personal_finance?useSSL=false&serverTimezone=Asia/Tokyo
 spring.datasource.username=root
 spring.datasource.password=root
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
