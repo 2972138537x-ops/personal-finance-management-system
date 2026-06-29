@@ -266,7 +266,8 @@ frontend
 | 日本語 | 中文 |
 |---|---|
 | フロントに AI アシスタント画面を用意 | 前端提供 AI 助手页面 |
-| 記帳、支出分析、節約アドバイスについて質問可能 | 用户可以提问记账、消费分析、省钱建议 |
+| 現在はユーザーの実際の収支データとは連携せず、一般的な家計管理・節約・予算管理に関する質問に回答 | 目前不直接联动用户真实收支数据，主要回答一般记账、节约、预算管理相关问题 |
+| 今後はユーザーの収支データをもとに、支出傾向分析やカテゴリ別アドバイスを追加予定 | 后续计划结合用户收支数据，实现支出趋势分析和分类建议 |
 | バックエンドの `AiService` が OpenRouter AI API を呼び出す | 后端 `AiService` 调用 OpenRouter AI API |
 | `RestTemplate` で HTTP リクエストを送信 | 使用 `RestTemplate` 发送 HTTP 请求 |
 | API Key は `OPENROUTER_API_KEY` 環境変数から読み込む | API Key 通过 `OPENROUTER_API_KEY` 环境变量读取 |
@@ -302,7 +303,7 @@ frontend
 | 収支記録タイプとカテゴリタイプは一致が必要 | 收支记录类型必须和分类类型一致 |
 | OpenRouter API Key は環境変数 `OPENROUTER_API_KEY` を使用 | OpenRouter API Key 使用环境变量 `OPENROUTER_API_KEY` |
 | API Key はコードに直書きせず、フロントにも公開しない | API Key 不写死在代码中，也不暴露给前端 |
-| AI アシスタントには簡単なプロンプト漏えい防止処理を追加 | AI 助手加入简单的提示词泄露防护 |
+| AI アシスタントは現在、実際の収支データを外部 AI API に送信しない設計 | AI 助手目前设计为不把真实收支数据发送给外部 AI API |
 
 ---
 
@@ -676,7 +677,7 @@ npm run build
 | 新規登録後にデフォルトカテゴリを自動作成 | 新用户注册后自动初始化默认分类 |
 | デフォルトカテゴリは言語に応じて表示し、カスタムカテゴリはユーザー入力名を保持 | 默认分类根据语言显示，自定义分类保持用户输入名称 |
 | Swagger / OpenAPI で API を確認しやすい | 接入 Swagger / OpenAPI，方便查看接口 |
-| OpenRouter AI API と連携し、簡単な AI 財務アシスタントを実装 | 接入 OpenRouter AI API，实现简单 AI 财务助手 |
+| OpenRouter AI API と連携し、一般的な家計管理質問に答える AI 財務アシスタントを実装 | 接入 OpenRouter AI API，实现回答一般财务管理问题的 AI 财务助手 |
 | API Key は環境変数で管理 | API Key 使用环境变量管理 |
 
 ---
