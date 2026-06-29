@@ -65,9 +65,10 @@ export function getDefaultCategoryCodeByName(name) {
 export function getCategoryDisplayName(category, t) {
   if (!category) return "-";
   const rawName = categoryName(category);
-  const code = defaultCategoryCode(category) || getDefaultCategoryCodeByName(rawName);
+  const codeFromName = getDefaultCategoryCodeByName(rawName);
+  const code = defaultCategoryCode(category) || codeFromName;
 
-  if (t && code && (isDefaultCategory(category) || defaultCategoryCode(category))) {
+  if (t && code && (isDefaultCategory(category) || defaultCategoryCode(category) || codeFromName)) {
     const translated = t(`defaultCategory_${code}`);
     if (translated && translated !== `defaultCategory_${code}`) {
       return translated;

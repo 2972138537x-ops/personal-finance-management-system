@@ -17,7 +17,7 @@ import { setAuthExpiredHandler, getResultData } from "@/api/request.js";
 import { getToken, setToken, clearAuth, getCurrentUser, setCurrentUser } from "@/auth/token.js";
 import { loadAppearance, saveAppearance, applyAppearance } from "@/utils/appearance.js";
 
-const lang = ref(localStorage.getItem("pf.lang") || "zh");
+const lang = ref(localStorage.getItem("pf.lang") || "ja");
 const t = createI18n(() => lang.value);
 const token = ref(getToken());
 const user = ref(getCurrentUser());
@@ -44,7 +44,14 @@ function localizeMessage(message) {
     "请输入用户名和密码": "usernamePasswordRequired",
     "登录成功，但后端没有返回 token": "loginSuccessNoToken",
     "登录成功": "loginSuccess",
+    "注册成功": "registerSuccess",
     "注册成功，请登录": "registerSuccess",
+    "注册失败": "registerFailed",
+    "用户名不能为空": "usernameRequired",
+    "密码不能为空": "passwordRequired",
+    "用户名已存在": "usernameExists",
+    "用户不存在": "userNotFound",
+    "密码错误": "passwordWrong",
     "密码修改成功": "changePasswordSuccess",
     "保存成功": "saveSuccess",
     "删除成功": "deleteSuccess"

@@ -733,3 +733,33 @@ Object.keys(defaultCategoryI18nPatchMessages).forEach((lang) => {
   };
 });
 
+const authToastPatchMessages = {
+  zh: {
+    registerFailed: "注册失败",
+    passwordRequired: "请输入密码",
+    usernameExists: "用户名已存在",
+    userNotFound: "用户不存在",
+    passwordWrong: "密码错误"
+  },
+  ja: {
+    registerFailed: "登録に失敗しました",
+    passwordRequired: "パスワードを入力してください",
+    usernameExists: "このユーザー名は既に存在します",
+    userNotFound: "ユーザーが存在しません",
+    passwordWrong: "パスワードが正しくありません"
+  },
+  en: {
+    registerFailed: "Registration failed",
+    passwordRequired: "Please enter a password.",
+    usernameExists: "This username already exists.",
+    userNotFound: "User does not exist.",
+    passwordWrong: "Password is incorrect."
+  }
+};
+
+Object.keys(authToastPatchMessages).forEach((lang) => {
+  messages[lang] = {
+    ...(messages[lang] || {}),
+    ...authToastPatchMessages[lang]
+  };
+});
