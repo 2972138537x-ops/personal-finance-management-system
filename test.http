@@ -1,682 +1,333 @@
-### 使用说明 / Notes
-### 1. 先运行“登录管理员”和“登录普通用户”接口。
-### 2. 从返回结果 data.token 里复制 token。
-### 3. 把 token 粘贴到下面的 adminToken / userToken。
-### 4. 再测试 /me 和 /admin/** 接口。
+### Personal Finance API manual tests
+### 個人財務管理システム API 手動テスト
+### 个人财务管理系统 API 手动测试
+
+### Usage / 使い方 / 使用方法
+### 1. Start Spring Boot.
+### 2. Run login requests and copy data.token.
+### 3. Paste tokens into @userToken / @adminToken.
+### 4. Run protected API tests.
+### 5. Test user passwords have been migrated to BCrypt. Plain input password is 123456.
 
 @baseUrl = http://localhost:8080
-@adminToken = paste_admin_token_here
 @userToken = paste_user_token_here
+@adminToken = paste_admin_token_here
+@categoryId = 1
+@recordId = 1
 
 
-### 01 注册用户 / Register user
-POST {{baseUrl}}/users
-Content-Type: application/json
+### =========================
+### Auth / 認証 / 认证
+### =========================
 
-{
-  "username": "spring01",
-  "password": "123456"
-}
-
-
-### 02 登录普通用户 alice，获取 USER token / Login as normal user
-POST  http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "alice",
-  "password": "abc123"
-}
-
-
-### 03 登录管理员 tom，获取 ADMIN token / Login as admin
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "tom",
-  "password": "123456"
-}
-
-
-### 04 不带 token 访问 /me，应该失败 / Access /me without token
-GET {{baseUrl}}/me
-
-
-### 05 使用错误 token 访问 /me，应该失败 / Access /me with invalid token
-GET {{baseUrl}}/me
-Authorization: invalid-token
-
-
-### 06 普通用户查看自己的信息 / USER access /me
-GET http://localhost:8080/me
-Authorization: c9409153-bf8b-4f10-be3c-2c3a73b687c9
-
-
-### 07 普通用户修改自己的密码 / USER change own password
-PUT {{baseUrl}}/me/password
-Authorization: {{userToken}}
-Content-Type: application/json
-
-{
-  "password": "abcdef"
-}
-
-
-### 08 使用新密码登录普通用户 / Login with new password
+### Login USER / 一般ユーザーログイン / 普通用户登录
 POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "username": "alice",
-  "password": "abcdef"
+  "username": "クマ",
+  "password": "123456"
 }
 
 
-### 09 把普通用户密码改回 abc123 / Change user password back
-### 如果刚刚运行了 08，请先把 08 返回的新 token 复制到 userToken。
+### Login ADMIN / 管理者ログイン / 管理员登录
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456"
+}
+
+
+### BCrypt check: wrong password should return Result(false, "密码错误", null)
+### BCrypt 確認：誤ったパスワードは業務エラーとして返る
+### BCrypt 验证：错误密码应返回业务错误
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "クマ",
+  "password": "111111"
+}
+
+
+### BusinessException check: unknown user should return Result(false, "用户不存在", null)
+### BusinessException 確認：存在しないユーザー
+### BusinessException 验证：不存在的用户
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "not_exists_user",
+  "password": "123456"
+}
+
+
+### Access /me without token should fail in interceptor
+### token なしで /me にアクセスすると失敗
+### 不带 token 访问 /me 应失败
+GET {{baseUrl}}/me
+
+
+### Access /me with invalid token should fail in interceptor
+### 無効 token で /me にアクセスすると失敗
+### 使用错误 token 访问 /me 应失败
+GET {{baseUrl}}/me
+Authorization: invalid-token
+
+
+### Get current user / 現在ユーザー取得 / 查看当前用户
+GET {{baseUrl}}/me
+Authorization: {{userToken}}
+
+
+### Logout / ログアウト / 退出登录
+POST {{baseUrl}}/logout
+Authorization: {{userToken}}
+
+
+### =========================
+### User / ユーザー / 用户
+### =========================
+
+### Register temporary user
+### 一時ユーザー登録
+### 注册临时用户
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "manual_test_user",
+  "password": "123456"
+}
+
+
+### Validation check: short password
+### バリデーション確認：短すぎるパスワード
+### 参数校验：密码太短
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "bad_user",
+  "password": "123"
+}
+
+
+### Admin get all users
+### 管理者：全ユーザー取得
+### 管理员查询全部用户
+GET {{baseUrl}}/admin/users
+Authorization: {{adminToken}}
+
+
+### USER access admin API should fail
+### 一般ユーザーで管理者 API にアクセスすると失敗
+### 普通用户访问管理员接口应失败
+GET {{baseUrl}}/admin/users
+Authorization: {{userToken}}
+
+
+### Admin reset temporary user password
+### 管理者：パスワードリセット
+### 管理员重置密码
+PUT {{baseUrl}}/admin/users/manual_test_user/password
+Authorization: {{adminToken}}
+Content-Type: application/json
+
+{
+  "newPassword": "123456"
+}
+
+
+### Admin delete temporary user
+### 管理者：ユーザー削除
+### 管理员删除临时用户
+DELETE {{baseUrl}}/admin/users/manual_test_user
+Authorization: {{adminToken}}
+
+
+### Change current user password
+### 現在ユーザーのパスワード変更
+### 修改当前用户密码
 PUT {{baseUrl}}/me/password
 Authorization: {{userToken}}
 Content-Type: application/json
 
 {
-  "password": "abc123"
+  "oldPassword": "123456",
+  "newPassword": "123456"
 }
 
 
-### 10 USER token 访问管理员接口，应该失败 / USER access admin API should fail
-GET {{baseUrl}}/admin/users
+### =========================
+### Category / カテゴリ / 分类
+### =========================
+
+### Get my categories
+### 自分のカテゴリ取得
+### 查询自己的分类
+GET {{baseUrl}}/transaction-categories
 Authorization: {{userToken}}
 
 
-### 11 管理员查询全部用户 / ADMIN get all users
-GET {{baseUrl}}/admin/users
-Authorization: {{adminToken}}
-
-
-### 12 管理员查询单个用户 / ADMIN get one user
-GET {{baseUrl}}/admin/users/alice
-Authorization: {{adminToken}}
-
-
-### 13 管理员重置用户密码 / ADMIN reset user password
-PUT {{baseUrl}}/admin/users/alice/password
-Authorization: {{adminToken}}
+### Add expense category
+### 支出カテゴリ追加
+### 新增支出分类
+POST {{baseUrl}}/transaction-categories
+Authorization: {{userToken}}
 Content-Type: application/json
 
 {
-  "password": "abcdef"
-}
-
-
-### 14 管理员删除用户 / ADMIN delete user
-DELETE {{baseUrl}}/admin/users/spring01
-Authorization: {{adminToken}}
-
-
-### 15 参数校验失败：用户名为空，密码太短 / Validation error
-POST {{baseUrl}}/users
-Content-Type: application/json
-
-{
-  "username": "",
-  "password": "123"
-}
-
-### 退出登录 / Logout
-POST http://localhost:8080/logout
-Authorization: c9409153-bf8b-4f10-be3c-2c3a73b687c9
-
-
-### 01 登录普通用户 alice，获取 USER token
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "alice",
-  "password": "abc123"
-}
-
-### 02 普通用户查看自己信息，测试 findByToken
-GET http://localhost:8080/me
-Authorization: daf83338-e8c1-4d83-a1c5-f2846e20c575
-
-### 03 登录管理员 tom，获取 ADMIN token
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "tom",
-  "password": "123456"
-}
-
-### 04 管理员查询全部用户，测试 findAll
-GET http://localhost:8080/admin/users
-Authorization: 3788f66d-f3d7-4b43-a9b9-64c4153a8f21
-
-### 05 管理员查询 alice，测试 findByUsername
-GET http://localhost:8080/admin/users/alice
-Authorization: 64224aea-bfe2-42f8-8bb1-8e62bf57ca5d
-
-### 06 普通用户修改自己的密码，测试 updatePassword
-PUT http://localhost:8080/me/password
-Authorization: ea640867-c6e3-47a1-832f-4197839201c5
-Content-Type: application/json
-
-{
-  "password": "abcdef"
-}
-
-### 07 用新密码登录 alice，确认密码已修改
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "alice",
-  "password": "abcdef"
-}
-
-### 08 把 alice 密码改回 abc123
-PUT http://localhost:8080/me/password
-Authorization: 89a8c9cc-4b9d-4bc7-8de6-9dc308e5675d
-Content-Type: application/json
-
-{
-  "password": "abc123"
-}
-
-### 09 注册临时用户，测试 insert
-POST http://localhost:8080/users
-Content-Type: application/json
-
-{
-  "username": "mybatis_test",
-  "password": "123456"
-}
-
-### 10 管理员删除临时用户，测试 deleteByUsername
-DELETE http://localhost:8080/admin/users/mybatis_test
-Authorization: 525f19d7-4bb4-4ce2-ac61-b5d38e0f0bb5
-
-### 11 普通用户退出登录，测试 clearToken
-POST http://localhost:8080/logout
-Authorization: 583c0c16-2cfc-4ce0-a689-610027ed934a
-
-### 12 退出后用旧 token 访问 /me，应该失败
-GET http://localhost:8080/me
-Authorization: 583c0c16-2cfc-4ce0-a689-610027ed934a
-
-
-### 新增支出分类 / Add expense category
-POST http://localhost:8080/transaction-categories
-Authorization: 744e4daa-ca3e-4acf-a5d0-abd4a2ce38a4
-Content-Type: application/json
-
-{
-  "name": "餐饮",
+  "name": "手動テスト支出",
   "type": "expense"
 }
 
-### 新增收入分类 / Add income category
-POST http://localhost:8080/transaction-categories
-Authorization: 744e4daa-ca3e-4acf-a5d0-abd4a2ce38a4
+
+### Add category with invalid type should return BusinessException result
+### 不正なカテゴリタイプは業務エラー
+### 分类类型错误应返回业务错误
+POST {{baseUrl}}/transaction-categories
+Authorization: {{userToken}}
 Content-Type: application/json
 
 {
-  "name": "工资",
-  "type": "income"
-}
-
-### 分类名为空，应该失败
-POST http://localhost:8080/transaction-categories
-Authorization: 744e4daa-ca3e-4acf-a5d0-abd4a2ce38a4
-Content-Type: application/json
-
-{
-  "name": "",
-  "type": "expense"
-}
-
-### 分类类型错误，应该失败
-POST http://localhost:8080/transaction-categories
-Authorization: 744e4daa-ca3e-4acf-a5d0-abd4a2ce38a4
-Content-Type: application/json
-
-{
-  "name": "乱写",
+  "name": "invalid",
   "type": "abc"
 }
 
-###
-GET http://localhost:8080/transaction-categories
-Authorization: 47843658-2053-49c5-9c8b-9a1b52a09b12
 
-### 修改自己的分类
-PUT http://localhost:8080/transaction-categories/2
-Authorization: cee2e088-d39f-4e5e-a439-a928ed6ba1cc
-Content-Type: application/json
-
-{
-  "name": "外食",
-  "type": "expense"
-}
-
-### 删除自己的分类
-DELETE http://localhost:8080/transaction-categories/1
-Authorization: 3f2b1fe0-962e-4fd3-a7c0-0e6bdc57cf03
+### Delete category
+### カテゴリ削除
+### 删除分类
+DELETE {{baseUrl}}/transaction-categories/{{categoryId}}
+Authorization: {{userToken}}
 
 
 ### =========================
-### 收支记录模块 / Transaction records
-### 使用前：
-### 1. 先登录普通用户，复制 token 到文件顶部的 @userToken。
-### 2. 先创建分类，再查询分类，确认 categoryId。
-### 3. 下面的 categoryId 要换成当前用户自己的分类 id。
+### Record / 収支記録 / 收支记录
 ### =========================
 
-
-### 01 新增支出记录 / Add expense record
-POST http://localhost:8080/transaction-records
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+### Add expense record
+### 支出記録追加
+### 新增支出记录
+POST {{baseUrl}}/transaction-records
+Authorization: {{userToken}}
 Content-Type: application/json
 
 {
-  "categoryId": 2,
+  "categoryId": {{categoryId}},
   "type": "expense",
   "amount": 1200.50,
-  "remark": "午饭",
-  "recordDate": "2026-06-23"
+  "remark": "manual test",
+  "recordDate": "2026-06-30"
 }
 
 
-### 02 新增收入记录 / Add income record
+### Get records page
+### 収支記録ページング取得
+### 分页查询收支记录
+GET {{baseUrl}}/transaction-records/page?page=1&size=10
+Authorization: {{userToken}}
+
+
+### Search records
+### 複合条件検索
+### 条件筛选分页查询
+GET {{baseUrl}}/transaction-records/search?type=expense&page=1&size=10
+Authorization: {{userToken}}
+
+
+### Invalid page should return BusinessException result
+### 不正な page は業務エラー
+### page 错误应返回业务错误
+GET {{baseUrl}}/transaction-records/page?page=0&size=10
+Authorization: {{userToken}}
+
+
+### Amount zero should return BusinessException result
+### 金額 0 は業務エラー
+### 金额为 0 应返回业务错误
 POST {{baseUrl}}/transaction-records
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
+Authorization: {{userToken}}
 Content-Type: application/json
 
 {
-  "categoryId": 3,
-  "type": "income",
-  "amount": 200000,
-  "remark": "工资",
-  "recordDate": "2026-06-23"
-}
-
-
-### 03 查询自己的全部收支记录 / Get my records
-GET {{baseUrl}}/transaction-records
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-
-
-### 04 按类型查询支出记录 / Get my expense records
-GET {{baseUrl}}/transaction-records/type/expense
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-
-
-### 05 按类型查询收入记录 / Get my income records
-GET {{baseUrl}}/transaction-records/type/income
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-
-
-### 06 按日期范围查询记录 / Get my records by date range
-GET {{baseUrl}}/transaction-records/range?startRecordDate=2026-06-01&endOfRecordDate=2026-06-30
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-
-
-### 07 修改自己的收支记录 / Update my record
-### 把路径里的 1 换成自己的 record id。
-PUT {{baseUrl}}/transaction-records/1
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-Content-Type: application/json
-
-{
-  "categoryId": 2,
-  "type": "expense",
-  "amount": 1500,
-  "remark": "晚饭",
-  "recordDate": "2026-06-23"
-}
-
-
-### 08 删除自己的收支记录 / Delete my record
-### 把路径里的 1 换成自己的 record id。
-DELETE {{baseUrl}}/transaction-records/1
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-
-
-### 09 不带 token 新增记录，应该失败 / Add record without token should fail
-POST {{baseUrl}}/transaction-records
-Content-Type: application/json
-
-{
-  "categoryId": 2,
-  "type": "expense",
-  "amount": 1200,
-  "remark": "没有token",
-  "recordDate": "2026-06-23"
-}
-
-
-### 10 分类 id 不存在，应该失败 / Category id not found should fail
-POST {{baseUrl}}/transaction-records
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-Content-Type: application/json
-
-{
-  "categoryId": 9999,
-  "type": "expense",
-  "amount": 1200,
-  "remark": "不存在的分类",
-  "recordDate": "2026-06-23"
-}
-
-
-### 11 类型和分类类型不一致，应该失败 / Record type and category type mismatch should fail
-### 例如 categoryId 是支出分类，但 type 写 income。
-POST {{baseUrl}}/transaction-records
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-Content-Type: application/json
-
-{
-  "categoryId": 2,
-  "type": "income",
-  "amount": 1200,
-  "remark": "类型不一致",
-  "recordDate": "2026-06-23"
-}
-
-
-### 12 金额为 0，应该失败 / Amount zero should fail
-POST {{baseUrl}}/transaction-records
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-Content-Type: application/json
-
-{
-  "categoryId": 2,
+  "categoryId": {{categoryId}},
   "type": "expense",
   "amount": 0,
-  "remark": "金额为0",
-  "recordDate": "2026-06-23"
+  "remark": "amount zero",
+  "recordDate": "2026-06-30"
 }
 
 
-### 13 日期范围错误，应该失败 / Invalid date range should fail
-GET {{baseUrl}}/transaction-records/range?startRecordDate=2026-06-30&endOfRecordDate=2026-06-01
-Authorization: f1b3d327-5914-498d-b654-90986bcf817a
-
-
-### =========================
-### Alice 空数据完整流程测试 / Alice full flow
-### 使用方法：
-### 1. 先运行 A01，复制返回的 data.token。
-### 2. 粘贴到文件顶部 @userToken = 后面。
-### 3. 按 A02 -> A03 -> A04 的顺序创建并查询分类。
-### 4. 把 A06 / A07 / A12 / A15 里的 categoryId 换成 A04 返回的真实分类 id。
-### 5. A08 查询记录后，把 A12 / A13 路径里的记录 id 换成真实记录 id。
-### =========================
-
-
-### A01 登录 alice，获取 token / Login alice and get token
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "alice",
-  "password": "abc123"
-}
-
-
-### A02 新增 alice 的支出分类：餐饮 / Add alice expense category
-POST http://localhost:8080/transaction-categories
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-Content-Type: application/json
-
-{
-  "name": "餐饮",
-  "type": "expense"
-}
-
-
-### A03 新增 alice 的收入分类：工资 / Add alice income category
-POST http://localhost:8080/transaction-categories
+### Update record
+### 記録更新
+### 修改记录
+PUT {{baseUrl}}/transaction-records/{{recordId}}
 Authorization: {{userToken}}
 Content-Type: application/json
 
 {
-  "name": "工资",
-  "type": "income"
-}
-
-
-### A04 查询 alice 自己的分类，确认分类 id / Get alice categories and check ids
-GET http://localhost:8080/transaction-categories
-Authorization: 2955b25f-64e2-4e7c-9bf9-a8183dee2e6f
-
-
-### A05 分类类型错误，应该失败 / Add category with invalid type should fail
-POST http://localhost:8080/transaction-categories
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-Content-Type: application/json
-
-{
-  "name": "乱写分类",
-  "type": "abc"
-}
-
-
-### A06 新增 alice 的支出记录 / Add alice expense record
-### 把 categoryId 换成 A04 返回的“餐饮”分类 id。
-POST http://localhost:8080/transaction-records
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-Content-Type: application/json
-
-{
-  "categoryId": 3,
-  "type": "expense",
-  "amount": 1200.50,
-  "remark": "午饭",
-  "recordDate": "2026-06-23"
-}
-
-
-### A07 新增 alice 的收入记录 / Add alice income record
-### 把 categoryId 换成 A04 返回的“工资”分类 id。
-POST http://localhost:8080/transaction-records
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-Content-Type: application/json
-
-{
-  "categoryId": 3,
-  "type": "income",
-  "amount": 200000,
-  "remark": "工资",
-  "recordDate": "2026-06-23"
-}
-
-
-### A08 查询 alice 自己的全部收支记录 / Get alice records
-GET http://localhost:8080/transaction-records
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-
-
-### A09 按类型查询 alice 的支出记录 / Get alice expense records
-GET http://localhost:8080/transaction-records/type/expense
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-
-
-### A10 按类型查询 alice 的收入记录 / Get alice income records
-GET http://localhost:8080/transaction-records/type/income
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-
-
-### A11 按日期范围查询 alice 的记录 / Get alice records by date range
-GET http://localhost:8080/transaction-records/range?startRecordDate=2026-06-01&endOfRecordDate=2026-06-30
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-
-
-### A12 修改 alice 自己的收支记录 / Update alice record
-### 把路径里的 1 换成 A08 返回的真实记录 id。
-### categoryId 也要换成 A04 返回的、属于 alice 的分类 id。
-PUT http://localhost:8080/transaction-records/1
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-Content-Type: application/json
-
-{
-  "categoryId": 3,
+  "categoryId": {{categoryId}},
   "type": "expense",
   "amount": 1500,
-  "remark": "晚饭",
-  "recordDate": "2026-06-23"
+  "remark": "updated manual test",
+  "recordDate": "2026-06-30"
 }
 
 
-### A13 删除 alice 自己的收支记录 / Delete alice record
-### 把路径里的 1 换成 A08 返回的真实记录 id。
-DELETE http://localhost:8080/transaction-records/2
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+### Delete record
+### 記録削除
+### 删除记录
+DELETE {{baseUrl}}/transaction-records/{{recordId}}
+Authorization: {{userToken}}
 
 
-### A14 使用不存在的分类 id 新增记录，应该失败 / Add record with invalid category id should fail
-POST http://localhost:8080/transaction-records
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
+### =========================
+### Stats / 統計 / 统计
+### =========================
+
+### Monthly stats
+### 月次統計
+### 月度统计
+GET {{baseUrl}}/transaction-stats/month?year=2026&month=6
+Authorization: {{userToken}}
+
+
+### Expense category stats
+### 支出カテゴリ別集計
+### 支出分类统计
+GET {{baseUrl}}/transaction-stats/category/expense?year=2026&month=6
+Authorization: {{userToken}}
+
+
+### Expense type total
+### 支出タイプ合計
+### 支出类型总额
+GET {{baseUrl}}/transaction-stats/type-total?type=expense&year=2026&month=6
+Authorization: {{userToken}}
+
+
+### Invalid month should return BusinessException result
+### 不正な月は業務エラー
+### 月份错误应返回业务错误
+GET {{baseUrl}}/transaction-stats/month?year=2026&month=13
+Authorization: {{userToken}}
+
+
+### =========================
+### AI / AI アシスタント / AI 助手
+### =========================
+
+### AI chat
+### AI 相談
+### AI 对话
+POST {{baseUrl}}/ai/chat
+Authorization: {{userToken}}
 Content-Type: application/json
 
 {
-  "categoryId": 9999,
-  "type": "expense",
-  "amount": 1000,
-  "remark": "不存在的分类",
-  "recordDate": "2026-06-23"
-}
-
-
-### A15 类型和分类类型不一致，应该失败 / Type mismatch should fail
-### 例如 categoryId 是“餐饮 expense”，但 type 写成 income。
-POST http://localhost:8080/transaction-records
-Authorization:650e7e62-fe54-4785-841a-0587a85263cf
-Content-Type: application/json
-
-{
-  "categoryId": 3,
-  "type": "income",
-  "amount": 1000,
-  "remark": "类型不一致",
-  "recordDate": "2026-06-23"
-}
-
-
-### A16 日期范围错误，应该失败 / Invalid date range should fail
-GET http://localhost:8080/transaction-records/range?startRecordDate=2026-06-30&endOfRecordDate=2026-06-01
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-
-###
-GET http://localhost:8080/transaction-records
-Authorization: 650e7e62-fe54-4785-841a-0587a85263cf
-
-###
-POST http://localhost:8080/transaction-categories
-Authorization: 8e7a36d3-9bf2-4f6b-8028-bd59fbca8c5f
-Content-Type: application/json
-
-{
-  "name": "交通",
-  "type": "expense"
-}
-
-###
-POST http://localhost:8080/transaction-records
-Authorization: 8e7a36d3-9bf2-4f6b-8028-bd59fbca8c5f
-Content-Type: application/json
-
-{
-  "categoryId": 4,
-  "type": "expense",
-  "amount": 300,
-  "remark": "电车",
-  "recordDate": "2026-06-23"
-}
-###
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-"username": "alice",
-"password": "abc123"
-}
-
-### 按月份统计收入、支出、结余
-GET http://localhost:8080/transaction-stats/month?year=2026&month=6
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-
-### 按支出分类统计 / Expense stats by category
-GET http://localhost:8080/transaction-stats/category/expense?year=2026&month=6
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-### 按收入分类统计 / Income stats by category
-GET http://localhost:8080/transaction-stats/category/income?year=2026&month=6
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-### 查询 alice 自己的全部收支记录
-GET http://localhost:8080/transaction-records
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-### 查询 alice 的支出记录
-GET http://localhost:8080/transaction-records/type/expense
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-### 查询 alice 的收入记录
-GET http://localhost:8080/transaction-records/type/income
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-### 查询 alice 2026-06-01 到 2026-06-30 的记录
-GET http://localhost:8080/transaction-records/range?startRecordDate=2026-06-01&endOfRecordDate=2026-06-30
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-### 查询 alice 2026-06-23 到 2026-06-24 的记录
-GET http://localhost:8080/transaction-records/range?startRecordDate=2026-06-23&endOfRecordDate=2026-06-24
-Authorization:86411b27-f304-4d4c-9af2-275379b2e649
-
-### 按支出分类统计
-GET http://localhost:8080/transaction-stats/category/expense?year=2026&month=6
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-### 按收入分类统计
-GET http://localhost:8080/transaction-stats/category/income?year=2026&month=6
-Authorization: 86411b27-f304-4d4c-9af2-275379b2e649
-
-2955b25f-64e2-4e7c-9bf9-a8183dee2e6f
-### 3. 按分类 id 查询 alice 自己的记录
-GET http://localhost:8080/transaction-records/category/1
-Authorization: 2955b25f-64e2-4e7c-9bf9-a8183dee2e6f
-
-###
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  "username": "alice",
-  "password": "abc123"
-}
-
-
-### 查询某月支出总额
-GET http://localhost:8080/transaction-stats/type-total?type=expense&year=2026&month=6
-Authorization: 9f636f94-4fbf-4447-84a9-0d3507415e57
-
-### 查询某月收入总额
-GET http://localhost:8080/transaction-stats/type-total?type=income&year=2026&month=6
-Authorization: 9f636f94-4fbf-4447-84a9-0d3507415e57
-
-###
-GET http://localhost:8080/transaction-records/page?page=1&size=10
-Authorization: f021c740-0521-4fd0-9ab4-ac7270f1057f
-
-###
-POST http://localhost:8080/ai/chat
-Content-Type: application/json
-Authorization: 43f60163-e835-4010-bf15-575ccdc7ba84
-
-{
-  "message": "请给我一些控制生活支出的建议"
+  "message": "生活費を節約するためのアドバイスをください"
 }

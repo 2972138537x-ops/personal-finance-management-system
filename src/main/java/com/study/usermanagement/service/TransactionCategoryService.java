@@ -3,6 +3,7 @@ package com.study.usermanagement.service;
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.entity.TransactionCategory;
 import com.study.usermanagement.entity.TransactionRecord;
+import com.study.usermanagement.exception.BusinessException;
 import com.study.usermanagement.mapper.TransactionCategoryMapper;
 import com.study.usermanagement.mapper.TransactionRecordMapper;
 import com.study.usermanagement.vo.TransactionCategoryVO;
@@ -58,27 +59,27 @@ public class TransactionCategoryService {
 
     public Result addCategory(Integer userId, TransactionCategory category) {
         if (category == null) {
-            return new Result(false, "请求体不能为空", null);
+            throw new BusinessException("请求体不能为空");
         }
         String name = category.getName();
         String type = category.getType();
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (name == null || name.isEmpty()) {
-            return new Result(false, "分类名不能为空", null);
+            throw new BusinessException("分类名不能为空");
         }
         if (type == null || type.isEmpty()) {
-            return new Result(false, "分类类型不能为空", null);
+            throw new BusinessException("分类类型不能为空");
         }
         if (!"income".equals(type) && !"expense".equals(type)) {
-            return new Result(false, "类型必须是 income 或者 expense", null);
+            throw new BusinessException("类型必须是 income 或者 expense");
         }
 
         TransactionCategory oldCategory =
                 transactionCategoryMapper.findByUserIdAndNameAndType(userId, name, type);
         if (oldCategory != null) {
-            return new Result(false, "该分类已存在", null);
+            throw new BusinessException("该分类已存在");
         }
 
         category.setUserId(userId);
@@ -91,12 +92,12 @@ public class TransactionCategoryService {
             return new Result(true, "新增分类成功",
                     new TransactionCategoryVO(category.getId(), category.getName(), category.getType(), category.getCode(), category.getIsDefault()));
         }
-        return new Result(false, "新增分类失败", null);
+        throw new BusinessException("新增分类失败");
     }
 
     public Result findByUserId(Integer userId) {
         if (userId == null) {
-            return new Result(false, "登录状态异常，请重新登录", null);
+            throw new BusinessException("登录状态异常，请重新登录");
         }
         List<TransactionCategory> categoryList = transactionCategoryMapper.findByUserId(userId);
         List<TransactionCategoryVO> categoryVOList = new ArrayList<>();
@@ -114,30 +115,30 @@ public class TransactionCategoryService {
 
     public Result updateByIdAndUserId(Integer id, Integer userId, TransactionCategory category) {
         if (category == null) {
-            return new Result(false, "请求体不能为空", null);
+            throw new BusinessException("请求体不能为空");
         }
         String name = category.getName();
         String type = category.getType();
         if (id == null) {
-            return new Result(false, "分类id不能为空", null);
+            throw new BusinessException("分类id不能为空");
         }
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (name == null || name.isEmpty()) {
-            return new Result(false, "分类名不能为空", null);
+            throw new BusinessException("分类名不能为空");
         }
         if (type == null || type.isEmpty()) {
-            return new Result(false, "分类类型不能为空", null);
+            throw new BusinessException("分类类型不能为空");
         }
         if (!"income".equals(type) && !"expense".equals(type)) {
-            return new Result(false, "类型必须是 income 或者 expense", null);
+            throw new BusinessException("类型必须是 income 或者 expense");
         }
 
         TransactionCategory oldCategory =
                 transactionCategoryMapper.findByUserIdAndNameAndType(userId, name, type);
         if (oldCategory != null && !oldCategory.getId().equals(id)) {
-            return new Result(false, "该分类已存在", null);
+            throw new BusinessException("该分类已存在");
         }
 
         // 用户手动编辑后，默认分类也转为自定义分类，避免以后切换语言覆盖用户自己的命名
@@ -149,33 +150,33 @@ public class TransactionCategoryService {
             return new Result(true, "修改成功",
                     new TransactionCategoryVO(id, category.getName(), category.getType(), category.getCode(), category.getIsDefault()));
         }
-        return new Result(false, "修改失败", null);
+        throw new BusinessException("修改失败");
     }
 
     public Result deleteByIdAndUserId(Integer id, Integer userId) {
         if (id == null) {
-            return new Result(false, "分类id不能为空", null);
+            throw new BusinessException("分类id不能为空");
         }
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
 
         TransactionCategory category = transactionCategoryMapper.findByIdAndUserId(id, userId);
         if (category == null) {
-            return new Result(false, "该分类不存在 或 该分类不属于当前用户", null);
+            throw new BusinessException("该分类不存在 或 该分类不属于当前用户");
         }
 
         List<TransactionRecord> records =
                 transactionRecordMapper.findByUserIdAndCategoryId(userId, id);
         if (records != null && !records.isEmpty()) {
-            return new Result(false, "该分类下已有收支记录，不能删除", null);
+            throw new BusinessException("该分类下已有收支记录，不能删除");
         }
 
         int rows = transactionCategoryMapper.deleteByIdAndUserId(id, userId);
         if (rows > 0) {
             return new Result(true, "删除成功", id);
         }
-        return new Result(false, "删除失败", null);
+        throw new BusinessException("删除失败");
     }
 
     private static class DefaultCategory {

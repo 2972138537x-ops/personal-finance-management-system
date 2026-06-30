@@ -51,11 +51,18 @@ public class GlobalExceptionHandler {
         return new Result(false, "请求体 JSON 格式错误", null);
     }
 
-    // 处理业务运行时异常
-    // 業務処理中の実行時例外を処理する
+    // Service 抛出 BusinessException 后，由这里统一转换成 Result 返回给前端
+    // BusinessException が発生した場合は、Result 形式でフロントエンドに返す
+    @ExceptionHandler(BusinessException.class)
+    public Result handleBusinessException(BusinessException e) {
+        return new Result(false, e.getMessage(), null);
+    }
+
+    // 处理未预期的运行时异常，避免把系统错误细节直接返回给前端
+    // 想定外の実行時例外を処理し、詳細をフロントへ直接返さない
     @ExceptionHandler(RuntimeException.class)
     public Result handleRuntimeException(RuntimeException e) {
-        return new Result(false, e.getMessage(), null);
+        return new Result(false, "服务器内部错误", null);
     }
 
     // 兜底异常处理
@@ -64,6 +71,7 @@ public class GlobalExceptionHandler {
     public Result handleException(Exception e) {
         return new Result(false, "服务器内部错误", null);
     }
+
 
 
 }

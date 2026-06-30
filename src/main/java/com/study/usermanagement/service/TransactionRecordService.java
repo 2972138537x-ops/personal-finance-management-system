@@ -3,6 +3,7 @@ package com.study.usermanagement.service;
 import com.study.usermanagement.common.Result;
 import com.study.usermanagement.entity.TransactionCategory;
 import com.study.usermanagement.entity.TransactionRecord;
+import com.study.usermanagement.exception.BusinessException;
 import com.study.usermanagement.mapper.TransactionCategoryMapper;
 import com.study.usermanagement.mapper.TransactionRecordMapper;
 import com.study.usermanagement.vo.PageVO;
@@ -30,38 +31,38 @@ public class TransactionRecordService {
     public Result addRecord(Integer userId,
                             TransactionRecord record) {
         if (record == null) {
-            return new Result(false, "请求体不能为空", null);
+            throw new BusinessException("请求体不能为空");
         }
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         Integer categoryId = record.getCategoryId();
         if (categoryId == null) {
-            return new Result(false, "分类id不能为空", null);
+            throw new BusinessException("分类id不能为空");
         }
         TransactionCategory category = findByIdAndUserId(categoryId, userId);
         if (category == null) {
-            return new Result(false, "该分类id不存在 或 该分类id不属于该用户", null);
+            throw new BusinessException("该分类id不存在 或 该分类id不属于该用户");
         }
         String type = record.getType();
         BigDecimal amount = record.getAmount();
         LocalDate recordDate = record.getRecordDate();
         if (type == null || type.isEmpty()) {
-            return new Result(false, "类型不能为空", null);
+            throw new BusinessException("类型不能为空");
         }
         if (!"income".equals(type) && !"expense".equals(type)) {
-            return new Result(false, "类型必须是 income 或者 expense", null);
+            throw new BusinessException("类型必须是 income 或者 expense");
         }
         if (!type.equals(category.getType())) {
-            return new Result(false, "记录类型必须和分类类型一致", null);
+            throw new BusinessException("记录类型必须和分类类型一致");
         }
         // 金额必须是正数，避免保存 0 或负数的收支记录
         // 金額は正数のみ許可し、0 やマイナスの収支記録を保存しない
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            return new Result(false, "金额不能为空 且 必须大于0", null);
+            throw new BusinessException("金额不能为空 且 必须大于0");
         }
         if (recordDate == null) {
-            return new Result(false, "日期不能为空", null);
+            throw new BusinessException("日期不能为空");
         }
         record.setUserId(userId);
         int rows = transactionRecordMapper.insert(record);
@@ -69,14 +70,14 @@ public class TransactionRecordService {
             return new Result(true, "新增收支记录成功",
                     new TransactionRecordVO(record.getId(), category.getName(), record.getType(), record.getAmount(), record.getRemark(), record.getRecordDate()));
         }
-        return new Result(false, "新增收支记录失败", null);
+        throw new BusinessException("新增收支记录失败");
     }
 
     // 查询当前登录用户自己的全部收支记录，并转换成 VO 返回
     // ログイン中ユーザー本人の全収支記録を取得し、VO に変換して返す
     public Result findByUserId(Integer userId) {
         if (userId == null) {
-            return new Result(false, "登录状态异常，请重新登录", null);
+            throw new BusinessException("登录状态异常，请重新登录");
         }
         List<TransactionRecord> records = transactionRecordMapper.findByUserId(userId);
         List<TransactionRecordVO> recordsVO = new ArrayList<>();
@@ -93,47 +94,47 @@ public class TransactionRecordService {
                                       Integer userId,
                                       TransactionRecord record) {
         if (record == null) {
-            return new Result(false, "请求体不能为空", null);
+            throw new BusinessException("请求体不能为空");
         }
         String type = record.getType();
         BigDecimal amount = record.getAmount();
         LocalDate recordDate = record.getRecordDate();
         if (id == null) {
-            return new Result(false, "收支记录id不能为空", null);
+            throw new BusinessException("收支记录id不能为空");
         }
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         Integer categoryId = record.getCategoryId();
         if (categoryId == null) {
-            return new Result(false, "分类id不能为空", null);
+            throw new BusinessException("分类id不能为空");
         }
         TransactionCategory category = findByIdAndUserId(categoryId, userId);
         if (category == null) {
-            return new Result(false, "该分类id不存在 或 该分类id不属于该用户", null);
+            throw new BusinessException("该分类id不存在 或 该分类id不属于该用户");
         }
         if (type == null || type.isEmpty()) {
-            return new Result(false, "分类类型不能为空", null);
+            throw new BusinessException("分类类型不能为空");
         }
         if (!"income".equals(type) && !"expense".equals(type)) {
-            return new Result(false, "类型必须是 income 或者 expense", null);
+            throw new BusinessException("类型必须是 income 或者 expense");
         }
         if (!type.equals(category.getType())) {
-            return new Result(false, "记录类型必须和分类类型一致", null);
+            throw new BusinessException("记录类型必须和分类类型一致");
         }
         // 修改记录时同样要校验金额，防止把已有记录改成非法金额
         // 記録更新時も金額をチェックし、既存記録が不正な金額にならないようにする
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            return new Result(false, "金额不能为空 且 必须大于0", null);
+            throw new BusinessException("金额不能为空 且 必须大于0");
         }
         if (recordDate == null) {
-            return new Result(false, "日期不能为空", null);
+            throw new BusinessException("日期不能为空");
         }
         int rows = transactionRecordMapper.updateByIdAndUserId(id, userId, record);
         if (rows > 0) {
             return new Result(true, "修改收支记录成功", new TransactionRecordVO(id, category.getName(), record.getType(), record.getAmount(), record.getRemark(), record.getRecordDate()));
         }
-        return new Result(false, "修改收支记录失败", null);
+        throw new BusinessException("修改收支记录失败");
     }
 
     // 删除当前登录用户自己的收支记录：用记录 id 和 userId 双重限制
@@ -141,16 +142,16 @@ public class TransactionRecordService {
     public Result deleteByIdAndUserId(Integer id,
                                       Integer userId) {
         if (id == null) {
-            return new Result(false, "收支记录id不能为空", null);
+            throw new BusinessException("收支记录id不能为空");
         }
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         int rows = transactionRecordMapper.deleteByIdAndUserId(id, userId);
         if (rows > 0) {
             return new Result(true, "删除收支记录成功", id);
         }
-        return new Result(false, "删除收支记录失败", null);
+        throw new BusinessException("删除收支记录失败");
     }
 
     // 按类型查询自己的收支记录：type 只能是 income 或 expense
@@ -158,13 +159,13 @@ public class TransactionRecordService {
     public Result findByUserIdAndType(Integer userId,
                                       String type) {
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (type == null || type.isEmpty()) {
-            return new Result(false, "分类类型不能为空", null);
+            throw new BusinessException("分类类型不能为空");
         }
         if (!"income".equals(type) && !"expense".equals(type)) {
-            return new Result(false, "类型必须是 income 或者 expense", null);
+            throw new BusinessException("类型必须是 income 或者 expense");
         }
         List<TransactionRecord> records = transactionRecordMapper.findByUserIdAndType(userId, type);
         List<TransactionRecordVO> recordsVO = new ArrayList<>();
@@ -181,13 +182,13 @@ public class TransactionRecordService {
                                            LocalDate startRecordDate,
                                            LocalDate endOfRecordDate) {
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if ((startRecordDate == null) || (endOfRecordDate == null)) {
-            return new Result(false, "日期不能为空", null);
+            throw new BusinessException("日期不能为空");
         }
         if (startRecordDate.isAfter(endOfRecordDate)) {
-            return new Result(false, "开始日期不能晚于结束日期", null);
+            throw new BusinessException("开始日期不能晚于结束日期");
         }
         List<TransactionRecord> records = transactionRecordMapper.findByUserIdAndDateRange(userId, startRecordDate, endOfRecordDate);
         List<TransactionRecordVO> recordsVO = new ArrayList<>();
@@ -210,14 +211,14 @@ public class TransactionRecordService {
     public Result findByUserIdAndCategoryId(Integer userId,
                                             Integer categoryId) {
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (categoryId == null) {
-            return new Result(false, "分类id不能为空", null);
+            throw new BusinessException("分类id不能为空");
         }
         TransactionCategory category = findByIdAndUserId(categoryId, userId);
         if (category == null) {
-            return new Result(false, "该分类id不存在 或 该分类id不属于该用户", null);
+            throw new BusinessException("该分类id不存在 或 该分类id不属于该用户");
         }
         List<TransactionRecord> records = transactionRecordMapper.findByUserIdAndCategoryId(userId, categoryId);
         List<TransactionRecordVO> recordsVO = new ArrayList<>();
@@ -233,19 +234,19 @@ public class TransactionRecordService {
                                    Integer page,
                                    Integer size) {
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (page == null) {
-            return new Result(false, "page不能为空", null);
+            throw new BusinessException("page不能为空");
         }
         if (page <= 0) {
-            return new Result(false, "页数必须大于0", null);
+            throw new BusinessException("页数必须大于0");
         }
         if (size == null) {
-            return new Result(false, "size不能为空", null);
+            throw new BusinessException("size不能为空");
         }
         if (size <= 0) {
-            return new Result(false, "查看的每页的记录数量必须大于0", null);
+            throw new BusinessException("查看的每页的记录数量必须大于0");
         }
         // MySQL 分页偏移量：第 1 页从 0 开始，第 2 页从 size 开始
         // MySQL のページング開始位置：1ページ目は0、2ページ目は size から始まる
@@ -272,32 +273,32 @@ public class TransactionRecordService {
                                      Integer page,
                                      Integer size) {
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (page == null) {
-            return new Result(false, "page不能为空", null);
+            throw new BusinessException("page不能为空");
         }
         if (page <= 0) {
-            return new Result(false, "页数必须大于0", null);
+            throw new BusinessException("页数必须大于0");
         }
         if (size == null) {
-            return new Result(false, "size不能为空", null);
+            throw new BusinessException("size不能为空");
         }
         if (size <= 0) {
-            return new Result(false, "查看的每页的记录数量必须大于0", null);
+            throw new BusinessException("查看的每页的记录数量必须大于0");
         }
         if (type != null && !type.isEmpty()) {
             if (!"income".equals(type) && !"expense".equals(type)) {
-                return new Result(false, "类型必须是 income 或者 expense", null);
+                throw new BusinessException("类型必须是 income 或者 expense");
             }
         }
         if ((startRecordDate == null && endOfRecordDate != null)
                 || (startRecordDate != null && endOfRecordDate == null)) {
-            return new Result(false, "开始日期和结束日期必须同时填写", null);
+            throw new BusinessException("开始日期和结束日期必须同时填写");
         }
         if (startRecordDate != null && endOfRecordDate != null) {
             if (startRecordDate.isAfter(endOfRecordDate)) {
-                return new Result(false, "开始日期不能晚于结束日期", null);
+                throw new BusinessException("开始日期不能晚于结束日期");
             }
         }
         if (categoryId != null) {
@@ -305,11 +306,11 @@ public class TransactionRecordService {
             // カテゴリ条件は現在ユーザー本人のカテゴリか確認し、他人のデータを検索させない
             TransactionCategory category = findByIdAndUserId(categoryId, userId);
             if (category == null) {
-                return new Result(false, "该分类id不存在 或 该分类id不属于该用户", null);
+                throw new BusinessException("该分类id不存在 或 该分类id不属于该用户");
             }
 
             if (type != null && !type.isEmpty() && !type.equals(category.getType())) {
-                return new Result(false, "筛选类型必须和分类类型一致", null);
+                throw new BusinessException("筛选类型必须和分类类型一致");
             }
         }
         // 搜索接口也使用相同分页公式

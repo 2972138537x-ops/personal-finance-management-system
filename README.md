@@ -75,6 +75,8 @@
 | ビルドツール：Maven | 构建工具：Maven |
 | 入力チェック：Service 層の業務チェック / Spring Validation | 参数校验：Service 层业务校验 / Spring Validation |
 | ログイン認証：Token, Spring MVC Interceptor | 登录认证：Token, Spring MVC Interceptor |
+| パスワード保護：Spring Security Crypto, BCrypt | 密码保护：Spring Security Crypto, BCrypt |
+| 例外処理：BusinessException, GlobalExceptionHandler | 异常处理：BusinessException, GlobalExceptionHandler |
 | API ドキュメント：Swagger / OpenAPI | 接口文档：Swagger / OpenAPI |
 | AI API：OpenRouter AI API, RestTemplate | AI API：OpenRouter AI API, RestTemplate |
 | フロントエンド：Vue 3.5.x, Vite 6.x, HTML, CSS, JavaScript | 前端：Vue 3.5.x, Vite 6.x, HTML, CSS, JavaScript |
@@ -89,6 +91,7 @@
 | JDK：Java 17 | JDK：Java 17 |
 | Spring Boot：3.5.15 | Spring Boot：3.5.15 |
 | MyBatis Spring Boot Starter：3.0.5 | MyBatis Spring Boot Starter：3.0.5 |
+| Spring Security Crypto：BCrypt パスワードハッシュ化 | Spring Security Crypto：BCrypt 密码哈希 |
 | Springdoc OpenAPI：2.8.9 | Springdoc OpenAPI：2.8.9 |
 | データベース：MySQL 8.x（開発環境：8.0.34） | 数据库：MySQL 8.x（开发环境：8.0.34） |
 | フロントエンド：Vue 3.5.x + Vite 6.x | 前端：Vue 3.5.x + Vite 6.x |
@@ -116,6 +119,7 @@
 | Token によるログイン認証 | Token 登录认证 |
 | ログイン中ユーザー情報の確認 | 个人信息查看 |
 | パスワード変更 | 修改密码 |
+| BCrypt によるパスワードハッシュ化保存 | 使用 BCrypt 哈希保存密码 |
 | 管理者によるユーザー管理 | 管理员用户管理 |
 | 収支カテゴリ管理 | 收支分类管理 |
 | 新規ユーザーのデフォルトカテゴリ自動作成 | 新用户默认分类初始化 |
@@ -203,7 +207,9 @@ frontend
 | 日本語 | 中文 |
 |---|---|
 | `POST /users` で一般ユーザーを登録 | `POST /users` 注册普通用户 |
+| 登録時にパスワードを BCrypt でハッシュ化して保存 | 注册时使用 BCrypt 对密码进行哈希后保存 |
 | `POST /login` 成功時に Token を生成 | `POST /login` 登录成功后生成 Token |
+| ログイン時は BCrypt の `matches` でパスワードを照合 | 登录时使用 BCrypt 的 `matches` 校验密码 |
 | Token は DB の `user.token` に保存 | Token 保存到数据库 `user.token` 字段 |
 | `POST /logout` で現在ユーザーの Token をクリア | `POST /logout` 清空当前用户 Token |
 | 以降のリクエストは `Authorization` ヘッダーで Token を送信 | 后续请求通过 `Authorization` 请求头携带 Token |
@@ -215,6 +221,7 @@ frontend
 | `GET /me` でログイン中ユーザー情報を取得 | `GET /me` 查看当前登录用户信息 |
 | `PUT /me/password` で自分のパスワードを変更 | `PUT /me/password` 修改自己的密码 |
 | パスワード変更には現在のパスワードと新しいパスワードが必要 | 修改密码需要旧密码和新密码 |
+| パスワード変更・管理者リセット時も新しいパスワードを BCrypt で保存 | 修改密码和管理员重置密码时，新密码也使用 BCrypt 保存 |
 | ユーザー情報は `UserVO` で返し、パスワードは返さない | 返回用户信息时使用 `UserVO`，不返回密码 |
 
 ### 管理者ユーザー管理 / 管理员用户管理
@@ -293,14 +300,21 @@ frontend
 |---|---|
 | 一般ユーザーは自分のデータだけ操作できる | 普通用户只能操作自己的数据 |
 | バックエンドは Token から現在ユーザーを取得し、フロントの `userId` に依存しない | 后端通过 Token 查询当前用户，不依赖前端传入 `userId` |
+| パスワードは平文では保存せず、BCrypt ハッシュとして保存 | 密码不以明文保存，而是保存 BCrypt 哈希 |
+| 既存のテストユーザーの平文パスワードは BCrypt に移行済み | 旧测试用户的明文密码已迁移为 BCrypt |
 | 管理者はユーザー確認、パスワードリセット、削除ができる | 管理员可以查看用户、重置密码、删除用户 |
 | `/admin/**` API は `ADMIN` ロールが必要 | `/admin/**` 接口需要 `ADMIN` 角色 |
+| 業務エラーは `BusinessException` を投げ、`GlobalExceptionHandler` で `Result` に変換 | 业务错误抛出 `BusinessException`，由 `GlobalExceptionHandler` 转换为 `Result` |
+| 想定外のシステム例外は詳細を直接返さず、共通エラーとして返す | 非预期系统异常不直接返回内部细节，而是返回统一错误 |
 | 金額項目は `DECIMAL(10,2)` を想定 | 金额字段按 `DECIMAL(10,2)` 设计 |
 | フロントでは `0.01` から `99999999.99`、小数ステップ `0.01` に制限 | 前端金额输入限制为 `0.01` 到 `99999999.99`，小数步长 `0.01` |
 | バックエンドでは金額が 0 より大きいことを確認し、範囲・小数桁チェックのロジックも保持 | 后端校验金额必须大于 0，并保留范围和小数位校验逻辑 |
 | 収支記録があるカテゴリは削除不可 | 分类下已有收支记录时，不允许删除分类 |
 | 収支記録のカテゴリはログイン中ユーザー本人のものに限る | 收支记录的分类必须属于当前登录用户 |
 | 収支記録タイプとカテゴリタイプは一致が必要 | 收支记录类型必须和分类类型一致 |
+| `user_id`、`token`、`record_date` などよく検索するカラムにインデックスを追加 | 给 `user_id`、`token`、`record_date` 等高频查询字段添加索引 |
+| `user`、`transaction_category`、`transaction_record` 間に外部キーを追加 | 在 `user`、`transaction_category`、`transaction_record` 之间添加外键 |
+| 同一ユーザー内の同種・同名カテゴリを複合ユニークインデックスで制限 | 使用联合唯一索引限制同一用户下同类型同名分类重复 |
 | OpenRouter API Key は環境変数 `OPENROUTER_API_KEY` を使用 | OpenRouter API Key 使用环境变量 `OPENROUTER_API_KEY` |
 | API Key はコードに直書きせず、フロントにも公開しない | API Key 不写死在代码中，也不暴露给前端 |
 | AI アシスタントは現在、実際の収支データを外部 AI API に送信しない設計 | AI 助手目前设计为不把真实收支数据发送给外部 AI API |
@@ -346,6 +360,32 @@ frontend
 
 当前开发环境使用 **MySQL 8.0.34**，数据库名为 `personal_finance`。项目主要使用三张表：`user`、`transaction_category`、`transaction_record`。项目使用 `utf8mb4` 防止中文、日文乱码，并使用 `utf8mb4_bin` 让字符串比较区分大小写。
 
+SQL ファイル / SQL 文件：
+
+| ファイル | 日本語 | 中文 |
+|---|---|---|
+| `docs/sql/schema.sql` | 新規環境用。DB、テーブル、インデックスを作成 | 新环境使用。创建数据库、表和索引 |
+| `docs/sql/migration-bcrypt.sql` | 既存環境用。`password` を BCrypt 保存に対応できる長さへ変更 | 旧环境使用。把 `password` 字段改成可保存 BCrypt 的长度 |
+| `docs/sql/migration-index.sql` | 既存環境用。検索用インデックスとカテゴリ重複防止のユニークインデックスを追加 | 旧环境使用。追加查询索引和防止分类重复的唯一索引 |
+| `docs/sql/migration-foreign-key.sql` | 既存環境用。ユーザー、カテゴリ、収支記録の外部キー制約を追加 | 旧环境使用。给用户、分类、收支记录添加外键约束 |
+
+主なインデックス / 主要索引：
+
+| 日本語 | 中文 |
+|---|---|
+| `user.token`：Token 認証時のユーザー検索を高速化 | `user.token`：加快 Token 认证时的用户查询 |
+| `transaction_category.user_id`：現在ユーザーのカテゴリ検索を高速化 | `transaction_category.user_id`：加快当前用户分类查询 |
+| `transaction_record.user_id, record_date`：日付範囲検索を高速化 | `transaction_record.user_id, record_date`：加快日期范围查询 |
+| `transaction_record.user_id, type`：収入 / 支出タイプ検索を高速化 | `transaction_record.user_id, type`：加快收入 / 支出类型查询 |
+| `transaction_category(user_id, type, name)`：同一ユーザー内のカテゴリ重複を防止 | `transaction_category(user_id, type, name)`：防止同一用户下重复分类 |
+
+外部キー / 外键：
+
+| 日本語 | 中文 |
+|---|---|
+| `transaction_category.user_id` は `user.id` を参照 | `transaction_category.user_id` 引用 `user.id` |
+| `transaction_record.user_id` は `user.id` を参照 | `transaction_record.user_id` 引用 `user.id` |
+| `transaction_record.category_id` は `transaction_category.id` を参照 | `transaction_record.category_id` 引用 `transaction_category.id` |
 
 参考 SQL：
 
@@ -359,7 +399,7 @@ USE personal_finance;
 CREATE TABLE `user` (
   id INT PRIMARY KEY AUTO_INCREMENT,
   username VARCHAR(20) NOT NULL UNIQUE,
-  password VARCHAR(20) NOT NULL,
+  password VARCHAR(100) NOT NULL,
   register_date DATE,
   role VARCHAR(20) NOT NULL DEFAULT 'USER',
   token VARCHAR(100)
@@ -393,18 +433,19 @@ CREATE TABLE transaction_record (
 
 日本語説明：
 
-まず `personal_finance` データベースを作成し、その後 `user`、`transaction_category`、`transaction_record` の3テーブルを作成します。本プロジェクトでは文字化けを防ぐため `utf8mb4` を使用し、文字列比較を区分するため `utf8mb4_bin` を指定しています。
+まず `docs/sql/schema.sql` を実行し、`personal_finance` データベース、テーブル、インデックスを作成します。本プロジェクトでは文字化けを防ぐため `utf8mb4` を使用し、文字列比較を区分するため `utf8mb4_bin` を指定しています。
 
 中文说明：
 
-先创建数据库 `personal_finance`，再创建 `user`、`transaction_category`、`transaction_record` 三张表。本项目使用 `utf8mb4` 防止中文、日文乱码，并使用 `utf8mb4_bin` 让字符串比较区分大小写。
+先执行 `docs/sql/schema.sql`，创建 `personal_finance` 数据库、表和索引。本项目使用 `utf8mb4` 防止中文、日文乱码，并使用 `utf8mb4_bin` 让字符串比较区分大小写。
 
 
-```sql
-CREATE DATABASE IF NOT EXISTS personal_finance
-  DEFAULT CHARACTER SET utf8mb4
-  DEFAULT COLLATE utf8mb4_bin;
+```powershell
+Get-Content docs/sql/schema.sql | mysql -uroot -proot
 ```
+
+既存 DB に追加適用する場合は、`docs/sql/migration-*.sql` を確認してから一度だけ実行します。  
+如果是已有数据库，需要确认后只执行一次 `docs/sql/migration-*.sql`。
 
 ### DB 設定の変更 / 2. 修改数据库配置
 
@@ -666,10 +707,12 @@ npm run build
 | Spring Boot + MyBatis + MySQL で個人財務管理システムを実装 | 使用 Spring Boot + MyBatis + MySQL 实现个人财务管理系统 |
 | Controller / Service / Mapper / XML の層構成を採用 | 使用 Controller / Service / Mapper / XML 分层结构 |
 | Token と Interceptor でログイン認証を実装 | 使用 Token 和 Interceptor 实现登录认证 |
+| Spring Security Crypto の BCrypt でパスワードをハッシュ化 | 使用 Spring Security Crypto 的 BCrypt 对密码哈希 |
 | role 項目で ADMIN / USER の権限制御を実装 | 使用 role 字段实现 ADMIN / USER 权限控制 |
 | 一般ユーザーは自分の収支データのみ操作可能 | 普通用户只能操作自己的收支数据 |
 | VO でレスポンスを制御し、パスワードを返さない | 使用 VO 控制返回数据，避免返回密码 |
-| 共通例外処理でエラーレスポンスを返す | 使用统一异常处理返回错误信息 |
+| BusinessException と共通例外処理で業務エラーを統一的に返す | 使用 BusinessException 和统一异常处理返回业务错误 |
+| SQL 初期化スクリプト、インデックス、外部キーを整理 | 整理 SQL 初始化脚本、索引和外键 |
 | 収支記録はページング検索と条件検索に対応 | 收支记录支持分页查询和条件筛选 |
 | 統計機能は月次統計とカテゴリ別集計に対応 | 统计模块支持月度统计和分类统计 |
 | Vue 3 + Vite でコンポーネント化し、PC・スマートフォンに対応 | Vue 3 + Vite 实现组件化前端，支持 PC 和手机端 |
@@ -709,11 +752,8 @@ BUILD SUCCESS
 
 | 日本語 | 中文 |
 |---|---|
-| パスワードを BCrypt などでハッシュ化して保存 | 密码改为加密保存，例如 BCrypt |
 | Token を JWT などより整った認証方式に変更 | Token 改为 JWT 或更完整的认证方案 |
-| DB に外部キーやインデックスを追加 | 增加数据库外键和索引 |
 | Service 層の単体テストを追加 | 给 Service 层补充单元测试 |
-| SQL 初期化スクリプトを追加 | 增加 SQL 初始化脚本 |
 | AI アシスタントが実際の収支データを使って分析できるようにする | AI 助手结合当前用户真实收支数据分析 |
 | フロント画面とモバイル対応を改善 | 继续优化前端页面和移动端适配 |
 

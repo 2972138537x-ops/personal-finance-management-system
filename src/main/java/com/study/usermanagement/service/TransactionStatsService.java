@@ -1,6 +1,7 @@
 package com.study.usermanagement.service;
 
 import com.study.usermanagement.common.Result;
+import com.study.usermanagement.exception.BusinessException;
 import com.study.usermanagement.mapper.TransactionStatsMapper;
 import com.study.usermanagement.vo.MonthlyStatsVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +21,19 @@ public class TransactionStatsService {
     // 月・タイプ別金額集計：月次サマリーで再利用する
     public Result sumAmountByMonthAndType(Integer userId, String type, Integer year, Integer month) {
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (type == null || type.isEmpty()) {
-            return new Result(false, "分类类型不能为空", null);
+            throw new BusinessException("分类类型不能为空");
         }
         if (!"income".equals(type) && !"expense".equals(type)) {
-            return new Result(false, "类型必须是 income 或者 expense", null);
+            throw new BusinessException("类型必须是 income 或者 expense");
         }
         if (year == null || year <= 0) {
-            return new Result(false, "年份不能为空 且 不能小于零", null);
+            throw new BusinessException("年份不能为空 且 不能小于零");
         }
         if (month == null || (month <= 0 || month > 12)) {
-            return new Result(false, "月份不能为空 且 必须在1~12之间", null);
+            throw new BusinessException("月份不能为空 且 必须在1~12之间");
         }
         return new Result(true, "查询成功", transactionStatsMapper.sumAmountByMonthAndType(userId, type, year, month));
     }
@@ -41,13 +42,13 @@ public class TransactionStatsService {
     // 月次サマリー：収入合計 - 支出合計 = 残高
     public Result getMonthlyStats(Integer userId, Integer year, Integer month) {
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (year == null || year <= 0) {
-            return new Result(false, "年份不能为空 且 不能小于零", null);
+            throw new BusinessException("年份不能为空 且 不能小于零");
         }
         if (month == null || (month <= 0 || month > 12)) {
-            return new Result(false, "月份不能为空 且 必须在1~12之间", null);
+            throw new BusinessException("月份不能为空 且 必须在1~12之间");
         }
         BigDecimal incomeTotal =
                 transactionStatsMapper.sumAmountByMonthAndType(userId, "income", year, month);
@@ -61,19 +62,19 @@ public class TransactionStatsService {
     // カテゴリ別集計：income / expense ごとに各カテゴリの合計金額を取得する
     public Result getStatsByCategoryAndType(Integer userId, String type, Integer year, Integer month) {
         if (userId == null) {
-            return new Result(false, "userId不能为空", null);
+            throw new BusinessException("userId不能为空");
         }
         if (type == null || type.isEmpty()) {
-            return new Result(false, "分类类型不能为空", null);
+            throw new BusinessException("分类类型不能为空");
         }
         if (!"income".equals(type) && !"expense".equals(type)) {
-            return new Result(false, "类型必须是 income 或者 expense", null);
+            throw new BusinessException("类型必须是 income 或者 expense");
         }
         if (year == null || year <= 0) {
-            return new Result(false, "年份不能为空 且 不能小于零", null);
+            throw new BusinessException("年份不能为空 且 不能小于零");
         }
         if (month == null || (month <= 0 || month > 12)) {
-            return new Result(false, "月份不能为空 且 必须在1~12之间", null);
+            throw new BusinessException("月份不能为空 且 必须在1~12之间");
         }
         return new Result(true, "查询成功", transactionStatsMapper.sumByCategoryAndType(userId, type, year, month));
     }
