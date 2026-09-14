@@ -130,7 +130,7 @@ public class AiService {
         } catch (HttpClientErrorException.NotFound e) {
             // 404：模型名不存在，或者 API 地址错误
             // 404：モデル名が存在しない、または API URL が間違っている
-            return new Result(false, "AI 模型不存在，请检查 openrouter.model 是否正确。", null);
+            return new Result(false, "AI 模型或服务端点不可用（404），请检查 openrouter.model、API 地址及 OpenRouter 的模型可用性设置。", null);
 
         } catch (HttpClientErrorException.BadRequest e) {
             // 400：请求格式错误，可能是模型名或请求体结构有问题

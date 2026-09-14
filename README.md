@@ -570,7 +570,7 @@ mybatis.mapper-locations=classpath:mapper/*.xml
 
 openrouter.api-key=${OPENROUTER_API_KEY}
 openrouter.api-url=https://openrouter.ai/api/v1/chat/completions
-openrouter.model=openai/gpt-oss-20b:free
+openrouter.model=${OPENROUTER_MODEL:openrouter/free}
 ```
 
 ---
